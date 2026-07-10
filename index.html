@@ -497,11 +497,15 @@
                     </div>
                 </div>`;
 
-            // SEÇÃO 3 - Homologadores (logo abaixo do progresso)
+            // SEÇÃO 3 - Homologadores (extraídos da aba cenários)
+            // Listar homologadores únicos que aparecem nos cenários
+            const homologadoresFromCenarios = [...new Set(
+                cenarios.map(c => c.homologador).filter(h => h && h.trim() !== '')
+            )];
             mainContent.innerHTML += `<div class="section-title">Homologadores</div>`;
-            mainContent.innerHTML += `<div class="homologadores-grid">${buildHomologadoresCards(homologadores)}</div>`;
+            mainContent.innerHTML += `<div class="homologadores-grid">${buildHomologadoresCards(homologadoresFromCenarios)}</div>`;
 
-            // SEÇÃO 4 - Charts (sem gráfico de classificação)
+            // SEÇÃO 4 - Charts
             mainContent.innerHTML += `
                 <div class="charts-grid">
                     <div class="chart-card">
@@ -509,7 +513,7 @@
                         <div class="chart-container"><canvas id="chartCategoria"></canvas></div>
                     </div>
                     <div class="chart-card">
-                        <h3>Status dos Homologadores</h3>
+                        <h3>Cenários por Homologador</h3>
                         <div class="chart-container"><canvas id="chartHomologadores"></canvas></div>
                     </div>
                     <div class="chart-card full-width">
@@ -562,7 +566,7 @@
                 });
             });
 
-            renderCharts(activeCenarios, homologadores);
+            renderCharts(activeCenarios, cenarios);
         }
 
         function renderTable(filter) {
@@ -669,7 +673,7 @@
             return '#e65100';
         }
 
-        function buildHomologadoresCards(homologadores) {
+        function buildHomologadoresCards(homologadoresNomes) {
             const avatarColors = [
                 'linear-gradient(135deg, #1565c0, #42a5f5)',
                 'linear-gradient(135deg, #2e7d32, #66bb6a)',
@@ -681,21 +685,21 @@
                 'linear-gradient(135deg, #283593, #5c6bc0)'
             ];
 
-            return homologadores.map((h, i) => {
-                const initials = h.nome.split(' ').filter(w => w.length > 2).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+            return homologadoresNomes.map((nome, i) => {
+                const initials = nome.split(' ').filter(w => w.length > 2).slice(0, 2).map(w => w[0].toUpperCase()).join('');
                 const color = avatarColors[i % avatarColors.length];
 
                 return `<div class="homologador-card">
                     <div class="homologador-avatar" style="background: ${color};">${initials}</div>
                     <div class="homologador-info">
-                        <h4>${h.nome}</h4>
+                        <h4>${nome}</h4>
                     </div>
                 </div>`;
             }).join('');
         }
 
-        // Charts
-        function renderCharts(activeCenarios, homologadores) {
+        // Charts - TUDO baseado na aba cenários
+        function renderCharts(activeCenarios, allCenarios) {
             Object.values(chartInstances).forEach(c => c.destroy());
             chartInstances = {};
 
@@ -717,28 +721,22 @@
                 }
             });
 
-            // Chart 2 - Homologadores status (Donut)
-            const hStatusCount = {};
-            homologadores.forEach(h => {
-                const s = getStatusLabel(normalizeStatus(h.status));
-                hStatusCount[s] = (hStatusCount[s] || 0) + 1;
+            // Chart 2 - Cenários por Homologador (Donut) - baseado na coluna Homologador dos cenários
+            const hCount = {};
+            allCenarios.forEach(c => {
+                const h = c.homologador && c.homologador.trim() !== '' ? c.homologador.trim() : 'Não atribuído';
+                hCount[h] = (hCount[h] || 0) + 1;
             });
+            const hLabels = Object.keys(hCount).sort((a, b) => hCount[b] - hCount[a]);
+            const hColors = ['#1565c0','#2e7d32','#c62828','#6a1b9a','#e65100','#f57f17','#00695c','#283593','#78909c','#ec407a'];
 
             chartInstances.homologadores = new Chart(document.getElementById('chartHomologadores'), {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(hStatusCount),
+                    labels: hLabels,
                     datasets: [{
-                        data: Object.values(hStatusCount),
-                        backgroundColor: Object.keys(hStatusCount).map(label => {
-                            if (label.includes('sucesso')) return '#2e7d32';
-                            if (label.includes('ressalvas')) return '#f57f17';
-                            if (label.includes('Homologação')) return '#1565c0';
-                            if (label.includes('Aguardando')) return '#e65100';
-                            if (label.includes('Reprovado')) return '#c62828';
-                            if (label.includes('cancelado')) return '#6a1b9a';
-                            return '#90a4ae';
-                        }),
+                        data: hLabels.map(l => hCount[l]),
+                        backgroundColor: hLabels.map((_, i) => hColors[i % hColors.length]),
                         borderWidth: 2, borderColor: '#fff'
                     }]
                 },
