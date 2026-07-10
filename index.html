@@ -70,6 +70,111 @@
 
         .header-time { font-size: 13px; opacity: 0.9; }
 
+        .header-countdown {
+            font-size: 11px;
+            opacity: 0.85;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 4px 12px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .header-countdown .countdown-label { font-weight: 300; }
+        .header-countdown .countdown-value { font-weight: 700; font-size: 13px; }
+
+        /* Gráfico circular de progresso geral */
+        .progress-circle-section {
+            background: var(--branco);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--sombra);
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .progress-circle-wrapper {
+            position: relative;
+            width: 180px;
+            height: 180px;
+        }
+
+        .progress-circle-wrapper svg {
+            transform: rotate(-90deg);
+            width: 180px;
+            height: 180px;
+        }
+
+        .progress-circle-wrapper .circle-bg {
+            fill: none;
+            stroke: #e5e7eb;
+            stroke-width: 14;
+        }
+
+        .progress-circle-wrapper .circle-fg {
+            fill: none;
+            stroke-width: 14;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.8s ease;
+        }
+
+        .progress-circle-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-circle-text .pct {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--azul-escuro);
+        }
+
+        .progress-circle-text .pct-label {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .progress-circle-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .progress-circle-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--azul-escuro);
+            margin-bottom: 4px;
+        }
+
+        .progress-circle-info .info-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--cinza-texto);
+        }
+
+        .progress-circle-info .info-row .info-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .progress-circle-info .info-row .info-count {
+            font-weight: 700;
+            min-width: 24px;
+        }
+
         .tagline-bar {
             background: linear-gradient(90deg, var(--amarelo), var(--verde-claro));
             padding: 6px 40px;
@@ -264,6 +369,7 @@
         <div class="header-right">
             <div class="header-badge">🔴 AO VIVO</div>
             <div class="header-time" id="current-time"></div>
+            <div class="header-countdown" id="header-countdown"></div>
         </div>
     </header>
 
@@ -291,7 +397,10 @@
 
         let chartInstances = {};
 
-        // Clock
+        // Clock + Countdown
+        const HOMOLOG_START = new Date('2026-06-13T00:00:00');
+        const HOMOLOG_END = new Date('2026-06-24T23:59:59');
+
         function updateTime() {
             const now = new Date();
             const timeStr = now.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
@@ -299,6 +408,23 @@
             const el2 = document.getElementById('footer-time');
             if (el1) el1.textContent = timeStr;
             if (el2) el2.textContent = timeStr;
+
+            // Countdown
+            const countdownEl = document.getElementById('header-countdown');
+            if (countdownEl) {
+                if (now < HOMOLOG_START) {
+                    const diff = HOMOLOG_START - now;
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    countdownEl.innerHTML = `<div class="countdown-label">Início em</div><div class="countdown-value">${days} dia${days !== 1 ? 's' : ''}</div>`;
+                } else if (now <= HOMOLOG_END) {
+                    const diff = HOMOLOG_END - now;
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    countdownEl.innerHTML = `<div class="countdown-label">⏱ Restam</div><div class="countdown-value">${days}d ${hours}h</div>`;
+                } else {
+                    countdownEl.innerHTML = `<div class="countdown-label">Homologação</div><div class="countdown-value">Encerrada</div>`;
+                }
+            }
         }
         setInterval(updateTime, 1000);
         updateTime();
@@ -456,6 +582,43 @@
                 <div class="refresh-info">
                     <span>📊 Dados carregados de <strong>CAF.xlsx</strong> — Atualização automática a cada 30s</span>
                     <button onclick="loadSpreadsheet()">🔄 Atualizar Agora</button>
+                </div>`;
+
+            // GRÁFICO CIRCULAR - Percentual de avaliação
+            const totalParaAvaliar = cenarios.filter(c => !c.cancelado).length;
+            const avaliados = cenarios.filter(c => {
+                const st = (c.status || '').trim().toLowerCase();
+                return st !== '' && st !== 'não iniciado' && !c.cancelado;
+            }).length;
+            const naoIniciados = totalParaAvaliar - avaliados;
+            const pctAvaliado = totalParaAvaliar > 0 ? Math.round((avaliados / totalParaAvaliar) * 100) : 0;
+
+            const circumference = 2 * Math.PI * 72; // radius = 72
+            const dashOffset = circumference - (pctAvaliado / 100) * circumference;
+            const circleColor = pctAvaliado === 100 ? '#2e7d32' : pctAvaliado >= 50 ? '#f9a825' : '#2980b9';
+
+            mainContent.innerHTML += `
+                <div class="progress-circle-section">
+                    <div class="progress-circle-wrapper">
+                        <svg viewBox="0 0 180 180">
+                            <circle class="circle-bg" cx="90" cy="90" r="72"/>
+                            <circle class="circle-fg" cx="90" cy="90" r="72"
+                                stroke="${circleColor}"
+                                stroke-dasharray="${circumference}"
+                                stroke-dashoffset="${dashOffset}"/>
+                        </svg>
+                        <div class="progress-circle-text">
+                            <div class="pct">${pctAvaliado}%</div>
+                            <div class="pct-label">avaliados</div>
+                        </div>
+                    </div>
+                    <div class="progress-circle-info">
+                        <h3>Progresso da Homologação</h3>
+                        <div class="info-row"><div class="info-dot" style="background:${circleColor}"></div><span class="info-count">${avaliados}</span> cenários avaliados</div>
+                        <div class="info-row"><div class="info-dot" style="background:#e5e7eb"></div><span class="info-count">${naoIniciados}</span> cenários pendentes</div>
+                        <div class="info-row"><div class="info-dot" style="background:#6a1b9a"></div><span class="info-count">${cancelados.length}</span> cenários cancelados</div>
+                        <div class="info-row" style="margin-top:8px; font-size:12px; color:#6b7280;">Total de cenários válidos: <strong style="margin-left:4px;">${totalParaAvaliar}</strong></div>
+                    </div>
                 </div>`;
 
             // SEÇÃO 1 - Status cards baseados na coluna STATUS dos cenários
