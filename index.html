@@ -48,7 +48,7 @@
 
         .header-left { display: flex; align-items: center; gap: 20px; }
 
-        .header-logo svg { height: 50px; width: auto; }
+        .header-logo img { height: 54px; width: auto; border-radius: 6px; }
 
         .header-divider { width: 2px; height: 44px; background: rgba(255,255,255,0.3); }
         .header-title { display: flex; flex-direction: column; }
@@ -253,11 +253,7 @@
     <header class="header">
         <div class="header-left">
             <div class="header-logo">
-                <!-- Logo Dataprev SVG branca -->
-                <svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-                    <text x="0" y="45" font-family="Plus Jakarta Sans, sans-serif" font-size="38" font-weight="800" fill="#ffffff" letter-spacing="3">DATAPREV</text>
-                    <polygon points="160,2 180,18 170,18 190,34 178,34 200,52 155,52 175,34 163,34 183,18 173,18" fill="#4dd0e1" opacity="0.9"/>
-                </svg>
+                <img src="Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
             </div>
             <div class="header-divider"></div>
             <div class="header-title">
@@ -405,14 +401,26 @@
             const activeCenarios = cenarios.filter(c => !c.cancelado);
             const cancelados = cenarios.filter(c => c.cancelado);
 
-            // Status counts
-            const statusCounts = {};
-            homologadores.forEach(h => {
-                const s = normalizeStatus(h.status);
-                statusCounts[s] = (statusCounts[s] || 0) + 1;
+            // Status counts DOS CENÁRIOS (coluna Status da tabela de cenários)
+            const cenarioStatusCounts = {};
+            cenarios.forEach(c => {
+                let st = (c.status || '').trim();
+                if (!st && c.cancelado) {
+                    st = 'Cancelado';
+                } else if (!st) {
+                    st = 'Pendente de execução';
+                }
+                cenarioStatusCounts[st] = (cenarioStatusCounts[st] || 0) + 1;
             });
 
-            const concluidos = (statusCounts['homologado'] || 0) + (statusCounts['ressalvas'] || 0);
+            // Para o progresso dos homologadores
+            const homologadorStatusCounts = {};
+            homologadores.forEach(h => {
+                const s = normalizeStatus(h.status);
+                homologadorStatusCounts[s] = (homologadorStatusCounts[s] || 0) + 1;
+            });
+
+            const concluidos = (homologadorStatusCounts['homologado'] || 0) + (homologadorStatusCounts['ressalvas'] || 0);
             const totalHomologadores = homologadores.length;
             const progressPercent = totalHomologadores > 0 ? Math.round((concluidos / totalHomologadores) * 100) : 0;
 
@@ -426,24 +434,27 @@
                     <button onclick="loadSpreadsheet()">🔄 Atualizar Agora</button>
                 </div>`;
 
-            // SEÇÃO 1 - Status cards (quantitativo por status)
-            const statusOrder = [
-                { key: 'homologado', label: 'Homologado com Sucesso', icon: '✅', css: 'st-homologado' },
-                { key: 'ressalvas', label: 'Homologado com Ressalvas', icon: '⚠️', css: 'st-ressalvas' },
-                { key: 'em-homologacao', label: 'Em Homologação', icon: '🔄', css: 'st-em-homologacao' },
-                { key: 'aguardando', label: 'Aguardando', icon: '⏳', css: 'st-aguardando' },
-                { key: 'reprovado', label: 'Reprovado', icon: '❌', css: 'st-reprovado' },
-                { key: 'cancelado', label: 'Cenário Cancelado', icon: '⛔', css: 'st-cancelado' }
-            ];
+            // SEÇÃO 1 - Status cards baseados na coluna STATUS dos cenários
+            const statusColors = {
+                'Pendente de execução': { icon: '⏳', css: 'st-aguardando', color: '#e65100' },
+                'Cancelado': { icon: '⛔', css: 'st-cancelado', color: '#6a1b9a' },
+                'Aprovado': { icon: '✅', css: 'st-homologado', color: '#2e7d32' },
+                'Reprovado': { icon: '❌', css: 'st-reprovado', color: '#c62828' },
+                'Em execução': { icon: '🔄', css: 'st-em-homologacao', color: '#1565c0' },
+                'Bloqueado': { icon: '🚫', css: 'st-cancelado', color: '#6a1b9a' }
+            };
 
+            // Gerar cards dinâmicos para cada status encontrado
             let statusCardsHtml = '<div class="status-grid">';
-            statusOrder.forEach(s => {
-                const count = statusCounts[s.key] || 0;
+            // Ordenar: primeiro os com mais itens
+            const sortedStatuses = Object.entries(cenarioStatusCounts).sort((a, b) => b[1] - a[1]);
+            sortedStatuses.forEach(([status, count]) => {
+                const config = statusColors[status] || getGenericStatusConfig(status);
                 statusCardsHtml += `
-                    <div class="status-card ${s.css}">
-                        <div class="status-icon">${s.icon}</div>
+                    <div class="status-card ${config.css}">
+                        <div class="status-icon">${config.icon}</div>
                         <div class="status-count">${count}</div>
-                        <div class="status-label">${s.label}</div>
+                        <div class="status-label">${status}</div>
                     </div>`;
             });
             statusCardsHtml += '</div>';
@@ -575,6 +586,16 @@
         function getStatusColor(normalized) {
             const colors = { 'homologado': '#2e7d32', 'ressalvas': '#f57f17', 'em-homologacao': '#1565c0', 'aguardando': '#e65100', 'reprovado': '#c62828', 'cancelado': '#6a1b9a' };
             return colors[normalized] || '#90a4ae';
+        }
+
+        function getGenericStatusConfig(status) {
+            const s = status.toLowerCase();
+            if (s.includes('aprovad') || s.includes('ok') || s.includes('pass')) return { icon: '✅', css: 'st-homologado', color: '#2e7d32' };
+            if (s.includes('reprovad') || s.includes('falh') || s.includes('erro')) return { icon: '❌', css: 'st-reprovado', color: '#c62828' };
+            if (s.includes('execu') || s.includes('andamento') || s.includes('progress')) return { icon: '🔄', css: 'st-em-homologacao', color: '#1565c0' };
+            if (s.includes('cancel') || s.includes('bloqu')) return { icon: '⛔', css: 'st-cancelado', color: '#6a1b9a' };
+            if (s.includes('ressalva') || s.includes('parcial')) return { icon: '⚠️', css: 'st-ressalvas', color: '#f57f17' };
+            return { icon: '📋', css: 'st-aguardando', color: '#e65100' };
         }
 
         function getStatusLabel(normalized) {
