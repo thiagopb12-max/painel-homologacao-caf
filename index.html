@@ -415,16 +415,26 @@
 
             const totalCenarios = cenarios.length;
 
-            // Para o progresso dos homologadores
+            // Para o progresso dos homologadores (apenas alocados a cenários)
+            const homologadoresAlocadosSet = new Set();
+            cenarios.forEach(c => {
+                if (c.homologador && c.homologador.trim() !== '') {
+                    homologadoresAlocadosSet.add(c.homologador.trim().toLowerCase());
+                }
+            });
+            const homologadoresAlocados = homologadores.filter(h =>
+                homologadoresAlocadosSet.has(h.nome.trim().toLowerCase())
+            );
+
             const homologadorStatusCounts = {};
-            homologadores.forEach(h => {
+            homologadoresAlocados.forEach(h => {
                 const s = normalizeStatus(h.status);
                 homologadorStatusCounts[s] = (homologadorStatusCounts[s] || 0) + 1;
             });
 
             const concluidos = (homologadorStatusCounts['homologado'] || 0) + (homologadorStatusCounts['ressalvas'] || 0);
-            const totalHomologadores = homologadores.length;
-            const progressPercent = totalHomologadores > 0 ? Math.round((concluidos / totalHomologadores) * 100) : 0;
+            const totalHomologadoresAlocados = homologadoresAlocados.length;
+            const progressPercent = totalHomologadoresAlocados > 0 ? Math.round((concluidos / totalHomologadoresAlocados) * 100) : 0;
 
             const mainContent = document.getElementById('main-content');
             mainContent.innerHTML = '';
@@ -464,7 +474,7 @@
             mainContent.innerHTML += statusCardsHtml;
 
             // SEÇÃO 2 - Progresso geral (reflete realidade)
-            const progressSegments = buildProgressSegments(homologadores);
+            const progressSegments = buildProgressSegments(homologadores, cenarios);
             mainContent.innerHTML += `
                 <div class="progress-section">
                     <div class="progress-bar-container">
@@ -606,12 +616,24 @@
             return labels[normalized] || normalized;
         }
 
-        function buildProgressSegments(homologadores) {
-            const total = homologadores.length;
+        function buildProgressSegments(homologadores, cenarios) {
+            // Filtra apenas homologadores que estão alocados a pelo menos 1 cenário
+            const homologadoresAlocados = new Set();
+            cenarios.forEach(c => {
+                if (c.homologador && c.homologador.trim() !== '') {
+                    homologadoresAlocados.add(c.homologador.trim().toLowerCase());
+                }
+            });
+
+            const alocados = homologadores.filter(h =>
+                homologadoresAlocados.has(h.nome.trim().toLowerCase())
+            );
+
+            const total = alocados.length;
             if (total === 0) return { bar: '', legend: '' };
 
             const counts = {};
-            homologadores.forEach(h => {
+            alocados.forEach(h => {
                 const s = normalizeStatus(h.status);
                 counts[s] = (counts[s] || 0) + 1;
             });
@@ -619,7 +641,6 @@
             let bar = '';
             let legend = '';
 
-            // Todos os status participam da barra de progresso
             for (const [status, count] of Object.entries(counts)) {
                 const pct = (count / total * 100).toFixed(1);
                 const color = getStatusColor(status);
