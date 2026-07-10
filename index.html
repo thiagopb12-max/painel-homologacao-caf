@@ -408,10 +408,12 @@
                 if (!st && c.cancelado) {
                     st = 'Cancelado';
                 } else if (!st) {
-                    st = 'Pendente de execução';
+                    st = 'Não Iniciado';
                 }
                 cenarioStatusCounts[st] = (cenarioStatusCounts[st] || 0) + 1;
             });
+
+            const totalCenarios = cenarios.length;
 
             // Para o progresso dos homologadores
             const homologadorStatusCounts = {};
@@ -436,7 +438,7 @@
 
             // SEÇÃO 1 - Status cards baseados na coluna STATUS dos cenários
             const statusColors = {
-                'Pendente de execução': { icon: '⏳', css: 'st-aguardando', color: '#e65100' },
+                'Não Iniciado': { icon: '⏳', css: 'st-aguardando', color: '#e65100' },
                 'Cancelado': { icon: '⛔', css: 'st-cancelado', color: '#6a1b9a' },
                 'Aprovado': { icon: '✅', css: 'st-homologado', color: '#2e7d32' },
                 'Reprovado': { icon: '❌', css: 'st-reprovado', color: '#c62828' },
@@ -445,7 +447,15 @@
             };
 
             // Gerar cards dinâmicos para cada status encontrado
-            let statusCardsHtml = '<div class="status-grid">';
+            let statusCardsHtml = `<div class="section-title">Status dos Cenários — Total: ${totalCenarios} casos</div>`;
+            statusCardsHtml += '<div class="status-grid">';
+            // Card de total geral primeiro
+            statusCardsHtml += `
+                <div class="status-card" style="border-left-color: var(--azul-medio);">
+                    <div class="status-icon">📋</div>
+                    <div class="status-count">${totalCenarios}</div>
+                    <div class="status-label" style="color: var(--azul-medio);">TOTAL GERAL</div>
+                </div>`;
             // Ordenar: primeiro os com mais itens
             const sortedStatuses = Object.entries(cenarioStatusCounts).sort((a, b) => b[1] - a[1]);
             sortedStatuses.forEach(([status, count]) => {
@@ -474,7 +484,11 @@
                     </div>
                 </div>`;
 
-            // SEÇÃO 3 - Charts (sem gráfico de classificação)
+            // SEÇÃO 3 - Homologadores (logo abaixo do progresso)
+            mainContent.innerHTML += `<div class="section-title">Homologadores</div>`;
+            mainContent.innerHTML += `<div class="homologadores-grid">${buildHomologadoresCards(homologadores)}</div>`;
+
+            // SEÇÃO 4 - Charts (sem gráfico de classificação)
             mainContent.innerHTML += `
                 <div class="charts-grid">
                     <div class="chart-card">
@@ -490,10 +504,6 @@
                         <div class="chart-container"><canvas id="chartGrupo"></canvas></div>
                     </div>
                 </div>`;
-
-            // SEÇÃO 4 - Homologadores (sem status textual)
-            mainContent.innerHTML += `<div class="section-title">Homologadores</div>`;
-            mainContent.innerHTML += `<div class="homologadores-grid">${buildHomologadoresCards(homologadores)}</div>`;
 
             // SEÇÃO 5 - Tabela
             mainContent.innerHTML += `
