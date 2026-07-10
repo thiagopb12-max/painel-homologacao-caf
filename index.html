@@ -48,11 +48,7 @@
 
         .header-left { display: flex; align-items: center; gap: 20px; }
 
-        .header-logo img {
-            height: 56px;
-            width: auto;
-            filter: brightness(0) invert(1);
-        }
+        .header-logo svg { height: 50px; width: auto; }
 
         .header-divider { width: 2px; height: 44px; background: rgba(255,255,255,0.3); }
         .header-title { display: flex; flex-direction: column; }
@@ -88,20 +84,14 @@
         .main { max-width: 1440px; margin: 0 auto; padding: 32px 40px; }
 
         .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 80px 20px;
-            gap: 16px;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; padding: 80px 20px; gap: 16px;
         }
 
         .loading-spinner {
             width: 48px; height: 48px;
-            border: 4px solid #e5e7eb;
-            border-top-color: var(--azul-medio);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            border: 4px solid #e5e7eb; border-top-color: var(--azul-medio);
+            border-radius: 50%; animation: spin 1s linear infinite;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -109,68 +99,79 @@
         .loading p { font-size: 14px; color: #6b7280; }
 
         .refresh-info {
-            background: var(--branco);
-            border-radius: var(--radius);
-            padding: 12px 24px;
-            box-shadow: var(--sombra);
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 13px;
-            color: #6b7280;
+            background: var(--branco); border-radius: var(--radius);
+            padding: 12px 24px; box-shadow: var(--sombra); margin-bottom: 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 13px; color: #6b7280;
         }
 
         .refresh-info button {
-            background: var(--azul-medio);
-            color: var(--branco);
-            border: none;
-            border-radius: 8px;
-            padding: 8px 20px;
-            font-size: 13px;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: background 0.2s;
+            background: var(--azul-medio); color: var(--branco); border: none;
+            border-radius: 8px; padding: 8px 20px; font-size: 13px; font-weight: 600;
+            font-family: inherit; cursor: pointer; transition: background 0.2s;
         }
-
         .refresh-info button:hover { background: var(--azul-escuro); }
 
-        .kpi-grid {
+        /* Status cards - primeira seção */
+        .status-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
             margin-bottom: 32px;
         }
 
-        .kpi-card {
+        .status-card {
             background: var(--branco);
             border-radius: var(--radius);
-            padding: 24px;
+            padding: 20px;
             box-shadow: var(--sombra);
-            border-top: 4px solid var(--azul-medio);
+            border-left: 5px solid #90a4ae;
+            text-align: center;
             transition: transform 0.2s;
         }
 
-        .kpi-card:hover { transform: translateY(-2px); }
-        .kpi-card.success { border-top-color: var(--verde); }
-        .kpi-card.warning { border-top-color: var(--amarelo); }
-        .kpi-card.danger { border-top-color: var(--laranja); }
-        .kpi-card.info { border-top-color: var(--ciano); }
-        .kpi-card.neutral { border-top-color: #90a4ae; }
+        .status-card:hover { transform: translateY(-2px); }
 
-        .kpi-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280; margin-bottom: 8px; }
-        .kpi-value { font-size: 36px; font-weight: 800; color: var(--azul-escuro); }
-        .kpi-detail { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+        .status-card .status-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .status-card .status-count {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--azul-escuro);
+        }
+
+        .status-card .status-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .status-card.st-homologado { border-left-color: #2e7d32; }
+        .status-card.st-homologado .status-label { color: #2e7d32; }
+        .status-card.st-ressalvas { border-left-color: #f57f17; }
+        .status-card.st-ressalvas .status-label { color: #f57f17; }
+        .status-card.st-em-homologacao { border-left-color: #1565c0; }
+        .status-card.st-em-homologacao .status-label { color: #1565c0; }
+        .status-card.st-aguardando { border-left-color: #e65100; }
+        .status-card.st-aguardando .status-label { color: #e65100; }
+        .status-card.st-reprovado { border-left-color: #c62828; }
+        .status-card.st-reprovado .status-label { color: #c62828; }
+        .status-card.st-cancelado { border-left-color: #6a1b9a; }
+        .status-card.st-cancelado .status-label { color: #6a1b9a; }
 
         .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
 
         .chart-card {
-            background: var(--branco);
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: var(--sombra);
+            background: var(--branco); border-radius: var(--radius);
+            padding: 24px; box-shadow: var(--sombra);
         }
+
+        .chart-card.full-width { grid-column: 1 / -1; }
 
         .chart-card h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
         .chart-container { position: relative; height: 280px; }
@@ -181,7 +182,7 @@
         }
         .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(180deg, var(--ciano), var(--azul-medio)); border-radius: 2px; }
 
-        .homologadores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .homologadores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 32px; }
 
         .homologador-card {
             background: var(--branco); border-radius: var(--radius);
@@ -195,26 +196,6 @@
         }
 
         .homologador-info h4 { font-size: 14px; font-weight: 600; color: var(--cinza-texto); }
-
-        .homologador-status {
-            display: inline-flex; align-items: center; gap: 6px;
-            font-size: 12px; font-weight: 500; margin-top: 4px; padding: 3px 10px; border-radius: 12px;
-        }
-
-        .status-em-homologacao { background: #e3f2fd; color: #1565c0; }
-        .status-homologado { background: #e8f5e9; color: #2e7d32; }
-        .status-reprovado { background: #fbe9e7; color: #c62828; }
-        .status-cancelado { background: #f3e5f5; color: #6a1b9a; }
-        .status-aguardando { background: #fff3e0; color: #e65100; }
-        .status-ressalvas { background: #fff8e1; color: #f57f17; }
-
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .status-em-homologacao .status-dot { background: #1565c0; }
-        .status-homologado .status-dot { background: #2e7d32; }
-        .status-reprovado .status-dot { background: #c62828; }
-        .status-cancelado .status-dot { background: #6a1b9a; }
-        .status-aguardando .status-dot { background: #e65100; }
-        .status-ressalvas .status-dot { background: #f57f17; }
 
         .table-card { background: var(--branco); border-radius: var(--radius); box-shadow: var(--sombra); overflow: hidden; margin-bottom: 32px; }
         .table-header { padding: 20px 24px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
@@ -250,7 +231,7 @@
         .progress-bar-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .progress-bar-title h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); }
         .progress-bar-title span { font-size: 24px; font-weight: 800; color: var(--azul-medio); }
-        .progress-bar { height: 12px; background: #e5e7eb; border-radius: 6px; overflow: hidden; display: flex; }
+        .progress-bar { height: 14px; background: #e5e7eb; border-radius: 7px; overflow: hidden; display: flex; }
         .progress-segment { height: 100%; transition: width 0.5s ease; }
         .progress-legend { display: flex; gap: 20px; margin-top: 12px; flex-wrap: wrap; }
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6b7280; }
@@ -259,20 +240,24 @@
         .footer {
             background: var(--azul-escuro); color: rgba(255,255,255,0.7);
             text-align: center; padding: 20px 40px; font-size: 12px;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
+            display: flex; align-items: center; justify-content: center; gap: 16px;
         }
-        .footer img { height: 28px; filter: brightness(0) invert(1); }
+        .footer svg { height: 32px; width: auto; }
         .footer strong { color: var(--branco); }
 
         @media (max-width: 1024px) { .charts-grid { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .header { flex-direction: column; gap: 16px; padding: 20px; } .main { padding: 20px; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .header { flex-direction: column; gap: 16px; padding: 20px; } .main { padding: 20px; } .status-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-left">
             <div class="header-logo">
-                <img src="Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+                <!-- Logo Dataprev SVG branca -->
+                <svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="45" font-family="Plus Jakarta Sans, sans-serif" font-size="38" font-weight="800" fill="#ffffff" letter-spacing="3">DATAPREV</text>
+                    <polygon points="160,2 180,18 170,18 190,34 178,34 200,52 155,52 175,34 163,34 183,18 173,18" fill="#4dd0e1" opacity="0.9"/>
+                </svg>
             </div>
             <div class="header-divider"></div>
             <div class="header-title">
@@ -300,23 +285,17 @@
     </main>
 
     <footer class="footer">
-        <img src="Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+        <img src="Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV" style="height:40px; border-radius: 4px;">
         <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação CAF DM-209196 • Atualizado em <span id="footer-time"></span></p>
     </footer>
 
     <script>
-        // ============================================
-        // CONFIGURAÇÃO
-        // ============================================
         const XLSX_FILE = 'CAF.xlsx';
-        const REFRESH_INTERVAL = 30000; // 30 segundos
+        const REFRESH_INTERVAL = 30000;
 
         let chartInstances = {};
-        let currentFilter = 'all';
 
-        // ============================================
-        // CLOCK
-        // ============================================
+        // Clock
         function updateTime() {
             const now = new Date();
             const timeStr = now.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
@@ -328,19 +307,14 @@
         setInterval(updateTime, 1000);
         updateTime();
 
-        // ============================================
-        // LOAD AND PARSE XLSX
-        // ============================================
+        // Load spreadsheet
         async function loadSpreadsheet() {
             try {
                 const response = await fetch(XLSX_FILE + '?t=' + Date.now());
                 const arrayBuffer = await response.arrayBuffer();
                 const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-
-                // Parse sheets
                 const cenariosData = parseSheetCenarios(workbook);
                 const homologadoresData = parseSheetHomologadores(workbook);
-
                 renderDashboard(cenariosData, homologadoresData);
             } catch (error) {
                 console.error('Erro ao carregar planilha:', error);
@@ -349,15 +323,14 @@
                         <p style="color: #c62828; font-weight: 600;">❌ Erro ao carregar a planilha</p>
                         <p>${error.message}</p>
                         <p style="margin-top: 12px; font-size: 12px; color: #6b7280;">
-                            Certifique-se de que o arquivo <strong>CAF.xlsx</strong> está na mesma pasta e que o painel está sendo servido via HTTP.<br>
-                            Execute: <code>python -m http.server 8080</code> na pasta do projeto e acesse <code>http://localhost:8080</code>
+                            Certifique-se de que o arquivo <strong>CAF.xlsx</strong> está na mesma pasta.<br>
+                            Para rodar localmente: <code>python -m http.server 8080</code>
                         </p>
                     </div>`;
             }
         }
 
         function parseSheetCenarios(workbook) {
-            // Try to find the cenários sheet
             const sheetName = workbook.SheetNames.find(n =>
                 n.toLowerCase().includes('cen') || n.toLowerCase().includes('homologa')
             ) || workbook.SheetNames[0];
@@ -367,25 +340,20 @@
 
             const cenarios = [];
             for (const row of json) {
-                // Try to find the cenário number column
                 const numero = row['Número do Cenário'] || row['Numero do Cenario'] || row['Cenário'] || row['Cenario'] || '';
                 if (!numero || !numero.toString().startsWith('CT-')) continue;
 
-                const status = (row['Status'] || '').toString().trim();
-                const canceladoCol = Object.keys(row).find(k => k.trim() === 'X' || row[k] === 'CANCELADO');
-                const isCancelado = status.toUpperCase().includes('CANCELADO') ||
-                    Object.values(row).some(v => v && v.toString().toUpperCase().includes('CANCELADO'));
+                const isCancelado = Object.values(row).some(v => v && v.toString().toUpperCase().includes('CANCELADO'));
 
                 cenarios.push({
                     id: numero.toString().trim(),
                     homologador: (row['Homologador'] || '').toString().trim(),
-                    status: status,
+                    status: (row['Status'] || '').toString().trim(),
                     desc: (row['Descrição'] || row['Descricao'] || '').toString().trim(),
                     categoria: (row['Categoria do Batimento'] || row['Categoria'] || '').toString().trim(),
                     classificacao: (row['Classificação Esperada'] || row['Classificacao Esperada'] || '').toString().trim(),
                     motivo: (row['Motivo Esperado'] || row['Motivo'] || '').toString().trim(),
                     grupo: (row['Grupo Sugerido'] || row['Grupo'] || '').toString().trim(),
-                    justificativa: (row['Justificativa de Inclusão'] || row['Justificativa'] || '').toString().trim(),
                     cancelado: isCancelado
                 });
             }
@@ -393,40 +361,24 @@
         }
 
         function parseSheetHomologadores(workbook) {
-            // Try to find the homologadores sheet
-            const sheetName = workbook.SheetNames.find(n =>
-                n.toLowerCase().includes('homologador')
-            );
-
-            // If there's a separate sheet, parse it
-            if (sheetName) {
-                const sheet = workbook.Sheets[sheetName];
-                const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
-                return json.filter(r => r['Nome']).map(r => ({
-                    nome: r['Nome'] || '',
-                    status: r['Status'] || ''
-                }));
-            }
-
-            // Otherwise look in the same sheet — try second table area
-            // Parse all sheets looking for "Homologadores" header
+            // Look in all sheets for the homologadores table
             for (const sn of workbook.SheetNames) {
                 const sheet = workbook.Sheets[sn];
                 const allData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
 
                 for (let i = 0; i < allData.length; i++) {
                     const row = allData[i];
-                    if (row && row.some(cell => cell && cell.toString().toLowerCase().includes('homologador'))) {
-                        // Check if next rows have Nome/Status pattern
-                        const headerRow = allData[i];
-                        const nomeIdx = headerRow.findIndex(c => c && c.toString().toLowerCase() === 'nome');
-                        const statusIdx = headerRow.findIndex(c => c && c.toString().toLowerCase() === 'status');
+                    if (!row) continue;
+                    const headerStr = row.map(c => (c || '').toString().toLowerCase()).join('|');
+                    if (headerStr.includes('nome') && headerStr.includes('status')) {
+                        const nomeIdx = row.findIndex(c => c && c.toString().toLowerCase().trim() === 'nome');
+                        const statusIdx = row.findIndex(c => c && c.toString().toLowerCase().trim() === 'status');
 
                         if (nomeIdx >= 0 && statusIdx >= 0) {
                             const homologadores = [];
                             for (let j = i + 1; j < allData.length; j++) {
                                 const r = allData[j];
-                                if (!r || !r[nomeIdx]) break;
+                                if (!r || !r[nomeIdx] || r[nomeIdx].toString().trim() === '') break;
                                 homologadores.push({
                                     nome: r[nomeIdx].toString().trim(),
                                     status: (r[statusIdx] || '').toString().trim()
@@ -438,7 +390,6 @@
                 }
             }
 
-            // Fallback: extract from known data
             return [
                 { nome: 'Nicole Campos Otani', status: 'Em Homologação' },
                 { nome: 'João Renato Sardinha Antunes', status: 'Homologado com sucesso' },
@@ -449,14 +400,12 @@
             ];
         }
 
-        // ============================================
-        // RENDER DASHBOARD
-        // ============================================
+        // Render
         function renderDashboard(cenarios, homologadores) {
             const activeCenarios = cenarios.filter(c => !c.cancelado);
             const cancelados = cenarios.filter(c => c.cancelado);
 
-            // Status counts for homologadores
+            // Status counts
             const statusCounts = {};
             homologadores.forEach(h => {
                 const s = normalizeStatus(h.status);
@@ -470,49 +419,37 @@
             const mainContent = document.getElementById('main-content');
             mainContent.innerHTML = '';
 
-            // Refresh info
+            // Refresh bar
             mainContent.innerHTML += `
                 <div class="refresh-info">
                     <span>📊 Dados carregados de <strong>CAF.xlsx</strong> — Atualização automática a cada 30s</span>
                     <button onclick="loadSpreadsheet()">🔄 Atualizar Agora</button>
                 </div>`;
 
-            // KPIs
-            mainContent.innerHTML += `
-                <div class="kpi-grid">
-                    <div class="kpi-card info">
-                        <div class="kpi-label">Total de Cenários</div>
-                        <div class="kpi-value">${cenarios.length}</div>
-                        <div class="kpi-detail">Cenários de teste planejados</div>
-                    </div>
-                    <div class="kpi-card success">
-                        <div class="kpi-label">Ativos (A Homologar)</div>
-                        <div class="kpi-value">${activeCenarios.length}</div>
-                        <div class="kpi-detail">Cenários válidos para execução</div>
-                    </div>
-                    <div class="kpi-card warning">
-                        <div class="kpi-label">Cancelados</div>
-                        <div class="kpi-value">${cancelados.length}</div>
-                        <div class="kpi-detail">${cancelados.map(c => c.id).join(', ') || 'Nenhum'}</div>
-                    </div>
-                    <div class="kpi-card neutral">
-                        <div class="kpi-label">Homologadores</div>
-                        <div class="kpi-value">${totalHomologadores}</div>
-                        <div class="kpi-detail">Atribuídos ao processo</div>
-                    </div>
-                    <div class="kpi-card success">
-                        <div class="kpi-label">Concluídos</div>
-                        <div class="kpi-value">${concluidos}</div>
-                        <div class="kpi-detail">Homologados (sucesso + ressalvas)</div>
-                    </div>
-                    <div class="kpi-card danger">
-                        <div class="kpi-label">Reprovados</div>
-                        <div class="kpi-value">${statusCounts['reprovado'] || 0}</div>
-                        <div class="kpi-detail">Necessita retrabalho</div>
-                    </div>
-                </div>`;
+            // SEÇÃO 1 - Status cards (quantitativo por status)
+            const statusOrder = [
+                { key: 'homologado', label: 'Homologado com Sucesso', icon: '✅', css: 'st-homologado' },
+                { key: 'ressalvas', label: 'Homologado com Ressalvas', icon: '⚠️', css: 'st-ressalvas' },
+                { key: 'em-homologacao', label: 'Em Homologação', icon: '🔄', css: 'st-em-homologacao' },
+                { key: 'aguardando', label: 'Aguardando', icon: '⏳', css: 'st-aguardando' },
+                { key: 'reprovado', label: 'Reprovado', icon: '❌', css: 'st-reprovado' },
+                { key: 'cancelado', label: 'Cenário Cancelado', icon: '⛔', css: 'st-cancelado' }
+            ];
 
-            // Progress
+            let statusCardsHtml = '<div class="status-grid">';
+            statusOrder.forEach(s => {
+                const count = statusCounts[s.key] || 0;
+                statusCardsHtml += `
+                    <div class="status-card ${s.css}">
+                        <div class="status-icon">${s.icon}</div>
+                        <div class="status-count">${count}</div>
+                        <div class="status-label">${s.label}</div>
+                    </div>`;
+            });
+            statusCardsHtml += '</div>';
+            mainContent.innerHTML += statusCardsHtml;
+
+            // SEÇÃO 2 - Progresso geral (reflete realidade)
             const progressSegments = buildProgressSegments(homologadores);
             mainContent.innerHTML += `
                 <div class="progress-section">
@@ -526,32 +463,28 @@
                     </div>
                 </div>`;
 
-            // Charts
+            // SEÇÃO 3 - Charts (sem gráfico de classificação)
             mainContent.innerHTML += `
                 <div class="charts-grid">
-                    <div class="chart-card">
-                        <h3>Distribuição por Classificação Esperada</h3>
-                        <div class="chart-container"><canvas id="chartClassificacao"></canvas></div>
-                    </div>
                     <div class="chart-card">
                         <h3>Cenários por Categoria de Batimento</h3>
                         <div class="chart-container"><canvas id="chartCategoria"></canvas></div>
                     </div>
                     <div class="chart-card">
-                        <h3>Cenários por Grupo</h3>
-                        <div class="chart-container"><canvas id="chartGrupo"></canvas></div>
-                    </div>
-                    <div class="chart-card">
                         <h3>Status dos Homologadores</h3>
                         <div class="chart-container"><canvas id="chartHomologadores"></canvas></div>
                     </div>
+                    <div class="chart-card full-width">
+                        <h3>Cenários por Grupo</h3>
+                        <div class="chart-container"><canvas id="chartGrupo"></canvas></div>
+                    </div>
                 </div>`;
 
-            // Homologadores
+            // SEÇÃO 4 - Homologadores (sem status textual)
             mainContent.innerHTML += `<div class="section-title">Homologadores</div>`;
             mainContent.innerHTML += `<div class="homologadores-grid">${buildHomologadoresCards(homologadores)}</div>`;
 
-            // Table
+            // SEÇÃO 5 - Tabela
             mainContent.innerHTML += `
                 <div class="table-card">
                     <div class="table-header">
@@ -584,11 +517,9 @@
                     </div>
                 </div>`;
 
-            // Render table
             window._cenarios = cenarios;
             renderTable('all');
 
-            // Bind filter buttons
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -597,7 +528,6 @@
                 });
             });
 
-            // Render charts
             renderCharts(activeCenarios, homologadores);
         }
 
@@ -628,12 +558,11 @@
             if (classificacao.includes('DESCARACTERIZA')) return 'badge-descaracteriza';
             if (classificacao.includes('PENDENTE')) return 'badge-pendente';
             if (classificacao.includes('NAO_IMPEDITIVO')) return 'badge-nao-impeditivo';
-            if (classificacao.includes('NAO_AVALIADO')) return 'badge-nao-avaliado';
             return 'badge-nao-avaliado';
         }
 
         function normalizeStatus(status) {
-            const s = status.toLowerCase().trim();
+            const s = (status || '').toLowerCase().trim();
             if (s.includes('sucesso')) return 'homologado';
             if (s.includes('ressalva')) return 'ressalvas';
             if (s.includes('reprova')) return 'reprovado';
@@ -644,39 +573,13 @@
         }
 
         function getStatusColor(normalized) {
-            const colors = {
-                'homologado': '#2e7d32',
-                'ressalvas': '#f57f17',
-                'em-homologacao': '#1565c0',
-                'aguardando': '#e65100',
-                'reprovado': '#c62828',
-                'cancelado': '#6a1b9a'
-            };
+            const colors = { 'homologado': '#2e7d32', 'ressalvas': '#f57f17', 'em-homologacao': '#1565c0', 'aguardando': '#e65100', 'reprovado': '#c62828', 'cancelado': '#6a1b9a' };
             return colors[normalized] || '#90a4ae';
         }
 
         function getStatusLabel(normalized) {
-            const labels = {
-                'homologado': 'Homologado com sucesso',
-                'ressalvas': 'Homologado com ressalvas',
-                'em-homologacao': 'Em Homologação',
-                'aguardando': 'Aguardando',
-                'reprovado': 'Reprovado',
-                'cancelado': 'Cenário cancelado'
-            };
+            const labels = { 'homologado': 'Homologado com sucesso', 'ressalvas': 'Homologado com ressalvas', 'em-homologacao': 'Em Homologação', 'aguardando': 'Aguardando', 'reprovado': 'Reprovado', 'cancelado': 'Cenário cancelado' };
             return labels[normalized] || normalized;
-        }
-
-        function getStatusCssClass(normalized) {
-            const classes = {
-                'homologado': 'status-homologado',
-                'ressalvas': 'status-ressalvas',
-                'em-homologacao': 'status-em-homologacao',
-                'aguardando': 'status-aguardando',
-                'reprovado': 'status-reprovado',
-                'cancelado': 'status-cancelado'
-            };
-            return classes[normalized] || 'status-aguardando';
         }
 
         function buildProgressSegments(homologadores) {
@@ -691,15 +594,13 @@
 
             let bar = '';
             let legend = '';
-            const completedStatuses = ['homologado', 'ressalvas', 'reprovado'];
 
+            // Todos os status participam da barra de progresso
             for (const [status, count] of Object.entries(counts)) {
                 const pct = (count / total * 100).toFixed(1);
                 const color = getStatusColor(status);
                 const label = getStatusLabel(status);
-                if (completedStatuses.includes(status)) {
-                    bar += `<div class="progress-segment" style="width: ${pct}%; background: ${color};"></div>`;
-                }
+                bar += `<div class="progress-segment" style="width: ${pct}%; background: ${color};" title="${label}: ${count}"></div>`;
                 legend += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div>${label} (${count})</div>`;
             }
 
@@ -720,53 +621,23 @@
 
             return homologadores.map((h, i) => {
                 const initials = h.nome.split(' ').filter(w => w.length > 2).slice(0, 2).map(w => w[0].toUpperCase()).join('');
-                const normalized = normalizeStatus(h.status);
-                const cssClass = getStatusCssClass(normalized);
-                const label = getStatusLabel(normalized);
                 const color = avatarColors[i % avatarColors.length];
 
                 return `<div class="homologador-card">
                     <div class="homologador-avatar" style="background: ${color};">${initials}</div>
                     <div class="homologador-info">
                         <h4>${h.nome}</h4>
-                        <div class="homologador-status ${cssClass}"><div class="status-dot"></div>${label}</div>
                     </div>
                 </div>`;
             }).join('');
         }
 
-        // ============================================
-        // CHARTS
-        // ============================================
+        // Charts
         function renderCharts(activeCenarios, homologadores) {
-            // Destroy existing
             Object.values(chartInstances).forEach(c => c.destroy());
             chartInstances = {};
 
-            // Chart 1 - Classificação (Donut)
-            const classCount = {};
-            activeCenarios.forEach(c => { classCount[c.classificacao] = (classCount[c.classificacao] || 0) + 1; });
-
-            chartInstances.classificacao = new Chart(document.getElementById('chartClassificacao'), {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(classCount).map(k => k.replace(/_/g, ' ')),
-                    datasets: [{
-                        data: Object.values(classCount),
-                        backgroundColor: Object.keys(classCount).map(k => {
-                            if (k.includes('CARACTERIZA') && !k.includes('DES')) return '#2e7d32';
-                            if (k.includes('DESCARACTERIZA')) return '#c62828';
-                            if (k.includes('PENDENTE')) return '#e65100';
-                            if (k.includes('NAO_IMPEDITIVO')) return '#1565c0';
-                            return '#6a1b9a';
-                        }),
-                        borderWidth: 2, borderColor: '#fff'
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 12 } } } }
-            });
-
-            // Chart 2 - Categoria (Bar horizontal)
+            // Chart 1 - Categoria (Bar horizontal)
             const catCount = {};
             activeCenarios.forEach(c => { if (c.categoria) catCount[c.categoria] = (catCount[c.categoria] || 0) + 1; });
             const catLabels = Object.keys(catCount).sort((a, b) => catCount[b] - catCount[a]);
@@ -784,26 +655,7 @@
                 }
             });
 
-            // Chart 3 - Grupo (Bar vertical)
-            const grupoCount = {};
-            activeCenarios.forEach(c => { if (c.grupo) grupoCount[c.grupo] = (grupoCount[c.grupo] || 0) + 1; });
-            const grupoLabels = Object.keys(grupoCount).sort();
-            const groupColors = ['#1a5276','#2980b9','#00bcd4','#4dd0e1','#7cb342','#aed581','#f9a825','#f57c00','#ef5350','#ab47bc','#5c6bc0','#26a69a','#78909c','#8d6e63','#ec407a','#42a5f5'];
-
-            chartInstances.grupo = new Chart(document.getElementById('chartGrupo'), {
-                type: 'bar',
-                data: {
-                    labels: grupoLabels.map(g => g.replace('Grupo ', 'G')),
-                    datasets: [{ label: 'Cenários', data: grupoLabels.map(l => grupoCount[l]), backgroundColor: grupoLabels.map((_, i) => groupColors[i % groupColors.length]), borderRadius: 6, barThickness: 20 }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 10 } } }, y: { grid: { color: '#f3f4f6' }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 }, stepSize: 1 } } }
-                }
-            });
-
-            // Chart 4 - Homologadores status
+            // Chart 2 - Homologadores status (Donut)
             const hStatusCount = {};
             homologadores.forEach(h => {
                 const s = getStatusLabel(normalizeStatus(h.status));
@@ -830,14 +682,29 @@
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 12 } } } }
             });
+
+            // Chart 3 - Grupo (Bar vertical - full width)
+            const grupoCount = {};
+            activeCenarios.forEach(c => { if (c.grupo) grupoCount[c.grupo] = (grupoCount[c.grupo] || 0) + 1; });
+            const grupoLabels = Object.keys(grupoCount).sort();
+            const groupColors = ['#1a5276','#2980b9','#00bcd4','#4dd0e1','#7cb342','#aed581','#f9a825','#f57c00','#ef5350','#ab47bc','#5c6bc0','#26a69a','#78909c','#8d6e63','#ec407a','#42a5f5'];
+
+            chartInstances.grupo = new Chart(document.getElementById('chartGrupo'), {
+                type: 'bar',
+                data: {
+                    labels: grupoLabels.map(g => g.replace('Grupo ', 'G').replace(' - ', ': ')),
+                    datasets: [{ label: 'Cenários', data: grupoLabels.map(l => grupoCount[l]), backgroundColor: grupoLabels.map((_, i) => groupColors[i % groupColors.length]), borderRadius: 6 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 10 } } }, y: { grid: { color: '#f3f4f6' }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 }, stepSize: 1 } } }
+                }
+            });
         }
 
-        // ============================================
-        // INIT
-        // ============================================
+        // Init
         loadSpreadsheet();
-
-        // Auto-refresh every 30 seconds
         setInterval(loadSpreadsheet, REFRESH_INTERVAL);
     </script>
 </body>
