@@ -449,13 +449,6 @@
             // Gerar cards dinâmicos para cada status encontrado
             let statusCardsHtml = `<div class="section-title">Status dos Cenários — Total: ${totalCenarios} casos</div>`;
             statusCardsHtml += '<div class="status-grid">';
-            // Card de total geral primeiro
-            statusCardsHtml += `
-                <div class="status-card" style="border-left-color: var(--azul-medio);">
-                    <div class="status-icon">📋</div>
-                    <div class="status-count">${totalCenarios}</div>
-                    <div class="status-label" style="color: var(--azul-medio);">TOTAL GERAL</div>
-                </div>`;
             // Ordenar: primeiro os com mais itens
             const sortedStatuses = Object.entries(cenarioStatusCounts).sort((a, b) => b[1] - a[1]);
             sortedStatuses.forEach(([status, count]) => {
