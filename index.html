@@ -339,16 +339,9 @@
                 const numero = row['Número do Cenário'] || row['Numero do Cenario'] || row['Cenário'] || row['Cenario'] || '';
                 if (!numero || !numero.toString().startsWith('CT-')) continue;
 
-                // Detectar cancelamento: verificar apenas colunas de controle, não descrição/justificativa
-                const colunasExcluidas = ['Descrição', 'Descricao', 'Justificativa de Inclusão', 'Justificativa',
-                    'Categoria do Batimento', 'Categoria', 'Classificação Esperada', 'Classificacao Esperada',
-                    'Motivo Esperado', 'Motivo', 'Grupo Sugerido', 'Grupo', 'Número do Cenário', 'Numero do Cenario',
-                    'Cenário', 'Cenario', 'Homologador'];
-                
-                const isCancelado = Object.entries(row).some(([key, v]) => {
-                    if (colunasExcluidas.some(col => key.toLowerCase().includes(col.toLowerCase()))) return false;
-                    return v && v.toString().toUpperCase().trim() === 'CANCELADO';
-                });
+                // Detectar cancelamento: verificar apenas a coluna Status
+                const statusValue = (row['Status'] || '').toString().toUpperCase().trim();
+                const isCancelado = statusValue === 'CANCELADO';
 
                 cenarios.push({
                     id: numero.toString().trim(),
