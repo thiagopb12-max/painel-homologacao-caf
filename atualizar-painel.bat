@@ -7,12 +7,23 @@ echo.
 
 cd /d "%~dp0"
 
-echo Verificando alteracoes na planilha...
-git add CAF.xlsx
-git status --short CAF.xlsx | findstr "CAF.xlsx" >nul
+echo [1/3] Gerando snapshot do dia...
+powershell -ExecutionPolicy Bypass -File "%~dp0gerar-snapshot.ps1"
+if %errorlevel% neq 0 (
+    echo.
+    echo AVISO: Nao foi possivel gerar snapshot. Verifique se o Excel esta fechado.
+    echo Continuando com o push da planilha...
+    echo.
+)
+
+echo.
+echo [2/3] Preparando arquivos para envio...
+git add CAF.xlsx historico.json
+git status --short | findstr /r "." >nul
 if %errorlevel%==0 (
     echo.
-    echo Alteracoes encontradas! Enviando para o GitHub...
+    echo [3/3] Alteracoes encontradas! Enviando para o GitHub...
+    git add -A
     git commit -m "Atualiza dados da homologacao - %date% %time:~0,5%"
     git push origin main
     echo.
@@ -22,7 +33,7 @@ if %errorlevel%==0 (
     echo ==========================================
 ) else (
     echo.
-    echo Nenhuma alteracao detectada na planilha.
+    echo Nenhuma alteracao detectada.
     echo Edite o arquivo CAF.xlsx e tente novamente.
 )
 

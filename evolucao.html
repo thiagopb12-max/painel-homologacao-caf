@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolução da Homologação - CAF (DM-209196)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --azul-escuro: #1a5276;
+            --azul-medio: #2980b9;
+            --azul-claro: #5dade2;
+            --ciano: #00bcd4;
+            --verde: #7cb342;
+            --verde-claro: #aed581;
+            --amarelo: #f9a825;
+            --laranja: #f57c00;
+            --cinza-texto: #2d2d2d;
+            --cinza-claro: #f5f7fa;
+            --branco: #ffffff;
+            --sombra: 0 2px 12px rgba(0,0,0,0.08);
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
+            background: var(--cinza-claro);
+            color: var(--cinza-texto);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--azul-escuro) 0%, var(--azul-medio) 50%, var(--ciano) 100%);
+            color: var(--branco);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .header-logo img { height: 54px; width: auto; border-radius: 6px; }
+        .header-divider { width: 2px; height: 44px; background: rgba(255,255,255,0.3); }
+        .header-title { display: flex; flex-direction: column; }
+        .header-title h1 { font-size: 18px; font-weight: 600; }
+        .header-title p { font-size: 13px; opacity: 0.85; font-weight: 300; }
+
+        .nav-bar {
+            background: var(--branco);
+            padding: 12px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-link {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--cinza-texto);
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover { background: #f3f4f6; }
+        .nav-link.active { background: var(--azul-medio); color: var(--branco); border-color: var(--azul-medio); }
+
+        .main { max-width: 1440px; margin: 0 auto; padding: 32px 40px; }
+
+        .section-title {
+            font-size: 18px; font-weight: 700; color: var(--azul-escuro);
+            margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+        }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(180deg, var(--ciano), var(--azul-medio)); border-radius: 2px; }
+
+        .chart-card {
+            background: var(--branco); border-radius: var(--radius);
+            padding: 24px; box-shadow: var(--sombra); margin-bottom: 32px;
+        }
+        .chart-card h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
+        .chart-container { position: relative; height: 350px; }
+
+        .timeline { margin-bottom: 32px; }
+
+        .timeline-day {
+            background: var(--branco);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            box-shadow: var(--sombra);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            transition: transform 0.2s;
+        }
+
+        .timeline-day:hover { transform: translateX(4px); }
+
+        .timeline-date {
+            min-width: 90px;
+            text-align: center;
+            border-right: 2px solid #e5e7eb;
+            padding-right: 20px;
+        }
+
+        .timeline-date .day { font-size: 24px; font-weight: 800; color: var(--azul-escuro); }
+        .timeline-date .month { font-size: 11px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
+        .timeline-date .time { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+
+        .timeline-stats {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .timeline-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .timeline-stat .stat-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+        }
+
+        .timeline-stat .stat-value { font-weight: 700; }
+
+        .timeline-progress {
+            width: 120px;
+            text-align: right;
+        }
+
+        .timeline-progress .pct {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--azul-medio);
+        }
+
+        .timeline-progress .pct-label {
+            font-size: 10px;
+            color: #6b7280;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state h3 { font-size: 18px; color: var(--azul-escuro); margin-bottom: 8px; }
+        .empty-state p { font-size: 14px; }
+
+        .footer {
+            background: var(--azul-escuro); color: rgba(255,255,255,0.7);
+            text-align: center; padding: 20px 40px; font-size: 12px;
+            display: flex; align-items: center; justify-content: center; gap: 16px;
+        }
+        .footer img { height: 40px; border-radius: 4px; }
+        .footer strong { color: var(--branco); }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 16px; padding: 20px; }
+            .main { padding: 20px; }
+            .timeline-day { flex-direction: column; align-items: flex-start; }
+            .timeline-date { border-right: none; border-bottom: 1px solid #e5e7eb; padding-right: 0; padding-bottom: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="header-logo">
+                <img src="Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+            </div>
+            <div class="header-divider"></div>
+            <div class="header-title">
+                <h1>Evolução da Homologação — CAF</h1>
+                <p>Cadastro Nacional da Agricultura Familiar • DM-209196</p>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-link">📊 Visão Atual</a>
+        <a href="evolucao.html" class="nav-link active">📈 Evolução</a>
+    </nav>
+
+    <main class="main" id="main-content">
+        <div class="chart-card">
+            <h3>Evolução Diária da Homologação</h3>
+            <div class="chart-container">
+                <canvas id="chartEvolucao"></canvas>
+            </div>
+        </div>
+
+        <div class="section-title">Histórico Dia a Dia</div>
+        <div class="timeline" id="timeline"></div>
+    </main>
+
+    <footer class="footer">
+        <img src="Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+        <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação CAF DM-209196</p>
+    </footer>
+
+    <script>
+        const HISTORICO_FILE = 'historico.json';
+
+        async function loadHistorico() {
+            try {
+                const response = await fetch(HISTORICO_FILE + '?t=' + Date.now());
+                if (!response.ok) throw new Error('Arquivo não encontrado');
+                const historico = await response.json();
+                renderEvolucao(Array.isArray(historico) ? historico : [historico]);
+            } catch (error) {
+                document.getElementById('main-content').innerHTML = `
+                    <div class="empty-state">
+                        <h3>📈 Nenhum histórico disponível ainda</h3>
+                        <p>O histórico será gerado automaticamente a cada atualização da planilha.</p>
+                        <p style="margin-top:12px; font-size:12px; color:#9ca3af;">
+                            Execute o <strong>atualizar-painel.bat</strong> para gerar o primeiro snapshot.
+                        </p>
+                    </div>`;
+            }
+        }
+
+        function renderEvolucao(historico) {
+            // Ordenar por data
+            historico.sort((a, b) => a.data.localeCompare(b.data));
+
+            // Gráfico de evolução
+            const labels = historico.map(h => {
+                const [y, m, d] = h.data.split('-');
+                return `${d}/${m}`;
+            });
+
+            // Calcular séries
+            const avaliados = historico.map(h => {
+                const total = h.total || 0;
+                const naoIniciado = (h.status && h.status['Não Iniciado']) || 0;
+                const cancelado = (h.status && h.status['Cancelado']) || 0;
+                return total - naoIniciado - cancelado;
+            });
+
+            const naoIniciados = historico.map(h => (h.status && h.status['Não Iniciado']) || 0);
+            const cancelados = historico.map(h => (h.status && h.status['Cancelado']) || 0);
+            const totais = historico.map(h => h.total || 0);
+
+            new Chart(document.getElementById('chartEvolucao'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Avaliados',
+                            data: avaliados,
+                            borderColor: '#2e7d32',
+                            backgroundColor: 'rgba(46,125,50,0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            borderWidth: 3,
+                            pointRadius: 5,
+                            pointBackgroundColor: '#2e7d32'
+                        },
+                        {
+                            label: 'Não Iniciados',
+                            data: naoIniciados,
+                            borderColor: '#e65100',
+                            backgroundColor: 'rgba(230,81,0,0.05)',
+                            fill: true,
+                            tension: 0.3,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#e65100'
+                        },
+                        {
+                            label: 'Cancelados',
+                            data: cancelados,
+                            borderColor: '#6a1b9a',
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            borderWidth: 2,
+                            pointRadius: 3,
+                            pointBackgroundColor: '#6a1b9a'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 12 }, padding: 16 } }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 12 } } },
+                        y: { grid: { color: '#f3f4f6' }, ticks: { font: { family: 'Plus Jakarta Sans', size: 12 }, stepSize: 1 }, beginAtZero: true }
+                    }
+                }
+            });
+
+            // Timeline
+            const timelineEl = document.getElementById('timeline');
+            const statusColorMap = {
+                'Não Iniciado': '#e65100',
+                'Cancelado': '#6a1b9a',
+                'Aprovado': '#2e7d32',
+                'Reprovado': '#c62828',
+                'Em execução': '#1565c0'
+            };
+
+            timelineEl.innerHTML = historico.slice().reverse().map(h => {
+                const [y, m, d] = h.data.split('-');
+                const meses = ['', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+                const total = h.total || 0;
+                const naoIni = (h.status && h.status['Não Iniciado']) || 0;
+                const canc = (h.status && h.status['Cancelado']) || 0;
+                const aval = total - naoIni - canc;
+                const totalValido = total - canc;
+                const pct = totalValido > 0 ? Math.round((aval / totalValido) * 100) : 0;
+
+                const statsHtml = Object.entries(h.status || {}).map(([status, count]) => {
+                    const color = statusColorMap[status] || getColor(status);
+                    return `<div class="timeline-stat"><div class="stat-dot" style="background:${color}"></div><span class="stat-value">${count}</span> ${status}</div>`;
+                }).join('');
+
+                return `<div class="timeline-day">
+                    <div class="timeline-date">
+                        <div class="day">${d}</div>
+                        <div class="month">${meses[parseInt(m)]}</div>
+                        <div class="time">${h.hora || ''}</div>
+                    </div>
+                    <div class="timeline-stats">${statsHtml}</div>
+                    <div class="timeline-progress">
+                        <div class="pct">${pct}%</div>
+                        <div class="pct-label">avaliado</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function getColor(status) {
+            const s = status.toLowerCase();
+            if (s.includes('aprovad') || s.includes('sucesso')) return '#2e7d32';
+            if (s.includes('reprovad')) return '#c62828';
+            if (s.includes('execu') || s.includes('andamento')) return '#1565c0';
+            if (s.includes('ressalva')) return '#f57f17';
+            return '#78909c';
+        }
+
+        loadHistorico();
+    </script>
+</body>
+</html>
