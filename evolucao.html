@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
             --azul-escuro: #1a5276;
@@ -87,6 +88,7 @@
         }
         .chart-card h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
         .chart-container { position: relative; height: 350px; }
+        .chart-container-tall { position: relative; height: 420px; }
 
         .timeline { margin-bottom: 32px; }
 
@@ -103,21 +105,22 @@
         }
 
         .timeline-day:hover { transform: translateX(4px); }
+        .timeline-day.atual { border-left: 4px solid var(--azul-medio); }
 
         .timeline-date {
-            min-width: 90px;
+            min-width: 100px;
             text-align: center;
             border-right: 2px solid #e5e7eb;
             padding-right: 20px;
         }
 
-        .timeline-date .day { font-size: 24px; font-weight: 800; color: var(--azul-escuro); }
+        .timeline-date .day { font-size: 22px; font-weight: 800; color: var(--azul-escuro); }
         .timeline-date .month { font-size: 11px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
         .timeline-date .time { font-size: 10px; color: #9ca3af; margin-top: 2px; }
 
         .timeline-stats {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             flex-wrap: wrap;
             flex: 1;
         }
@@ -126,30 +129,22 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 13px;
+            font-size: 12px;
+            background: #f8fafc;
+            padding: 4px 10px;
+            border-radius: 8px;
         }
 
-        .timeline-stat .stat-dot {
-            width: 10px; height: 10px; border-radius: 50%;
-        }
-
+        .timeline-stat .stat-dot { width: 8px; height: 8px; border-radius: 50%; }
         .timeline-stat .stat-value { font-weight: 700; }
 
-        .timeline-progress {
-            width: 120px;
+        .timeline-total {
+            min-width: 60px;
             text-align: right;
         }
 
-        .timeline-progress .pct {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--azul-medio);
-        }
-
-        .timeline-progress .pct-label {
-            font-size: 10px;
-            color: #6b7280;
-        }
+        .timeline-total .total-value { font-size: 20px; font-weight: 800; color: var(--azul-medio); }
+        .timeline-total .total-label { font-size: 10px; color: #6b7280; }
 
         .empty-state {
             text-align: center;
@@ -158,7 +153,6 @@
         }
 
         .empty-state h3 { font-size: 18px; color: var(--azul-escuro); margin-bottom: 8px; }
-        .empty-state p { font-size: 14px; }
 
         .footer {
             background: var(--azul-escuro); color: rgba(255,255,255,0.7);
@@ -172,7 +166,7 @@
             .header { flex-direction: column; gap: 16px; padding: 20px; }
             .main { padding: 20px; }
             .timeline-day { flex-direction: column; align-items: flex-start; }
-            .timeline-date { border-right: none; border-bottom: 1px solid #e5e7eb; padding-right: 0; padding-bottom: 12px; }
+            .timeline-date { border-right: none; border-bottom: 1px solid #e5e7eb; padding-right: 0; padding-bottom: 12px; width: 100%; }
         }
     </style>
 </head>
@@ -196,15 +190,10 @@
     </nav>
 
     <main class="main" id="main-content">
-        <div class="chart-card">
-            <h3>Evolução Diária da Homologação</h3>
-            <div class="chart-container">
-                <canvas id="chartEvolucao"></canvas>
-            </div>
+        <div class="loading" style="display:flex;flex-direction:column;align-items:center;padding:80px 20px;gap:16px;">
+            <div style="width:48px;height:48px;border:4px solid #e5e7eb;border-top-color:#2980b9;border-radius:50%;animation:spin 1s linear infinite;"></div>
+            <p style="font-size:14px;color:#6b7280;">Carregando dados da planilha...</p>
         </div>
-
-        <div class="section-title">Histórico Dia a Dia</div>
-        <div class="timeline" id="timeline"></div>
     </main>
 
     <footer class="footer">
@@ -212,151 +201,187 @@
         <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação CAF DM-209196</p>
     </footer>
 
-    <script>
-        const HISTORICO_FILE = 'historico.json';
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 
-        async function loadHistorico() {
+    <script>
+        const XLSX_FILE = 'CAF.xlsx';
+
+        // Cores para cada status
+        const STATUS_COLORS = {
+            'Pendente de cenário': '#e65100',
+            'Em Correção': '#f57f17',
+            'Em Análise': '#1565c0',
+            'Homologado com sucesso': '#2e7d32',
+            'Homologado com ressalva': '#7cb342',
+            'Disponível para reteste': '#00bcd4',
+            'Reprovado': '#c62828'
+        };
+
+        function getStatusColor(status) {
+            return STATUS_COLORS[status] || '#78909c';
+        }
+
+        async function loadData() {
             try {
-                const response = await fetch(HISTORICO_FILE + '?t=' + Date.now());
-                if (!response.ok) throw new Error('Arquivo não encontrado');
-                const historico = await response.json();
-                renderEvolucao(Array.isArray(historico) ? historico : [historico]);
+                const response = await fetch(XLSX_FILE + '?t=' + Date.now());
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+
+                // Encontrar aba ResumoDiario
+                const sheetName = workbook.SheetNames.find(n => n.toLowerCase().includes('resumo'));
+                if (!sheetName) throw new Error('Aba ResumoDiario não encontrada na planilha');
+
+                const sheet = workbook.Sheets[sheetName];
+                const data = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+
+                if (data.length < 2) throw new Error('Aba ResumoDiario está vazia');
+
+                // Headers (linha 1) - coluna 1 é data, colunas 2+ são status
+                const headers = data[0];
+                const statusNames = headers.slice(1).filter(h => h && h.toString().trim() !== '' && h.toString().toLowerCase() !== 'total');
+
+                // Linhas de dados (linha 2+)
+                const registros = [];
+                for (let i = 1; i < data.length; i++) {
+                    const row = data[i];
+                    if (!row || !row[0]) continue;
+
+                    const label = row[0].toString().trim();
+                    if (!label) continue;
+
+                    const registro = { label: label, status: {} };
+
+                    for (let j = 1; j <= statusNames.length; j++) {
+                        const val = row[j];
+                        const num = parseInt(val) || 0;
+                        if (statusNames[j-1]) {
+                            registro.status[statusNames[j-1].toString().trim()] = num;
+                        }
+                    }
+
+                    // Total (última coluna com dados ou soma)
+                    const totalIdx = headers.findIndex(h => h && h.toString().toLowerCase() === 'total');
+                    if (totalIdx >= 0) {
+                        registro.total = parseInt(row[totalIdx]) || 0;
+                    } else {
+                        registro.total = Object.values(registro.status).reduce((a, b) => a + b, 0);
+                    }
+
+                    registros.push(registro);
+                }
+
+                renderEvolucao(registros, statusNames);
+
             } catch (error) {
+                console.error(error);
                 document.getElementById('main-content').innerHTML = `
                     <div class="empty-state">
-                        <h3>📈 Nenhum histórico disponível ainda</h3>
-                        <p>O histórico será gerado automaticamente a cada atualização da planilha.</p>
-                        <p style="margin-top:12px; font-size:12px; color:#9ca3af;">
-                            Execute o <strong>atualizar-painel.bat</strong> para gerar o primeiro snapshot.
-                        </p>
+                        <h3>❌ Erro ao carregar dados</h3>
+                        <p>${error.message}</p>
                     </div>`;
             }
         }
 
-        function renderEvolucao(historico) {
-            // Ordenar por data
-            historico.sort((a, b) => a.data.localeCompare(b.data));
+        function renderEvolucao(registros, statusNames) {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = '';
 
-            // Gráfico de evolução
-            const labels = historico.map(h => {
-                const [y, m, d] = h.data.split('-');
-                return `${d}/${m}`;
-            });
+            // Separar "Atual" dos registros com data
+            const atual = registros.find(r => r.label.toLowerCase() === 'atual');
+            const historico = registros.filter(r => r.label.toLowerCase() !== 'atual' && r.total > 0);
 
-            // Calcular séries
-            const avaliados = historico.map(h => {
-                const total = h.total || 0;
-                const naoIniciado = (h.status && h.status['Não Iniciado']) || 0;
-                const cancelado = (h.status && h.status['Cancelado']) || 0;
-                return total - naoIniciado - cancelado;
-            });
+            // GRÁFICO DE EVOLUÇÃO (stacked area)
+            if (historico.length > 0) {
+                mainContent.innerHTML += `
+                    <div class="chart-card">
+                        <h3>Evolução Diária da Homologação</h3>
+                        <div class="chart-container-tall"><canvas id="chartEvolucao"></canvas></div>
+                    </div>`;
 
-            const naoIniciados = historico.map(h => (h.status && h.status['Não Iniciado']) || 0);
-            const cancelados = historico.map(h => (h.status && h.status['Cancelado']) || 0);
-            const totais = historico.map(h => h.total || 0);
+                const labels = historico.map(r => {
+                    // Formatar label de data
+                    const parts = r.label.split(' ');
+                    return parts[0]; // pega só a data, sem hora
+                });
 
-            new Chart(document.getElementById('chartEvolucao'), {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Avaliados',
-                            data: avaliados,
-                            borderColor: '#2e7d32',
-                            backgroundColor: 'rgba(46,125,50,0.1)',
-                            fill: true,
-                            tension: 0.3,
-                            borderWidth: 3,
-                            pointRadius: 5,
-                            pointBackgroundColor: '#2e7d32'
-                        },
-                        {
-                            label: 'Não Iniciados',
-                            data: naoIniciados,
-                            borderColor: '#e65100',
-                            backgroundColor: 'rgba(230,81,0,0.05)',
-                            fill: true,
-                            tension: 0.3,
-                            borderWidth: 2,
-                            pointRadius: 4,
-                            pointBackgroundColor: '#e65100'
-                        },
-                        {
-                            label: 'Cancelados',
-                            data: cancelados,
-                            borderColor: '#6a1b9a',
-                            borderDash: [5, 5],
-                            tension: 0.3,
-                            borderWidth: 2,
-                            pointRadius: 3,
-                            pointBackgroundColor: '#6a1b9a'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 12 }, padding: 16 } }
-                    },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 12 } } },
-                        y: { grid: { color: '#f3f4f6' }, ticks: { font: { family: 'Plus Jakarta Sans', size: 12 }, stepSize: 1 }, beginAtZero: true }
+                const datasets = statusNames.map(status => ({
+                    label: status,
+                    data: historico.map(r => r.status[status] || 0),
+                    borderColor: getStatusColor(status),
+                    backgroundColor: getStatusColor(status) + '20',
+                    fill: true,
+                    tension: 0.3,
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointBackgroundColor: getStatusColor(status)
+                }));
+
+                // Esperar render do canvas
+                setTimeout(() => {
+                    const ctx = document.getElementById('chartEvolucao');
+                    if (ctx) {
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: { labels, datasets },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 12, usePointStyle: true } }
+                                },
+                                scales: {
+                                    x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } },
+                                    y: { stacked: false, grid: { color: '#f3f4f6' }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 }, stepSize: 2 }, beginAtZero: true }
+                                }
+                            }
+                        });
                     }
-                }
-            });
+                }, 100);
+            }
 
-            // Timeline
+            // TIMELINE
+            mainContent.innerHTML += `<div class="section-title">Histórico Dia a Dia</div><div class="timeline" id="timeline"></div>`;
+
             const timelineEl = document.getElementById('timeline');
-            const statusColorMap = {
-                'Não Iniciado': '#e65100',
-                'Cancelado': '#6a1b9a',
-                'Aprovado': '#2e7d32',
-                'Reprovado': '#c62828',
-                'Em execução': '#1565c0'
-            };
+            const allRegistros = atual ? [atual, ...historico.reverse()] : historico.reverse();
 
-            timelineEl.innerHTML = historico.slice().reverse().map(h => {
-                const [y, m, d] = h.data.split('-');
-                const meses = ['', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-                const total = h.total || 0;
-                const naoIni = (h.status && h.status['Não Iniciado']) || 0;
-                const canc = (h.status && h.status['Cancelado']) || 0;
-                const aval = total - naoIni - canc;
-                const totalValido = total - canc;
-                const pct = totalValido > 0 ? Math.round((aval / totalValido) * 100) : 0;
+            timelineEl.innerHTML = allRegistros.map(r => {
+                const isAtual = r.label.toLowerCase() === 'atual';
+                let dateDisplay, timeDisplay;
 
-                const statsHtml = Object.entries(h.status || {}).map(([status, count]) => {
-                    const color = statusColorMap[status] || getColor(status);
-                    return `<div class="timeline-stat"><div class="stat-dot" style="background:${color}"></div><span class="stat-value">${count}</span> ${status}</div>`;
-                }).join('');
+                if (isAtual) {
+                    dateDisplay = 'ATUAL';
+                    timeDisplay = 'Agora';
+                } else {
+                    const parts = r.label.split(' ');
+                    dateDisplay = parts[0] || r.label;
+                    timeDisplay = parts[1] || '';
+                }
 
-                return `<div class="timeline-day">
+                const statsHtml = Object.entries(r.status)
+                    .filter(([, count]) => count > 0)
+                    .map(([status, count]) => `
+                        <div class="timeline-stat">
+                            <div class="stat-dot" style="background:${getStatusColor(status)}"></div>
+                            <span class="stat-value">${count}</span> ${status}
+                        </div>
+                    `).join('');
+
+                return `<div class="timeline-day ${isAtual ? 'atual' : ''}">
                     <div class="timeline-date">
-                        <div class="day">${d}</div>
-                        <div class="month">${meses[parseInt(m)]}</div>
-                        <div class="time">${h.hora || ''}</div>
+                        <div class="day">${dateDisplay}</div>
+                        <div class="time">${timeDisplay}</div>
                     </div>
                     <div class="timeline-stats">${statsHtml}</div>
-                    <div class="timeline-progress">
-                        <div class="pct">${pct}%</div>
-                        <div class="pct-label">avaliado</div>
+                    <div class="timeline-total">
+                        <div class="total-value">${r.total}</div>
+                        <div class="total-label">total</div>
                     </div>
                 </div>`;
             }).join('');
         }
 
-        function getColor(status) {
-            const s = status.toLowerCase();
-            if (s.includes('aprovad') || s.includes('sucesso')) return '#2e7d32';
-            if (s.includes('reprovad')) return '#c62828';
-            if (s.includes('execu') || s.includes('andamento')) return '#1565c0';
-            if (s.includes('ressalva')) return '#f57f17';
-            return '#78909c';
-        }
-
-        loadHistorico();
+        loadData();
     </script>
 </body>
 </html>

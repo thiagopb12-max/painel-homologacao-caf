@@ -7,23 +7,14 @@ echo.
 
 cd /d "%~dp0"
 
-echo [1/3] Gerando snapshot do dia...
-powershell -ExecutionPolicy Bypass -File "%~dp0gerar-snapshot.ps1"
-if %errorlevel% neq 0 (
-    echo.
-    echo AVISO: Nao foi possivel gerar snapshot. Verifique se o Excel esta fechado.
-    echo Continuando com o push da planilha...
-    echo.
-)
+echo [1/2] Registrando timestamp da atualizacao...
+powershell -ExecutionPolicy Bypass -Command "$json = @{ data = (Get-Date -Format 'yyyy-MM-dd'); hora = (Get-Date -Format 'HH:mm:ss'); dataHoraCompleta = (Get-Date -Format 'dd/MM/yyyy HH:mm:ss') } | ConvertTo-Json; $json | Out-File -FilePath 'ultima-atualizacao.json' -Encoding UTF8"
 
 echo.
-echo [2/3] Preparando arquivos para envio...
-git add CAF.xlsx historico.json ultima-atualizacao.json
+echo [2/2] Enviando para o GitHub...
+git add -A
 git status --short | findstr /r "." >nul
 if %errorlevel%==0 (
-    echo.
-    echo [3/3] Alteracoes encontradas! Enviando para o GitHub...
-    git add -A
     git commit -m "Atualiza dados da homologacao - %date% %time:~0,5%"
     git push origin main
     echo.
