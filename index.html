@@ -585,7 +585,7 @@
             // Refresh bar
             mainContent.innerHTML += `
                 <div class="refresh-info">
-                    <span>📊 Dados carregados de <strong>CAF.xlsx</strong> — Atualização automática a cada 30s</span>
+                    <span>📊 Dados carregados de <strong>CAF.xlsx</strong> — <span id="ultima-atualizacao">Carregando última atualização...</span></span>
                     <button onclick="loadSpreadsheet()">🔄 Atualizar Agora</button>
                 </div>`;
 
@@ -935,7 +935,23 @@
 
         // Init
         loadSpreadsheet();
+        loadUltimaAtualizacao();
         setInterval(loadSpreadsheet, REFRESH_INTERVAL);
+
+        async function loadUltimaAtualizacao() {
+            try {
+                const response = await fetch('ultima-atualizacao.json?t=' + Date.now());
+                if (!response.ok) throw new Error('Arquivo não encontrado');
+                const data = await response.json();
+                const el = document.getElementById('ultima-atualizacao');
+                if (el && data.dataHoraCompleta) {
+                    el.innerHTML = `Última atualização: <strong>${data.dataHoraCompleta}</strong>`;
+                }
+            } catch (e) {
+                const el = document.getElementById('ultima-atualizacao');
+                if (el) el.textContent = 'Atualização automática a cada 30s';
+            }
+        }
     </script>
 </body>
 </html>

@@ -137,6 +137,15 @@ try {
     # Salvar
     $newHistorico | ConvertTo-Json -Depth 5 | Out-File -FilePath $historicoPath -Encoding UTF8
     
+    # Salvar timestamp da última atualização
+    $ultimaAtualizacaoPath = Join-Path $scriptDir "ultima-atualizacao.json"
+    $ultimaAtualizacao = @{
+        data = $hoje
+        hora = (Get-Date -Format "HH:mm:ss")
+        dataHoraCompleta = (Get-Date -Format "dd/MM/yyyy HH:mm:ss")
+    }
+    $ultimaAtualizacao | ConvertTo-Json | Out-File -FilePath $ultimaAtualizacaoPath -Encoding UTF8
+
     Write-Host "Snapshot gerado com sucesso!" -ForegroundColor Green
     Write-Host "  Data: $hoje $horaAtual" -ForegroundColor Cyan
     Write-Host "  Total cenarios: $total" -ForegroundColor Cyan

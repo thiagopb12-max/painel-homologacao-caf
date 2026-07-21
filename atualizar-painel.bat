@@ -18,7 +18,7 @@ if %errorlevel% neq 0 (
 
 echo.
 echo [2/3] Preparando arquivos para envio...
-git add CAF.xlsx historico.json
+git add CAF.xlsx historico.json ultima-atualizacao.json
 git status --short | findstr /r "." >nul
 if %errorlevel%==0 (
     echo.
