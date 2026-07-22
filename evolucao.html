@@ -258,8 +258,16 @@
                     const row = data[i];
                     if (!row) continue;
 
-                    const dataVal = (colData >= 0 ? row[colData] : '').toString().trim();
+                    let dataVal = colData >= 0 ? row[colData] : '';
                     const horaVal = (colHora >= 0 ? row[colHora] : '').toString().trim();
+
+                    // Converter serial number do Excel para data legível
+                    if (typeof dataVal === 'number') {
+                        const date = new Date((dataVal - 25569) * 86400 * 1000);
+                        dataVal = date.toLocaleDateString('pt-BR');
+                    } else {
+                        dataVal = (dataVal || '').toString().trim();
+                    }
 
                     if (!dataVal) continue; // pula linhas sem data
 
