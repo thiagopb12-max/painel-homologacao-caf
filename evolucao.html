@@ -236,41 +236,55 @@
 
                 if (data.length < 2) throw new Error('Aba ResumoDiario está vazia');
 
-                // Headers (linha 1) - coluna 1 é data, colunas 2+ são status
-                const headers = data[0];
-                const statusNames = headers.slice(1).filter(h => h && h.toString().trim() !== '' && h.toString().toLowerCase() !== 'total');
+                // Headers (linha 1)
+                const headers = data[0].map(h => (h || '').toString().trim());
 
-                // Linhas de dados (linha 2+)
+                // Identificar colunas
+                const colHora = headers.findIndex(h => h.toLowerCase() === 'hora');
+                const colData = headers.findIndex(h => h.toLowerCase() === 'data');
+                const colTotal = headers.findIndex(h => h.toLowerCase() === 'total');
+
+                // Colunas de status (tudo que não é hora, data ou total)
+                const statusCols = [];
+                headers.forEach((h, i) => {
+                    if (i !== colHora && i !== colData && i !== colTotal && h !== '') {
+                        statusCols.push({ index: i, name: h });
+                    }
+                });
+
+                // Ler registros (só linhas com data preenchida)
                 const registros = [];
                 for (let i = 1; i < data.length; i++) {
                     const row = data[i];
-                    if (!row || !row[0]) continue;
+                    if (!row) continue;
 
-                    const label = row[0].toString().trim();
-                    if (!label) continue;
+                    const dataVal = (colData >= 0 ? row[colData] : '').toString().trim();
+                    const horaVal = (colHora >= 0 ? row[colHora] : '').toString().trim();
 
-                    const registro = { label: label, status: {} };
+                    if (!dataVal) continue; // pula linhas sem data
 
-                    for (let j = 1; j <= statusNames.length; j++) {
-                        const val = row[j];
-                        const num = parseInt(val) || 0;
-                        if (statusNames[j-1]) {
-                            registro.status[statusNames[j-1].toString().trim()] = num;
-                        }
+                    const registro = {
+                        data: dataVal,
+                        hora: horaVal,
+                        status: {},
+                        total: 0
+                    };
+
+                    statusCols.forEach(col => {
+                        const val = parseInt(row[col.index]) || 0;
+                        registro.status[col.name] = val;
+                    });
+
+                    registro.total = colTotal >= 0 ? (parseInt(row[colTotal]) || 0) : Object.values(registro.status).reduce((a, b) => a + b, 0);
+
+                    if (registro.total > 0) {
+                        registros.push(registro);
                     }
-
-                    // Total (última coluna com dados ou soma)
-                    const totalIdx = headers.findIndex(h => h && h.toString().toLowerCase() === 'total');
-                    if (totalIdx >= 0) {
-                        registro.total = parseInt(row[totalIdx]) || 0;
-                    } else {
-                        registro.total = Object.values(registro.status).reduce((a, b) => a + b, 0);
-                    }
-
-                    registros.push(registro);
                 }
 
-                renderEvolucao(registros, statusNames);
+                if (registros.length === 0) throw new Error('Nenhum registro com dados encontrado na aba ResumoDiario');
+
+                renderEvolucao(registros, statusCols.map(c => c.name));
 
             } catch (error) {
                 console.error(error);
@@ -286,77 +300,109 @@
             const mainContent = document.getElementById('main-content');
             mainContent.innerHTML = '';
 
-            // Separar "Atual" dos registros com data
-            const atual = registros.find(r => r.label.toLowerCase() === 'atual');
-            const historico = registros.filter(r => r.label.toLowerCase() !== 'atual' && r.total > 0);
+            // Ordenar por data
+            registros.sort((a, b) => {
+                const parseDate = (d) => {
+                    const parts = d.split('/');
+                    if (parts.length === 3) return new Date(parts[2], parts[1]-1, parts[0]);
+                    return new Date(d);
+                };
+                return parseDate(a.data) - parseDate(b.data);
+            });
 
-            // GRÁFICO DE EVOLUÇÃO (stacked area)
-            if (historico.length > 0) {
-                mainContent.innerHTML += `
-                    <div class="chart-card">
-                        <h3>Evolução Diária da Homologação</h3>
-                        <div class="chart-container-tall"><canvas id="chartEvolucao"></canvas></div>
-                    </div>`;
+            // GRÁFICO DE EVOLUÇÃO
+            mainContent.innerHTML += `
+                <div class="chart-card">
+                    <h3>Evolução Diária da Homologação</h3>
+                    <div class="chart-container-tall"><canvas id="chartEvolucao"></canvas></div>
+                </div>`;
 
-                const labels = historico.map(r => {
-                    // Formatar label de data
-                    const parts = r.label.split(' ');
-                    return parts[0]; // pega só a data, sem hora
+            const labels = registros.map(r => r.data);
+
+            const datasets = statusNames.map(status => ({
+                label: status,
+                data: registros.map(r => r.status[status] || 0),
+                borderColor: getStatusColor(status),
+                backgroundColor: getStatusColor(status) + '15',
+                fill: false,
+                tension: 0.3,
+                borderWidth: 3,
+                pointRadius: 5,
+                pointBackgroundColor: getStatusColor(status),
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }));
+
+            setTimeout(() => {
+                const ctx = document.getElementById('chartEvolucao');
+                if (ctx) {
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: { labels, datasets },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            interaction: { mode: 'index', intersect: false },
+                            plugins: {
+                                legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 16, usePointStyle: true, pointStyle: 'circle' } },
+                                tooltip: { mode: 'index', intersect: false }
+                            },
+                            scales: {
+                                x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' } } },
+                                y: { grid: { color: '#f3f4f6' }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 }, stepSize: 2 }, beginAtZero: true }
+                            }
+                        }
+                    });
+                }
+            }, 100);
+
+            // COMPARAÇÃO ENTRE DIAS (tabela de variação)
+            if (registros.length >= 2) {
+                let compHtml = `<div class="chart-card">
+                    <h3>Variação entre Dias</h3>
+                    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                        <thead style="background:#f8fafc;">
+                            <tr>
+                                <th style="padding:10px 12px;text-align:left;font-size:11px;text-transform:uppercase;border-bottom:2px solid #e5e7eb;">Status</th>`;
+
+                registros.forEach(r => {
+                    compHtml += `<th style="padding:10px 12px;text-align:center;font-size:11px;border-bottom:2px solid #e5e7eb;">${r.data}</th>`;
+                });
+                compHtml += `</tr></thead><tbody>`;
+
+                statusNames.forEach(status => {
+                    compHtml += `<tr><td style="padding:8px 12px;border-bottom:1px solid #f3f4f6;font-weight:600;">
+                        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${getStatusColor(status)};margin-right:8px;vertical-align:middle;"></span>${status}</td>`;
+
+                    registros.forEach((r, idx) => {
+                        const val = r.status[status] || 0;
+                        let diff = '';
+                        if (idx > 0) {
+                            const prev = registros[idx-1].status[status] || 0;
+                            const delta = val - prev;
+                            if (delta > 0) diff = `<span style="color:#2e7d32;font-size:10px;margin-left:4px;">▲${delta}</span>`;
+                            else if (delta < 0) diff = `<span style="color:#c62828;font-size:10px;margin-left:4px;">▼${Math.abs(delta)}</span>`;
+                        }
+                        compHtml += `<td style="padding:8px 12px;text-align:center;border-bottom:1px solid #f3f4f6;">${val}${diff}</td>`;
+                    });
+                    compHtml += `</tr>`;
                 });
 
-                const datasets = statusNames.map(status => ({
-                    label: status,
-                    data: historico.map(r => r.status[status] || 0),
-                    borderColor: getStatusColor(status),
-                    backgroundColor: getStatusColor(status) + '20',
-                    fill: true,
-                    tension: 0.3,
-                    borderWidth: 2,
-                    pointRadius: 4,
-                    pointBackgroundColor: getStatusColor(status)
-                }));
-
-                // Esperar render do canvas
-                setTimeout(() => {
-                    const ctx = document.getElementById('chartEvolucao');
-                    if (ctx) {
-                        new Chart(ctx, {
-                            type: 'line',
-                            data: { labels, datasets },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 12, usePointStyle: true } }
-                                },
-                                scales: {
-                                    x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } },
-                                    y: { stacked: false, grid: { color: '#f3f4f6' }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 }, stepSize: 2 }, beginAtZero: true }
-                                }
-                            }
-                        });
-                    }
-                }, 100);
+                // Linha de total
+                compHtml += `<tr style="font-weight:700;background:#f8fafc;"><td style="padding:8px 12px;">Total</td>`;
+                registros.forEach(r => {
+                    compHtml += `<td style="padding:8px 12px;text-align:center;">${r.total}</td>`;
+                });
+                compHtml += `</tr></tbody></table></div>`;
+                mainContent.innerHTML += compHtml;
             }
 
             // TIMELINE
-            mainContent.innerHTML += `<div class="section-title">Histórico Dia a Dia</div><div class="timeline" id="timeline"></div>`;
+            mainContent.innerHTML += `<div class="section-title">Detalhamento por Dia</div><div class="timeline" id="timeline"></div>`;
 
             const timelineEl = document.getElementById('timeline');
-            const allRegistros = atual ? [atual, ...historico.reverse()] : historico.reverse();
-
-            timelineEl.innerHTML = allRegistros.map(r => {
-                const isAtual = r.label.toLowerCase() === 'atual';
-                let dateDisplay, timeDisplay;
-
-                if (isAtual) {
-                    dateDisplay = 'ATUAL';
-                    timeDisplay = 'Agora';
-                } else {
-                    const parts = r.label.split(' ');
-                    dateDisplay = parts[0] || r.label;
-                    timeDisplay = parts[1] || '';
-                }
+            timelineEl.innerHTML = registros.slice().reverse().map((r, idx) => {
+                const isLast = idx === 0;
 
                 const statsHtml = Object.entries(r.status)
                     .filter(([, count]) => count > 0)
@@ -367,10 +413,10 @@
                         </div>
                     `).join('');
 
-                return `<div class="timeline-day ${isAtual ? 'atual' : ''}">
+                return `<div class="timeline-day ${isLast ? 'atual' : ''}">
                     <div class="timeline-date">
-                        <div class="day">${dateDisplay}</div>
-                        <div class="time">${timeDisplay}</div>
+                        <div class="day">${r.data}</div>
+                        <div class="time">${r.hora}</div>
                     </div>
                     <div class="timeline-stats">${statsHtml}</div>
                     <div class="timeline-total">
