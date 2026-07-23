@@ -358,26 +358,32 @@
             setTimeout(() => {
                 const ctx = document.getElementById('chartEvolucao');
                 if (ctx) {
+                    // Agrupar por status: eixo X = status, barras = dias
+                    const dayColors = ['#2980b9', '#1a5276', '#5dade2', '#00bcd4', '#0d47a1', '#4dd0e1', '#01579b', '#006064'];
+                    
                     new Chart(ctx, {
                         type: 'bar',
-                        data: { labels, datasets: statusNames.map(status => ({
-                            label: status,
-                            data: registros.map(r => r.status[status] || 0),
-                            backgroundColor: getStatusColor(status),
-                            borderColor: getStatusColor(status),
-                            borderWidth: 1,
-                            borderRadius: 4
-                        })) },
+                        data: {
+                            labels: statusNames,
+                            datasets: registros.map((r, idx) => ({
+                                label: r.data,
+                                data: statusNames.map(s => r.status[s] || 0),
+                                backgroundColor: dayColors[idx % dayColors.length],
+                                borderColor: dayColors[idx % dayColors.length],
+                                borderWidth: 1,
+                                borderRadius: 4
+                            }))
+                        },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
                             interaction: { mode: 'index', intersect: false },
                             plugins: {
-                                legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 16, usePointStyle: true, pointStyle: 'rect' } },
+                                legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' }, padding: 16 } },
                                 tooltip: { mode: 'index', intersect: false }
                             },
                             scales: {
-                                x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' } } },
+                                x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } },
                                 y: { grid: { color: '#f3f4f6' }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 }, stepSize: 2 }, beginAtZero: true }
                             }
                         }
