@@ -349,14 +349,21 @@
                 const ctx = document.getElementById('chartEvolucao');
                 if (ctx) {
                     new Chart(ctx, {
-                        type: 'line',
-                        data: { labels, datasets },
+                        type: 'bar',
+                        data: { labels, datasets: statusNames.map(status => ({
+                            label: status,
+                            data: registros.map(r => r.status[status] || 0),
+                            backgroundColor: getStatusColor(status),
+                            borderColor: getStatusColor(status),
+                            borderWidth: 1,
+                            borderRadius: 4
+                        })) },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
                             interaction: { mode: 'index', intersect: false },
                             plugins: {
-                                legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 16, usePointStyle: true, pointStyle: 'circle' } },
+                                legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 16, usePointStyle: true, pointStyle: 'rect' } },
                                 tooltip: { mode: 'index', intersect: false }
                             },
                             scales: {
