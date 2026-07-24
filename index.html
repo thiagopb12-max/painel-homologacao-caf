@@ -724,29 +724,59 @@
                 </div>`;
 
             window._cenarios = cenarios;
-            renderTable('all');
+            window._activeFilters = ['all'];
+            renderTable(['all']);
 
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    renderTable(this.dataset.filter);
+                    const filter = this.dataset.filter;
+                    
+                    if (filter === 'all') {
+                        // Clicou em "Todos" - desativa outros
+                        window._activeFilters = ['all'];
+                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        // Remove "Todos" se estava ativo
+                        const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+                        if (window._activeFilters.includes('all')) {
+                            window._activeFilters = [];
+                            allBtn.classList.remove('active');
+                        }
+                        
+                        // Toggle do filtro clicado
+                        if (window._activeFilters.includes(filter)) {
+                            window._activeFilters = window._activeFilters.filter(f => f !== filter);
+                            this.classList.remove('active');
+                        } else {
+                            window._activeFilters.push(filter);
+                            this.classList.add('active');
+                        }
+                        
+                        // Se nenhum ficou ativo, volta para "Todos"
+                        if (window._activeFilters.length === 0) {
+                            window._activeFilters = ['all'];
+                            allBtn.classList.add('active');
+                        }
+                    }
+                    
+                    renderTable(window._activeFilters);
                 });
             });
 
             renderCharts(activeCenarios, cenarios);
         }
 
-        function renderTable(filter) {
+        function renderTable(filters) {
             const cenarios = window._cenarios || [];
             const tbody = document.getElementById('cenarios-tbody');
             if (!tbody) return;
 
-            const filtered = filter === 'all' ? cenarios : cenarios.filter(c => {
+            const filtered = filters.includes('all') ? cenarios : cenarios.filter(c => {
                 let st = (c.status || '').trim();
                 if (c.cancelado && !st) st = 'Cancelado';
                 else if (!st) st = 'Não Iniciado';
-                return st === filter;
+                return filters.includes(st);
             });
             tbody.innerHTML = filtered.map(c => {
                 const badgeClass = getBadgeClass(c.classificacao);
