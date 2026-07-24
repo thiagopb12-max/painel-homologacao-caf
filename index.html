@@ -699,11 +699,9 @@
                         <h3>Detalhamento dos Cenários de Homologação</h3>
                         <div class="table-filter">
                             <button class="filter-btn active" data-filter="all">Todos</button>
-                            <button class="filter-btn" data-filter="CARACTERIZA_SE">Caracteriza</button>
-                            <button class="filter-btn" data-filter="DESCARACTERIZA_SE">Descaracteriza</button>
-                            <button class="filter-btn" data-filter="PENDENTE">Pendente</button>
-                            <button class="filter-btn" data-filter="NAO_IMPEDITIVO_SE">Não Impeditivo</button>
-                            <button class="filter-btn" data-filter="NAO_AVALIADO">Não Avaliado</button>
+                            ${Object.keys(cenarioStatusCounts).map(st => 
+                                `<button class="filter-btn" data-filter="${st}">${st}</button>`
+                            ).join('')}
                         </div>
                     </div>
                     <div class="table-wrapper">
@@ -744,7 +742,12 @@
             const tbody = document.getElementById('cenarios-tbody');
             if (!tbody) return;
 
-            const filtered = filter === 'all' ? cenarios : cenarios.filter(c => c.classificacao === filter);
+            const filtered = filter === 'all' ? cenarios : cenarios.filter(c => {
+                let st = (c.status || '').trim();
+                if (c.cancelado && !st) st = 'Cancelado';
+                else if (!st) st = 'Não Iniciado';
+                return st === filter;
+            });
             tbody.innerHTML = filtered.map(c => {
                 const badgeClass = getBadgeClass(c.classificacao);
                 const classLabel = c.classificacao.replace(/_/g, ' ');
@@ -936,7 +939,6 @@
         // Init
         loadSpreadsheet();
         loadUltimaAtualizacao();
-        setInterval(loadSpreadsheet, REFRESH_INTERVAL);
 
         async function loadUltimaAtualizacao() {
             try {
