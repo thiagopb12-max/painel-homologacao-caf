@@ -86,8 +86,50 @@
 
         .sistemas-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 28px;
+        }
+
+        .sistema-card.card-fluxo {
+            grid-column: 1 / -1;
+            flex-direction: row;
+            align-items: stretch;
+        }
+
+        .sistema-card.card-fluxo .card-banner {
+            width: 8px;
+            height: auto;
+            flex-shrink: 0;
+        }
+
+        .sistema-card.card-fluxo .card-body {
+            flex-direction: row;
+            align-items: center;
+            gap: 28px;
+            padding: 24px 32px;
+        }
+
+        .sistema-card.card-fluxo .card-icon {
+            font-size: 48px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+
+        .sistema-card.card-fluxo .card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .sistema-card.card-fluxo .card-footer {
+            border-top: none;
+            border-left: 1px solid #f3f4f6;
+            padding: 0 28px;
+            min-width: 180px;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
         }
 
         .sistema-card {
@@ -214,10 +256,17 @@
         .footer img { height: 36px; border-radius: 4px; }
         .footer strong { color: var(--branco); }
 
+        @media (max-width: 900px) {
+            .sistemas-grid { grid-template-columns: 1fr; }
+            .sistema-card.card-fluxo { flex-direction: column; }
+            .sistema-card.card-fluxo .card-banner { width: auto; height: 8px; }
+            .sistema-card.card-fluxo .card-body { flex-direction: column; align-items: flex-start; }
+            .sistema-card.card-fluxo .card-footer { border-left: none; border-top: 1px solid #f3f4f6; flex-direction: row; padding: 16px 28px; }
+        }
+
         @media (max-width: 768px) {
             .header { padding: 20px; flex-direction: column; gap: 12px; }
             .main { padding: 24px 20px; }
-            .sistemas-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -318,11 +367,13 @@
                 <div class="card-banner"></div>
                 <div class="card-body">
                     <div class="card-icon">🔄</div>
-                    <span class="card-tag">Fluxo Integrado</span>
-                    <div class="card-title">Homologação Fluxo Integrado</div>
-                    <div class="card-desc">
-                        PAT aciona o FPSE → FPSE valida e responde ao PAT → PAT aciona o SIBE → SIBE concede o benefício previdenciário.
-                        Planilha de cenários em preparação.
+                    <div class="card-content">
+                        <span class="card-tag">Fluxo Integrado</span>
+                        <div class="card-title">Homologação Fluxo Integrado</div>
+                        <div class="card-desc">
+                            PAT aciona o FPSE → FPSE valida e responde ao PAT → PAT aciona o SIBE → SIBE concede o benefício previdenciário.
+                            Planilha de cenários em preparação.
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer">
