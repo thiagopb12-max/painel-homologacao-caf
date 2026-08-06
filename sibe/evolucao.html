@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EvoluÃ§Ã£o da HomologaÃ§Ã£o - SIBE</title>
+    <title>Evolução da Homologação - SIBE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -93,65 +93,35 @@
         .timeline { margin-bottom: 32px; }
 
         .timeline-day {
-            background: var(--branco);
-            border-radius: var(--radius);
-            padding: 20px 24px;
-            box-shadow: var(--sombra);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            transition: transform 0.2s;
+            background: var(--branco); border-radius: var(--radius);
+            padding: 20px 24px; box-shadow: var(--sombra); margin-bottom: 12px;
+            display: flex; align-items: center; gap: 24px; transition: transform 0.2s;
         }
-
         .timeline-day:hover { transform: translateX(4px); }
         .timeline-day.atual { border-left: 4px solid var(--azul-medio); }
 
         .timeline-date {
-            min-width: 100px;
-            text-align: center;
-            border-right: 2px solid #e5e7eb;
-            padding-right: 20px;
+            min-width: 100px; text-align: center;
+            border-right: 2px solid #e5e7eb; padding-right: 20px;
         }
-
         .timeline-date .day { font-size: 22px; font-weight: 800; color: var(--azul-escuro); }
         .timeline-date .month { font-size: 11px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
         .timeline-date .time { font-size: 10px; color: #9ca3af; margin-top: 2px; }
 
-        .timeline-stats {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            flex: 1;
-        }
+        .timeline-stats { display: flex; gap: 12px; flex-wrap: wrap; flex: 1; }
 
         .timeline-stat {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            background: #f8fafc;
-            padding: 4px 10px;
-            border-radius: 8px;
+            display: flex; align-items: center; gap: 6px; font-size: 12px;
+            background: #f8fafc; padding: 4px 10px; border-radius: 8px;
         }
-
         .timeline-stat .stat-dot { width: 8px; height: 8px; border-radius: 50%; }
         .timeline-stat .stat-value { font-weight: 700; }
 
-        .timeline-total {
-            min-width: 60px;
-            text-align: right;
-        }
-
+        .timeline-total { min-width: 60px; text-align: right; }
         .timeline-total .total-value { font-size: 20px; font-weight: 800; color: var(--azul-medio); }
         .timeline-total .total-label { font-size: 10px; color: #6b7280; }
 
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6b7280;
-        }
-
+        .empty-state { text-align: center; padding: 60px 20px; color: #6b7280; }
         .empty-state h3 { font-size: 18px; color: var(--azul-escuro); margin-bottom: 8px; }
 
         .footer {
@@ -178,16 +148,16 @@
             </div>
             <div class="header-divider"></div>
             <div class="header-title">
-                <h1>Painel de HomologaÃ§Ã£o â€” SIBE</h1>
-                <p>Sistema de BenefÃ­cios do Servidor</p>
+                <h1>Painel de Homologação — SIBE</h1>
+                <p>Sistema de Benefícios do Servidor</p>
             </div>
         </div>
     </header>
 
     <nav class="nav-bar">
-        <a href="../index.html" class="nav-link">ðŸ  InÃ­cio</a>
-        <a href="visao-atual.html" class="nav-link">ðŸ“Š VisÃ£o Atual</a>
-        <a href="evolucao.html" class="nav-link active">ðŸ“ˆ EvoluÃ§Ã£o</a>
+        <a href="../index.html" class="nav-link">🏠 Início</a>
+        <a href="visao-atual.html" class="nav-link">📊 Visão Atual</a>
+        <a href="evolucao.html" class="nav-link active">📈 Evolução</a>
     </nav>
 
     <main class="main" id="main-content">
@@ -199,7 +169,7 @@
 
     <footer class="footer">
         <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
-        <p><strong>DATAPREV</strong> â€” Dados para cidadania â€¢ HomologaÃ§Ã£o SIBE</p>
+        <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação SIBE</p>
     </footer>
 
     <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
@@ -209,12 +179,12 @@
 
         // Cores para cada status
         const STATUS_COLORS = {
-            'Pendente de cenÃ¡rio': '#e65100',
-            'Em CorreÃ§Ã£o': '#f57f17',
-            'Em AnÃ¡lise': '#1565c0',
+            'Pendente de cenário': '#e65100',
+            'Em Correção': '#f57f17',
+            'Em Análise': '#1565c0',
             'Homologado com sucesso': '#2e7d32',
             'Homologado com ressalva': '#7cb342',
-            'DisponÃ­vel para reteste': '#00bcd4',
+            'Disponível para reteste': '#00bcd4',
             'Reprovado': '#c62828'
         };
 
@@ -230,12 +200,12 @@
 
                 // Encontrar aba ResumoDiario
                 const sheetName = workbook.SheetNames.find(n => n.toLowerCase().includes('resumo'));
-                if (!sheetName) throw new Error('Aba ResumoDiario nÃ£o encontrada na planilha');
+                if (!sheetName) throw new Error('Aba ResumoDiario não encontrada na planilha');
 
                 const sheet = workbook.Sheets[sheetName];
                 const data = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
 
-                if (data.length < 2) throw new Error('Aba ResumoDiario estÃ¡ vazia');
+                if (data.length < 2) throw new Error('Aba ResumoDiario está vazia');
 
                 // Headers (linha 1)
                 const headers = data[0].map(h => (h || '').toString().trim());
@@ -245,7 +215,7 @@
                 const colData = headers.findIndex(h => h.toLowerCase() === 'data');
                 const colTotal = headers.findIndex(h => h.toLowerCase() === 'total');
 
-                // Colunas de status (tudo que nÃ£o Ã© hora, data ou total)
+                // Colunas de status
                 const statusCols = [];
                 headers.forEach((h, i) => {
                     if (i !== colHora && i !== colData && i !== colTotal && h !== '') {
@@ -253,7 +223,7 @@
                     }
                 });
 
-                // Ler registros (sÃ³ linhas com data preenchida)
+                // Ler registros
                 const registros = [];
                 for (let i = 1; i < data.length; i++) {
                     const row = data[i];
@@ -262,7 +232,7 @@
                     let dataVal = colData >= 0 ? row[colData] : '';
                     let horaVal = colHora >= 0 ? row[colHora] : '';
 
-                    // Converter hora serial do Excel para formato legÃ­vel
+                    // Converter hora serial do Excel
                     if (typeof horaVal === 'number') {
                         const totalMinutes = Math.round(horaVal * 24 * 60);
                         const hours = Math.floor(totalMinutes / 60);
@@ -272,7 +242,7 @@
                         horaVal = (horaVal || '').toString().trim();
                     }
 
-                    // Converter serial number do Excel para data legÃ­vel
+                    // Converter serial number do Excel para data
                     if (typeof dataVal === 'number') {
                         const utcDays = dataVal - 25569;
                         const date = new Date(Date.UTC(1970, 0, 1 + utcDays));
@@ -284,7 +254,7 @@
                         dataVal = (dataVal || '').toString().trim();
                     }
 
-                    if (!dataVal) continue; // pula linhas sem data
+                    if (!dataVal) continue;
 
                     const registro = {
                         data: dataVal,
@@ -313,7 +283,7 @@
                 console.error(error);
                 document.getElementById('main-content').innerHTML = `
                     <div class="empty-state">
-                        <h3>âŒ Erro ao carregar dados</h3>
+                        <h3>❌ Erro ao carregar dados</h3>
                         <p>${error.message}</p>
                     </div>`;
             }
@@ -333,12 +303,14 @@
                 return parseDate(a.data) - parseDate(b.data);
             });
 
-            // GRÃFICO DE EVOLUÃ‡ÃƒO
+            // Gráfico de evolução
             mainContent.innerHTML += `
                 <div class="chart-card">
-                    <h3>EvoluÃ§Ã£o DiÃ¡ria da HomologaÃ§Ã£o</h3>
+                    <h3>Evolução Diária da Homologação</h3>
                     <div class="chart-container-tall"><canvas id="chartEvolucao"></canvas></div>
                 </div>`;
+
+            const labels = registros.map(r => r.data);
 
             setTimeout(() => {
                 const ctx = document.getElementById('chartEvolucao');
@@ -375,10 +347,10 @@
                 }
             }, 100);
 
-            // COMPARAÃ‡ÃƒO ENTRE DIAS
+            // Comparação entre dias (tabela de variação)
             if (registros.length >= 2) {
                 let compHtml = `<div class="chart-card">
-                    <h3>VariaÃ§Ã£o entre Dias</h3>
+                    <h3>Variação entre Dias</h3>
                     <table style="width:100%;border-collapse:collapse;font-size:13px;">
                         <thead style="background:#f8fafc;">
                             <tr>
@@ -399,8 +371,8 @@
                         if (idx > 0) {
                             const prev = registros[idx-1].status[status] || 0;
                             const delta = val - prev;
-                            if (delta > 0) diff = `<span style="color:#2e7d32;font-size:10px;margin-left:4px;">â–²${delta}</span>`;
-                            else if (delta < 0) diff = `<span style="color:#c62828;font-size:10px;margin-left:4px;">â–¼${Math.abs(delta)}</span>`;
+                            if (delta > 0) diff = `<span style="color:#2e7d32;font-size:10px;margin-left:4px;">▲${delta}</span>`;
+                            else if (delta < 0) diff = `<span style="color:#c62828;font-size:10px;margin-left:4px;">▼${Math.abs(delta)}</span>`;
                         }
                         compHtml += `<td style="padding:8px 12px;text-align:center;border-bottom:1px solid #f3f4f6;">${val}${diff}</td>`;
                     });
@@ -416,7 +388,7 @@
                 mainContent.innerHTML += compHtml;
             }
 
-            // TIMELINE
+            // Timeline
             mainContent.innerHTML += `<div class="section-title">Detalhamento por Dia</div><div class="timeline" id="timeline"></div>`;
 
             const timelineEl = document.getElementById('timeline');
@@ -450,4 +422,3 @@
     </script>
 </body>
 </html>
-

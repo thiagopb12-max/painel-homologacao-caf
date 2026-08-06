@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de HomologaÃ§Ã£o - SIBE</title>
+    <title>Painel de Homologação - SIBE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -69,118 +69,41 @@
         .header-time { font-size: 13px; opacity: 0.9; }
 
         .header-countdown {
-            font-size: 11px;
-            opacity: 0.85;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-            padding: 4px 12px;
-            text-align: center;
-            line-height: 1.4;
+            font-size: 11px; opacity: 0.85;
+            background: rgba(255,255,255,0.1); border-radius: 8px;
+            padding: 4px 12px; text-align: center; line-height: 1.4;
         }
-
         .header-countdown .countdown-label { font-weight: 300; }
         .header-countdown .countdown-value { font-weight: 700; font-size: 13px; }
 
         .progress-circle-section {
-            background: var(--branco);
-            border-radius: var(--radius);
-            padding: 32px;
-            box-shadow: var(--sombra);
-            margin-bottom: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 48px;
-            flex-wrap: wrap;
+            background: var(--branco); border-radius: var(--radius);
+            padding: 32px; box-shadow: var(--sombra); margin-bottom: 32px;
+            display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap;
         }
 
-        .progress-circle-wrapper {
-            position: relative;
-            width: 180px;
-            height: 180px;
-        }
-
-        .progress-circle-wrapper svg {
-            transform: rotate(-90deg);
-            width: 180px;
-            height: 180px;
-        }
-
-        .progress-circle-wrapper .circle-bg {
-            fill: none;
-            stroke: #e5e7eb;
-            stroke-width: 14;
-        }
-
-        .progress-circle-wrapper .circle-fg {
-            fill: none;
-            stroke-width: 14;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 0.8s ease;
-        }
+        .progress-circle-wrapper { position: relative; width: 180px; height: 180px; }
+        .progress-circle-wrapper svg { transform: rotate(-90deg); width: 180px; height: 180px; }
+        .progress-circle-wrapper .circle-bg { fill: none; stroke: #e5e7eb; stroke-width: 14; }
+        .progress-circle-wrapper .circle-fg { fill: none; stroke-width: 14; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
 
         .progress-circle-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); text-align: center;
         }
+        .progress-circle-text .pct { font-size: 36px; font-weight: 800; color: var(--azul-escuro); }
+        .progress-circle-text .pct-label { font-size: 12px; color: #6b7280; font-weight: 500; }
 
-        .progress-circle-text .pct {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--azul-escuro);
-        }
-
-        .progress-circle-text .pct-label {
-            font-size: 12px;
-            color: #6b7280;
-            font-weight: 500;
-        }
-
-        .progress-circle-info {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .progress-circle-info h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--azul-escuro);
-            margin-bottom: 4px;
-        }
-
-        .progress-circle-info .info-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            color: var(--cinza-texto);
-        }
-
-        .progress-circle-info .info-row .info-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .progress-circle-info .info-row .info-count {
-            font-weight: 700;
-            min-width: 24px;
-        }
+        .progress-circle-info { display: flex; flex-direction: column; gap: 12px; }
+        .progress-circle-info h3 { font-size: 18px; font-weight: 700; color: var(--azul-escuro); margin-bottom: 4px; }
+        .progress-circle-info .info-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--cinza-texto); }
+        .progress-circle-info .info-row .info-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        .progress-circle-info .info-row .info-count { font-weight: 700; min-width: 24px; }
 
         .tagline-bar {
             background: linear-gradient(90deg, var(--amarelo), var(--verde-claro));
-            padding: 6px 40px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--azul-escuro);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            padding: 6px 40px; font-size: 12px; font-weight: 600;
+            color: var(--azul-escuro); display: flex; align-items: center; gap: 8px;
         }
 
         .main { max-width: 1440px; margin: 0 auto; padding: 32px 40px; }
@@ -189,15 +112,12 @@
             display: flex; flex-direction: column; align-items: center;
             justify-content: center; padding: 80px 20px; gap: 16px;
         }
-
         .loading-spinner {
             width: 48px; height: 48px;
             border: 4px solid #e5e7eb; border-top-color: var(--azul-medio);
             border-radius: 50%; animation: spin 1s linear infinite;
         }
-
         @keyframes spin { to { transform: rotate(360deg); } }
-
         .loading p { font-size: 14px; color: #6b7280; }
 
         .refresh-info {
@@ -206,7 +126,6 @@
             display: flex; align-items: center; justify-content: space-between;
             font-size: 13px; color: #6b7280;
         }
-
         .refresh-info button {
             background: var(--azul-medio); color: var(--branco); border: none;
             border-radius: 8px; padding: 8px 20px; font-size: 13px; font-weight: 600;
@@ -215,27 +134,18 @@
         .refresh-info button:hover { background: var(--azul-escuro); }
 
         .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px; margin-bottom: 32px;
         }
-
         .status-card {
-            background: var(--branco);
-            border-radius: var(--radius);
-            padding: 20px;
-            box-shadow: var(--sombra);
-            border-left: 5px solid #90a4ae;
-            text-align: center;
-            transition: transform 0.2s;
+            background: var(--branco); border-radius: var(--radius);
+            padding: 20px; box-shadow: var(--sombra); border-left: 5px solid #90a4ae;
+            text-align: center; transition: transform 0.2s;
         }
-
         .status-card:hover { transform: translateY(-2px); }
         .status-card .status-icon { font-size: 24px; margin-bottom: 8px; }
         .status-card .status-count { font-size: 32px; font-weight: 800; color: var(--azul-escuro); }
         .status-card .status-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
-
         .status-card.st-homologado { border-left-color: #2e7d32; }
         .status-card.st-homologado .status-label { color: #2e7d32; }
         .status-card.st-ressalvas { border-left-color: #f57f17; }
@@ -250,14 +160,8 @@
         .status-card.st-cancelado .status-label { color: #6a1b9a; }
 
         .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
-
-        .chart-card {
-            background: var(--branco); border-radius: var(--radius);
-            padding: 24px; box-shadow: var(--sombra);
-        }
-
+        .chart-card { background: var(--branco); border-radius: var(--radius); padding: 24px; box-shadow: var(--sombra); }
         .chart-card.full-width { grid-column: 1 / -1; }
-
         .chart-card h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
         .chart-container { position: relative; height: 280px; }
 
@@ -268,30 +172,15 @@
         .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(180deg, var(--ciano), var(--azul-medio)); border-radius: 2px; }
 
         .homologadores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 32px; }
-
-        .homologador-card {
-            background: var(--branco); border-radius: var(--radius);
-            padding: 20px; box-shadow: var(--sombra); display: flex; align-items: center; gap: 16px;
-        }
-
-        .homologador-avatar {
-            width: 48px; height: 48px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: 700; color: var(--branco); flex-shrink: 0;
-        }
-
+        .homologador-card { background: var(--branco); border-radius: var(--radius); padding: 20px; box-shadow: var(--sombra); display: flex; align-items: center; gap: 16px; }
+        .homologador-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: var(--branco); flex-shrink: 0; }
         .homologador-info h4 { font-size: 14px; font-weight: 600; color: var(--cinza-texto); }
 
         .table-card { background: var(--branco); border-radius: var(--radius); box-shadow: var(--sombra); overflow: hidden; margin-bottom: 32px; }
         .table-header { padding: 20px 24px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
         .table-header h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); }
         .table-filter { display: flex; gap: 8px; flex-wrap: wrap; }
-
-        .filter-btn {
-            padding: 6px 14px; border: 1px solid #e5e7eb; border-radius: 20px;
-            font-size: 12px; font-weight: 500; cursor: pointer;
-            background: var(--branco); color: var(--cinza-texto); font-family: inherit; transition: all 0.2s;
-        }
+        .filter-btn { padding: 6px 14px; border: 1px solid #e5e7eb; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; background: var(--branco); color: var(--cinza-texto); font-family: inherit; transition: all 0.2s; }
         .filter-btn.active, .filter-btn:hover { background: var(--azul-medio); color: var(--branco); border-color: var(--azul-medio); }
 
         .table-wrapper { overflow-x: auto; }
@@ -333,12 +222,12 @@
             </div>
             <div class="header-divider"></div>
             <div class="header-title">
-                <h1>Painel de HomologaÃ§Ã£o â€” SIBE</h1>
-                <p>Sistema de BenefÃ­cios do Servidor</p>
+                <h1>Painel de Homologação — SIBE</h1>
+                <p>Sistema de Benefícios do Servidor</p>
             </div>
         </div>
         <div class="header-right">
-            <div class="header-badge">ðŸ”´ AO VIVO</div>
+            <div class="header-badge">🔴 AO VIVO</div>
             <div class="header-time" id="current-time"></div>
             <div class="header-countdown" id="header-countdown"></div>
         </div>
@@ -346,14 +235,14 @@
 
     <div class="tagline-bar">
         <span>Dados para cidadania</span>
-        <span>â€¢</span>
-        <span>Acompanhamento em tempo real da homologaÃ§Ã£o</span>
+        <span>•</span>
+        <span>Acompanhamento em tempo real da homologação</span>
     </div>
 
     <nav style="background: var(--branco); padding: 12px 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; gap: 8px;">
-        <a href="../index.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">ðŸ  InÃ­cio</a>
-        <a href="visao-atual.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; background: var(--azul-medio); color: white; border: 1px solid var(--azul-medio);">ðŸ“Š VisÃ£o Atual</a>
-        <a href="evolucao.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">ðŸ“ˆ EvoluÃ§Ã£o</a>
+        <a href="../index.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">🏠 Início</a>
+        <a href="visao-atual.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; background: var(--azul-medio); color: white; border: 1px solid var(--azul-medio);">📊 Visão Atual</a>
+        <a href="evolucao.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">📈 Evolução</a>
     </nav>
 
     <main class="main" id="main-content">
@@ -365,7 +254,7 @@
 
     <footer class="footer">
         <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
-        <p><strong>DATAPREV</strong> â€” Dados para cidadania â€¢ HomologaÃ§Ã£o SIBE â€¢ Atualizado em <span id="footer-time"></span></p>
+        <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação SIBE • Atualizado em <span id="footer-time"></span></p>
     </footer>
 
     <script>
@@ -373,10 +262,6 @@
         const REFRESH_INTERVAL = 30000;
 
         let chartInstances = {};
-
-        // Clock + Countdown
-        const HOMOLOG_START = new Date('2026-07-13T00:00:00');
-        const HOMOLOG_END = new Date('2026-08-07T18:00:00');
 
         function updateTime() {
             const now = new Date();
@@ -388,18 +273,7 @@
 
             const countdownEl = document.getElementById('header-countdown');
             if (countdownEl) {
-                if (now < HOMOLOG_START) {
-                    const diff = HOMOLOG_START - now;
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    countdownEl.innerHTML = `<div class="countdown-label">InÃ­cio em</div><div class="countdown-value">${days} dia${days !== 1 ? 's' : ''}</div>`;
-                } else if (now <= HOMOLOG_END) {
-                    const diff = HOMOLOG_END - now;
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    countdownEl.innerHTML = `<div class="countdown-label">â± Restam</div><div class="countdown-value">${days}d ${hours}h</div>`;
-                } else {
-                    countdownEl.innerHTML = `<div class="countdown-label">HomologaÃ§Ã£o</div><div class="countdown-value">Encerrada</div>`;
-                }
+                countdownEl.innerHTML = `<div class="countdown-label">Homologação</div><div class="countdown-value">Em andamento</div>`;
             }
         }
         setInterval(updateTime, 1000);
@@ -416,10 +290,10 @@
                 console.error('Erro ao carregar planilha:', error);
                 document.getElementById('main-content').innerHTML = `
                     <div class="loading">
-                        <p style="color: #c62828; font-weight: 600;">âŒ Erro ao carregar a planilha</p>
+                        <p style="color: #c62828; font-weight: 600;">❌ Erro ao carregar a planilha</p>
                         <p>${error.message}</p>
                         <p style="margin-top: 12px; font-size: 12px; color: #6b7280;">
-                            Certifique-se de que o arquivo <strong>SIBE.xlsx</strong> estÃ¡ na mesma pasta.<br>
+                            Certifique-se de que o arquivo <strong>SIBE.xlsx</strong> está na mesma pasta.<br>
                             Para rodar localmente: <code>python -m http.server 8080</code>
                         </p>
                     </div>`;
@@ -427,55 +301,55 @@
         }
 
         function parseSheetCenarios(workbook) {
-            // Buscar aba pelo nome exato "Cenarios_hml" ou que contenha "Cenario"
-            const sheetName = workbook.SheetNames.find(n => n === 'Cenarios_hml') ||
-                workbook.SheetNames.find(n => n.toLowerCase().includes('cenario')) ||
-                workbook.SheetNames[0];
+            // Encontrar aba Cenarios_hml ou que contenha "cenario"
+            const sheetName = workbook.SheetNames.find(n =>
+                n === 'Cenarios_hml' || n.toLowerCase().includes('cenario')
+            ) || workbook.SheetNames[0];
 
             const sheet = workbook.Sheets[sheetName];
             const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
 
             const cenarios = [];
             for (const row of json) {
-                // Coluna "NÃºmero do cenÃ¡rio" â€” nÃºmeros simples (1, 2, 3...)
-                const numero = row['NÃºmero do cenÃ¡rio'] || row['Numero do cenario'] || row['NÃºmero do CenÃ¡rio'] || '';
-                // Aceitar qualquer linha com nÃºmero do cenÃ¡rio preenchido (nÃ£o filtra por CT-)
+                // Coluna de número do cenário
+                const numero = row['Número do cenário'] || row['Numero do cenario'] || row['Número do Cenário'] || row['Numero do Cenario'] || '';
+                // Aceitar qualquer linha onde o número não esteja vazio
                 if (!numero || numero.toString().trim() === '') continue;
 
-                const statusRaw = (row['Status do teste'] || '').toString().trim();
-                // Cancelado apenas se Status do teste === 'Cancelado'
-                const isCancelado = statusRaw === 'Cancelado';
+                const statusValue = (row['Status do teste'] || row['Status'] || '').toString().trim();
+                const cancelado = statusValue === 'Cancelado';
 
                 cenarios.push({
                     id: numero.toString().trim(),
-                    tipo: (row['Tipo de teste'] || '').toString().trim(),
+                    tipo: (row['Tipo de teste'] || row['Tipo'] || '').toString().trim(),
                     homologador: (row['Homologador'] || '').toString().trim(),
-                    status: statusRaw,
-                    desc: (row['CenÃ¡rio de teste'] || '').toString().trim(),
-                    cancelado: isCancelado
+                    status: statusValue,
+                    desc: (row['Cenário de teste'] || row['Cenario de teste'] || row['Descrição'] || row['Descricao'] || '').toString().trim(),
+                    cancelado: cancelado
                 });
             }
             return cenarios;
         }
 
         function renderDashboard(cenarios) {
+            const activeCenarios = cenarios.filter(c => !c.cancelado);
             const cancelados = cenarios.filter(c => c.cancelado);
 
-            // Status counts dos cenÃ¡rios
+            // Status counts dos cenários
             const cenarioStatusCounts = {};
             cenarios.forEach(c => {
                 let st = (c.status || '').trim();
                 if (c.cancelado) {
                     st = 'Cancelado';
                 } else if (!st) {
-                    st = 'NÃ£o Iniciado';
+                    st = 'Não Iniciado';
                 }
                 cenarioStatusCounts[st] = (cenarioStatusCounts[st] || 0) + 1;
             });
 
             const totalCenarios = cenarios.length;
 
-            // Progresso por homologador â€” baseado no status dos cenÃ¡rios
+            // Para o progresso dos homologadores
             const homologadoresCenarios = {};
             cenarios.forEach(c => {
                 if (c.homologador && c.homologador.trim() !== '') {
@@ -483,7 +357,7 @@
                     if (!homologadoresCenarios[nome]) homologadoresCenarios[nome] = [];
                     let st = (c.status || '').trim();
                     if (!st && c.cancelado) st = 'Cancelado';
-                    else if (!st) st = 'NÃ£o Iniciado';
+                    else if (!st) st = 'Não Iniciado';
                     homologadoresCenarios[nome].push(st);
                 }
             });
@@ -511,15 +385,15 @@
             // Refresh bar
             mainContent.innerHTML += `
                 <div class="refresh-info">
-                    <span>ðŸ“Š Dados carregados de <strong>SIBE.xlsx</strong> â€” <span id="ultima-atualizacao">Carregando Ãºltima atualizaÃ§Ã£o...</span></span>
-                    <button onclick="loadSpreadsheet()">ðŸ”„ Atualizar Agora</button>
+                    <span>📊 Dados carregados de <strong>SIBE.xlsx</strong> — <span id="ultima-atualizacao">Carregando última atualização...</span></span>
+                    <button onclick="loadSpreadsheet()">🔄 Atualizar Agora</button>
                 </div>`;
 
-            // GrÃ¡fico circular
+            // Gráfico circular de progresso
             const totalParaAvaliar = cenarios.filter(c => !c.cancelado).length;
             const avaliados = cenarios.filter(c => {
                 const st = (c.status || '').trim().toLowerCase();
-                return st !== '' && st !== 'nÃ£o iniciado' && !c.cancelado;
+                return st !== '' && st !== 'não iniciado' && !c.cancelado;
             }).length;
             const naoIniciados = totalParaAvaliar - avaliados;
             const pctAvaliado = totalParaAvaliar > 0 ? Math.round((avaliados / totalParaAvaliar) * 100) : 0;
@@ -544,25 +418,26 @@
                         </div>
                     </div>
                     <div class="progress-circle-info">
-                        <h3>Progresso da HomologaÃ§Ã£o</h3>
-                        <div class="info-row"><div class="info-dot" style="background:${circleColor}"></div><span class="info-count">${avaliados}</span> cenÃ¡rios avaliados</div>
-                        <div class="info-row"><div class="info-dot" style="background:#e5e7eb"></div><span class="info-count">${naoIniciados}</span> cenÃ¡rios pendentes</div>
-                        <div class="info-row"><div class="info-dot" style="background:#6a1b9a"></div><span class="info-count">${cancelados.length}</span> cenÃ¡rios cancelados</div>
-                        <div class="info-row" style="margin-top:8px; font-size:12px; color:#6b7280;">Total de cenÃ¡rios vÃ¡lidos: <strong style="margin-left:4px;">${totalParaAvaliar}</strong></div>
+                        <h3>Progresso da Homologação</h3>
+                        <div class="info-row"><div class="info-dot" style="background:${circleColor}"></div><span class="info-count">${avaliados}</span> cenários avaliados</div>
+                        <div class="info-row"><div class="info-dot" style="background:#e5e7eb"></div><span class="info-count">${naoIniciados}</span> cenários pendentes</div>
+                        <div class="info-row"><div class="info-dot" style="background:#6a1b9a"></div><span class="info-count">${cancelados.length}</span> cenários cancelados</div>
+                        <div class="info-row" style="margin-top:8px; font-size:12px; color:#6b7280;">Total de cenários válidos: <strong style="margin-left:4px;">${totalParaAvaliar}</strong></div>
                     </div>
                 </div>`;
 
-            // Status cards
+            // Status colors
             const statusColors = {
-                'NÃ£o Iniciado': { icon: 'â³', css: 'st-aguardando', color: '#e65100' },
-                'Cancelado': { icon: 'â›”', css: 'st-cancelado', color: '#6a1b9a' },
-                'Aprovado': { icon: 'âœ…', css: 'st-homologado', color: '#2e7d32' },
-                'Reprovado': { icon: 'âŒ', css: 'st-reprovado', color: '#c62828' },
-                'Em execuÃ§Ã£o': { icon: 'ðŸ”„', css: 'st-em-homologacao', color: '#1565c0' },
-                'Bloqueado': { icon: 'ðŸ”’', css: 'st-cancelado', color: '#546e7a' }
+                'Não Iniciado': { icon: '⏳', css: 'st-aguardando', color: '#e65100' },
+                'Cancelado': { icon: '⛔', css: 'st-cancelado', color: '#6a1b9a' },
+                'Aprovado': { icon: '✅', css: 'st-homologado', color: '#2e7d32' },
+                'Reprovado': { icon: '❌', css: 'st-reprovado', color: '#c62828' },
+                'Em execução': { icon: '🔄', css: 'st-em-homologacao', color: '#1565c0' },
+                'Bloqueado': { icon: '🚫', css: 'st-cancelado', color: '#6a1b9a' }
             };
 
-            let statusCardsHtml = `<div class="section-title">Status dos CenÃ¡rios â€” Total: ${totalCenarios} casos</div>`;
+            // Cards de status
+            let statusCardsHtml = `<div class="section-title">Status dos Cenários — Total: ${totalCenarios} casos</div>`;
             statusCardsHtml += '<div class="status-grid">';
             const sortedStatuses = Object.entries(cenarioStatusCounts).sort((a, b) => b[1] - a[1]);
             sortedStatuses.forEach(([status, count]) => {
@@ -577,7 +452,7 @@
             statusCardsHtml += '</div>';
             mainContent.innerHTML += statusCardsHtml;
 
-            // Progress bar por homologadores
+            // Progresso por homologadores
             const progressSegments = buildProgressSegments(progressStatusCounts, totalCenariosAlocados);
             mainContent.innerHTML += `
                 <div class="progress-section">
@@ -601,12 +476,12 @@
             // Charts
             mainContent.innerHTML += `
                 <div class="charts-grid">
-                    <div class="chart-card full-width">
-                        <h3>CenÃ¡rios por Tipo de Teste</h3>
+                    <div class="chart-card">
+                        <h3>Cenários por Tipo de Teste</h3>
                         <div class="chart-container"><canvas id="chartTipo"></canvas></div>
                     </div>
-                    <div class="chart-card full-width">
-                        <h3>CenÃ¡rios por Homologador</h3>
+                    <div class="chart-card">
+                        <h3>Cenários por Homologador</h3>
                         <div class="chart-container"><canvas id="chartHomologadores"></canvas></div>
                     </div>
                 </div>`;
@@ -615,7 +490,7 @@
             mainContent.innerHTML += `
                 <div class="table-card">
                     <div class="table-header">
-                        <h3>Detalhamento dos CenÃ¡rios de HomologaÃ§Ã£o</h3>
+                        <h3>Detalhamento dos Cenários de Homologação</h3>
                         <div class="table-filter">
                             <button class="filter-btn active" data-filter="all">Todos</button>
                             ${Object.keys(cenarioStatusCounts).map(st =>
@@ -627,11 +502,11 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>NÃºmero</th>
+                                    <th>Número</th>
                                     <th>Tipo de Teste</th>
                                     <th>Homologador</th>
                                     <th>Status</th>
-                                    <th>DescriÃ§Ã£o</th>
+                                    <th>Descrição</th>
                                 </tr>
                             </thead>
                             <tbody id="cenarios-tbody"></tbody>
@@ -672,7 +547,7 @@
                 });
             });
 
-            renderCharts(cenarios);
+            renderCharts(activeCenarios, cenarios);
         }
 
         function renderTable(filters) {
@@ -683,16 +558,16 @@
             const filtered = filters.includes('all') ? cenarios : cenarios.filter(c => {
                 let st = (c.status || '').trim();
                 if (c.cancelado && !st) st = 'Cancelado';
-                else if (!st) st = 'NÃ£o Iniciado';
+                else if (!st) st = 'Não Iniciado';
                 return filters.includes(st);
             });
 
             tbody.innerHTML = filtered.map(c => {
                 return `<tr class="${c.cancelado ? 'cancelado' : ''}">
-                    <td><strong>${c.id}</strong>${c.cancelado ? ' â›”' : ''}</td>
-                    <td>${c.tipo || 'â€”'}</td>
-                    <td>${c.homologador || 'â€”'}</td>
-                    <td>${c.status || 'â€”'}</td>
+                    <td><strong>${c.id}</strong>${c.cancelado ? ' ⛔' : ''}</td>
+                    <td>${c.tipo || '—'}</td>
+                    <td>${c.homologador || '—'}</td>
+                    <td>${c.status || '—'}</td>
                     <td>${c.desc.substring(0, 100)}${c.desc.length > 100 ? '...' : ''}</td>
                 </tr>`;
             }).join('');
@@ -700,23 +575,23 @@
 
         function getGenericStatusConfig(status) {
             const s = status.toLowerCase();
-            if (s.includes('aprovad') || s.includes('ok') || s.includes('pass') || s.includes('sucesso')) return { icon: 'âœ…', css: 'st-homologado', color: '#2e7d32' };
-            if (s.includes('reprovad') || s.includes('falh') || s.includes('erro')) return { icon: 'âŒ', css: 'st-reprovado', color: '#c62828' };
-            if (s.includes('execu') || s.includes('andamento') || s.includes('progress')) return { icon: 'ðŸ”„', css: 'st-em-homologacao', color: '#1565c0' };
-            if (s.includes('cancel') || s.includes('bloqu')) return { icon: 'â›”', css: 'st-cancelado', color: '#6a1b9a' };
-            if (s.includes('ressalva') || s.includes('parcial')) return { icon: 'âš ï¸', css: 'st-ressalvas', color: '#f57f17' };
-            return { icon: 'ðŸ“‹', css: 'st-aguardando', color: '#e65100' };
+            if (s.includes('aprovad') || s.includes('ok') || s.includes('pass') || s.includes('sucesso')) return { icon: '✅', css: 'st-homologado', color: '#2e7d32' };
+            if (s.includes('reprovad') || s.includes('falh') || s.includes('erro')) return { icon: '❌', css: 'st-reprovado', color: '#c62828' };
+            if (s.includes('execu') || s.includes('andamento') || s.includes('progress')) return { icon: '🔄', css: 'st-em-homologacao', color: '#1565c0' };
+            if (s.includes('cancel') || s.includes('bloqu')) return { icon: '⛔', css: 'st-cancelado', color: '#6a1b9a' };
+            if (s.includes('ressalva') || s.includes('parcial')) return { icon: '⚠️', css: 'st-ressalvas', color: '#f57f17' };
+            return { icon: '📋', css: 'st-aguardando', color: '#e65100' };
         }
 
         function buildProgressSegments(statusCounts, total) {
             if (total === 0) return { bar: '', legend: '' };
 
             const statusColorMap = {
-                'NÃ£o Iniciado': '#e65100',
+                'Não Iniciado': '#e65100',
                 'Cancelado': '#6a1b9a',
                 'Aprovado': '#2e7d32',
                 'Reprovado': '#c62828',
-                'Em execuÃ§Ã£o': '#1565c0',
+                'Em execução': '#1565c0',
                 'Bloqueado': '#546e7a'
             };
 
@@ -724,7 +599,7 @@
             let legend = '';
 
             const sorted = Object.entries(statusCounts).sort((a, b) => {
-                const order = ['Aprovado', 'Em execuÃ§Ã£o', 'NÃ£o Iniciado', 'Reprovado', 'Cancelado', 'Bloqueado'];
+                const order = ['Aprovado', 'Em execução', 'Não Iniciado', 'Reprovado', 'Cancelado', 'Bloqueado'];
                 const idxA = order.findIndex(o => a[0].toLowerCase().includes(o.toLowerCase()));
                 const idxB = order.findIndex(o => b[0].toLowerCase().includes(o.toLowerCase()));
                 return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
@@ -774,36 +649,38 @@
             }).join('');
         }
 
-        function renderCharts(cenarios) {
+        function renderCharts(activeCenarios, allCenarios) {
             Object.values(chartInstances).forEach(c => c.destroy());
             chartInstances = {};
 
             // Chart 1 - Tipo de Teste (Bar horizontal)
             const tipoCount = {};
-            cenarios.forEach(c => {
-                if (c.tipo) tipoCount[c.tipo] = (tipoCount[c.tipo] || 0) + 1;
+            activeCenarios.forEach(c => {
+                const tipo = c.tipo && c.tipo.trim() !== '' ? c.tipo.trim() : 'Não informado';
+                tipoCount[tipo] = (tipoCount[tipo] || 0) + 1;
             });
             const tipoLabels = Object.keys(tipoCount).sort((a, b) => tipoCount[b] - tipoCount[a]);
 
-            if (tipoLabels.length > 0) {
-                chartInstances.tipo = new Chart(document.getElementById('chartTipo'), {
-                    type: 'bar',
-                    data: {
-                        labels: tipoLabels,
-                        datasets: [{ label: 'CenÃ¡rios', data: tipoLabels.map(l => tipoCount[l]), backgroundColor: '#2980b9', borderRadius: 6, barThickness: 20 }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-                        plugins: { legend: { display: false } },
-                        scales: { x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } }, y: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } } }
+            chartInstances.tipo = new Chart(document.getElementById('chartTipo'), {
+                type: 'bar',
+                data: {
+                    labels: tipoLabels,
+                    datasets: [{ label: 'Cenários', data: tipoLabels.map(l => tipoCount[l]), backgroundColor: '#2980b9', borderRadius: 6, barThickness: 20 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } },
+                        y: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } }
                     }
-                });
-            }
+                }
+            });
 
-            // Chart 2 - CenÃ¡rios por Homologador (Donut)
+            // Chart 2 - Cenários por Homologador (Donut)
             const hCount = {};
-            cenarios.forEach(c => {
-                const h = c.homologador && c.homologador.trim() !== '' ? c.homologador.trim() : 'NÃ£o atribuÃ­do';
+            allCenarios.forEach(c => {
+                const h = c.homologador && c.homologador.trim() !== '' ? c.homologador.trim() : 'Não atribuído';
                 hCount[h] = (hCount[h] || 0) + 1;
             });
             const hLabels = Object.keys(hCount).sort((a, b) => hCount[b] - hCount[a]);
@@ -819,29 +696,30 @@
                         borderWidth: 2, borderColor: '#fff'
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 12 } } } }
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 12 } } }
+                }
             });
         }
 
-        // Init
         loadSpreadsheet();
         loadUltimaAtualizacao();
 
         async function loadUltimaAtualizacao() {
             try {
                 const response = await fetch('ultima-atualizacao.json?t=' + Date.now());
-                if (!response.ok) throw new Error('Arquivo nÃ£o encontrado');
+                if (!response.ok) throw new Error('Arquivo não encontrado');
                 const data = await response.json();
                 const el = document.getElementById('ultima-atualizacao');
                 if (el && data.dataHoraCompleta) {
-                    el.innerHTML = `Ãšltima atualizaÃ§Ã£o: <strong>${data.dataHoraCompleta}</strong>`;
+                    el.innerHTML = `Última atualização: <strong>${data.dataHoraCompleta}</strong>`;
                 }
             } catch (e) {
                 const el = document.getElementById('ultima-atualizacao');
-                if (el) el.textContent = 'AtualizaÃ§Ã£o automÃ¡tica a cada 30s';
+                if (el) el.textContent = 'Atualização automática a cada 30s';
             }
         }
     </script>
 </body>
 </html>
-
