@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Homologação - CAF (DM-209196)</title>
+    <title>Painel de HomologaÃ§Ã£o - CAF (DM-209196)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -83,7 +83,7 @@
         .header-countdown .countdown-label { font-weight: 300; }
         .header-countdown .countdown-value { font-weight: 700; font-size: 13px; }
 
-        /* Gráfico circular de progresso geral */
+        /* GrÃ¡fico circular de progresso geral */
         .progress-circle-section {
             background: var(--branco);
             border-radius: var(--radius);
@@ -217,7 +217,7 @@
         }
         .refresh-info button:hover { background: var(--azul-escuro); }
 
-        /* Status cards - primeira seção */
+        /* Status cards - primeira seÃ§Ã£o */
         .status-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -358,16 +358,16 @@
     <header class="header">
         <div class="header-left">
             <div class="header-logo">
-                <img src="Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+                <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
             </div>
             <div class="header-divider"></div>
             <div class="header-title">
-                <h1>Painel de Homologação — FPSE</h1>
-                <p>Folha de Pagamento do Servidor • DM-209196</p>
+                <h1>Painel de HomologaÃ§Ã£o â€” FPSE</h1>
+                <p>Folha de Pagamento do Servidor â€¢ DM-209196</p>
             </div>
         </div>
         <div class="header-right">
-            <div class="header-badge">🔴 AO VIVO</div>
+            <div class="header-badge">ðŸ”´ AO VIVO</div>
             <div class="header-time" id="current-time"></div>
             <div class="header-countdown" id="header-countdown"></div>
         </div>
@@ -375,14 +375,14 @@
 
     <div class="tagline-bar">
         <span>Dados para cidadania</span>
-        <span>•</span>
-        <span>Acompanhamento em tempo real da homologação</span>
+        <span>â€¢</span>
+        <span>Acompanhamento em tempo real da homologaÃ§Ã£o</span>
     </div>
 
     <nav style="background: var(--branco); padding: 12px 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; gap: 8px;">
-        <a href="../index.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">🏠 Início</a>
-        <a href="visao-atual.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; background: var(--azul-medio); color: white; border: 1px solid var(--azul-medio);">📊 Visão Atual</a>
-        <a href="evolucao.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">📈 Evolução</a>
+        <a href="../index.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">ðŸ  InÃ­cio</a>
+        <a href="visao-atual.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; background: var(--azul-medio); color: white; border: 1px solid var(--azul-medio);">ðŸ“Š VisÃ£o Atual</a>
+        <a href="evolucao.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">ðŸ“ˆ EvoluÃ§Ã£o</a>
     </nav>
 
     <main class="main" id="main-content">
@@ -393,8 +393,8 @@
     </main>
 
     <footer class="footer">
-        <img src="Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV" style="height:40px; border-radius: 4px;">
-        <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação FPSE DM-209196 • Atualizado em <span id="footer-time"></span></p>
+        <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV" style="height:40px; border-radius: 4px;">
+        <p><strong>DATAPREV</strong> â€” Dados para cidadania â€¢ HomologaÃ§Ã£o FPSE DM-209196 â€¢ Atualizado em <span id="footer-time"></span></p>
     </footer>
 
     <script>
@@ -421,14 +421,14 @@
                 if (now < HOMOLOG_START) {
                     const diff = HOMOLOG_START - now;
                     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    countdownEl.innerHTML = `<div class="countdown-label">Início em</div><div class="countdown-value">${days} dia${days !== 1 ? 's' : ''}</div>`;
+                    countdownEl.innerHTML = `<div class="countdown-label">InÃ­cio em</div><div class="countdown-value">${days} dia${days !== 1 ? 's' : ''}</div>`;
                 } else if (now <= HOMOLOG_END) {
                     const diff = HOMOLOG_END - now;
                     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    countdownEl.innerHTML = `<div class="countdown-label">⏱ Restam</div><div class="countdown-value">${days}d ${hours}h</div>`;
+                    countdownEl.innerHTML = `<div class="countdown-label">â± Restam</div><div class="countdown-value">${days}d ${hours}h</div>`;
                 } else {
-                    countdownEl.innerHTML = `<div class="countdown-label">Homologação</div><div class="countdown-value">Encerrada</div>`;
+                    countdownEl.innerHTML = `<div class="countdown-label">HomologaÃ§Ã£o</div><div class="countdown-value">Encerrada</div>`;
                 }
             }
         }
@@ -448,10 +448,10 @@
                 console.error('Erro ao carregar planilha:', error);
                 document.getElementById('main-content').innerHTML = `
                     <div class="loading">
-                        <p style="color: #c62828; font-weight: 600;">❌ Erro ao carregar a planilha</p>
+                        <p style="color: #c62828; font-weight: 600;">âŒ Erro ao carregar a planilha</p>
                         <p>${error.message}</p>
                         <p style="margin-top: 12px; font-size: 12px; color: #6b7280;">
-                            Certifique-se de que o arquivo <strong>CAF.xlsx</strong> está na mesma pasta.<br>
+                            Certifique-se de que o arquivo <strong>CAF.xlsx</strong> estÃ¡ na mesma pasta.<br>
                             Para rodar localmente: <code>python -m http.server 8080</code>
                         </p>
                     </div>`;
@@ -468,7 +468,7 @@
 
             const cenarios = [];
             for (const row of json) {
-                const numero = row['Número do Cenário'] || row['Numero do Cenario'] || row['Cenário'] || row['Cenario'] || '';
+                const numero = row['NÃºmero do CenÃ¡rio'] || row['Numero do Cenario'] || row['CenÃ¡rio'] || row['Cenario'] || '';
                 if (!numero || !numero.toString().startsWith('CT-')) continue;
 
                 // Detectar cancelamento: verificar apenas a coluna Status
@@ -479,9 +479,9 @@
                     id: numero.toString().trim(),
                     homologador: (row['Homologador'] || '').toString().trim(),
                     status: (row['Status'] || '').toString().trim(),
-                    desc: (row['Descrição'] || row['Descricao'] || '').toString().trim(),
+                    desc: (row['DescriÃ§Ã£o'] || row['Descricao'] || '').toString().trim(),
                     categoria: (row['Categoria do Batimento'] || row['Categoria'] || '').toString().trim(),
-                    classificacao: (row['Classificação Esperada'] || row['Classificacao Esperada'] || '').toString().trim(),
+                    classificacao: (row['ClassificaÃ§Ã£o Esperada'] || row['Classificacao Esperada'] || '').toString().trim(),
                     motivo: (row['Motivo Esperado'] || row['Motivo'] || '').toString().trim(),
                     grupo: (row['Grupo Sugerido'] || row['Grupo'] || '').toString().trim(),
                     cancelado: isCancelado
@@ -521,12 +521,12 @@
             }
 
             return [
-                { nome: 'Nicole Campos Otani', status: 'Em Homologação' },
-                { nome: 'João Renato Sardinha Antunes', status: 'Homologado com sucesso' },
+                { nome: 'Nicole Campos Otani', status: 'Em HomologaÃ§Ã£o' },
+                { nome: 'JoÃ£o Renato Sardinha Antunes', status: 'Homologado com sucesso' },
                 { nome: 'Marcelo Caetano Figueredo Santana', status: 'Reprovado' },
-                { nome: 'Graziella Sales Xavier', status: 'Cenário cancelado' },
+                { nome: 'Graziella Sales Xavier', status: 'CenÃ¡rio cancelado' },
                 { nome: 'Gregorio Vinicius de Oliveira Bispo Dias', status: 'Aguardando' },
-                { nome: 'Walternilson Guimarães de Souza', status: 'Homologado com ressalvas' }
+                { nome: 'Walternilson GuimarÃ£es de Souza', status: 'Homologado com ressalvas' }
             ];
         }
 
@@ -535,21 +535,21 @@
             const activeCenarios = cenarios.filter(c => !c.cancelado);
             const cancelados = cenarios.filter(c => c.cancelado);
 
-            // Status counts DOS CENÁRIOS (coluna Status da tabela de cenários)
+            // Status counts DOS CENÃRIOS (coluna Status da tabela de cenÃ¡rios)
             const cenarioStatusCounts = {};
             cenarios.forEach(c => {
                 let st = (c.status || '').trim();
                 if (c.cancelado) {
                     st = 'Cancelado';
                 } else if (!st) {
-                    st = 'Não Iniciado';
+                    st = 'NÃ£o Iniciado';
                 }
                 cenarioStatusCounts[st] = (cenarioStatusCounts[st] || 0) + 1;
             });
 
             const totalCenarios = cenarios.length;
 
-            // Para o progresso dos homologadores - baseado no STATUS DOS CENÁRIOS por homologador
+            // Para o progresso dos homologadores - baseado no STATUS DOS CENÃRIOS por homologador
             const homologadoresCenarios = {};
             cenarios.forEach(c => {
                 if (c.homologador && c.homologador.trim() !== '') {
@@ -557,12 +557,12 @@
                     if (!homologadoresCenarios[nome]) homologadoresCenarios[nome] = [];
                     let st = (c.status || '').trim();
                     if (!st && c.cancelado) st = 'Cancelado';
-                    else if (!st) st = 'Não Iniciado';
+                    else if (!st) st = 'NÃ£o Iniciado';
                     homologadoresCenarios[nome].push(st);
                 }
             });
 
-            // Contar status de todos os cenários alocados
+            // Contar status de todos os cenÃ¡rios alocados
             const progressStatusCounts = {};
             let totalCenariosAlocados = 0;
             Object.values(homologadoresCenarios).forEach(statuses => {
@@ -586,15 +586,15 @@
             // Refresh bar
             mainContent.innerHTML += `
                 <div class="refresh-info">
-                    <span>📊 Dados carregados de <strong>CAF.xlsx</strong> — <span id="ultima-atualizacao">Carregando última atualização...</span></span>
-                    <button onclick="loadSpreadsheet()">🔄 Atualizar Agora</button>
+                    <span>ðŸ“Š Dados carregados de <strong>CAF.xlsx</strong> â€” <span id="ultima-atualizacao">Carregando Ãºltima atualizaÃ§Ã£o...</span></span>
+                    <button onclick="loadSpreadsheet()">ðŸ”„ Atualizar Agora</button>
                 </div>`;
 
-            // GRÁFICO CIRCULAR - Percentual de avaliação
+            // GRÃFICO CIRCULAR - Percentual de avaliaÃ§Ã£o
             const totalParaAvaliar = cenarios.filter(c => !c.cancelado).length;
             const avaliados = cenarios.filter(c => {
                 const st = (c.status || '').trim().toLowerCase();
-                return st !== '' && st !== 'não iniciado' && !c.cancelado;
+                return st !== '' && st !== 'nÃ£o iniciado' && !c.cancelado;
             }).length;
             const naoIniciados = totalParaAvaliar - avaliados;
             const pctAvaliado = totalParaAvaliar > 0 ? Math.round((avaliados / totalParaAvaliar) * 100) : 0;
@@ -619,26 +619,26 @@
                         </div>
                     </div>
                     <div class="progress-circle-info">
-                        <h3>Progresso da Homologação</h3>
-                        <div class="info-row"><div class="info-dot" style="background:${circleColor}"></div><span class="info-count">${avaliados}</span> cenários avaliados</div>
-                        <div class="info-row"><div class="info-dot" style="background:#e5e7eb"></div><span class="info-count">${naoIniciados}</span> cenários pendentes</div>
-                        <div class="info-row"><div class="info-dot" style="background:#6a1b9a"></div><span class="info-count">${cancelados.length}</span> cenários cancelados</div>
-                        <div class="info-row" style="margin-top:8px; font-size:12px; color:#6b7280;">Total de cenários válidos: <strong style="margin-left:4px;">${totalParaAvaliar}</strong></div>
+                        <h3>Progresso da HomologaÃ§Ã£o</h3>
+                        <div class="info-row"><div class="info-dot" style="background:${circleColor}"></div><span class="info-count">${avaliados}</span> cenÃ¡rios avaliados</div>
+                        <div class="info-row"><div class="info-dot" style="background:#e5e7eb"></div><span class="info-count">${naoIniciados}</span> cenÃ¡rios pendentes</div>
+                        <div class="info-row"><div class="info-dot" style="background:#6a1b9a"></div><span class="info-count">${cancelados.length}</span> cenÃ¡rios cancelados</div>
+                        <div class="info-row" style="margin-top:8px; font-size:12px; color:#6b7280;">Total de cenÃ¡rios vÃ¡lidos: <strong style="margin-left:4px;">${totalParaAvaliar}</strong></div>
                     </div>
                 </div>`;
 
-            // SEÇÃO 1 - Status cards baseados na coluna STATUS dos cenários
+            // SEÃ‡ÃƒO 1 - Status cards baseados na coluna STATUS dos cenÃ¡rios
             const statusColors = {
-                'Não Iniciado': { icon: '⏳', css: 'st-aguardando', color: '#e65100' },
-                'Cancelado': { icon: '⛔', css: 'st-cancelado', color: '#6a1b9a' },
-                'Aprovado': { icon: '✅', css: 'st-homologado', color: '#2e7d32' },
-                'Reprovado': { icon: '❌', css: 'st-reprovado', color: '#c62828' },
-                'Em execução': { icon: '🔄', css: 'st-em-homologacao', color: '#1565c0' },
-                'Bloqueado': { icon: '🚫', css: 'st-cancelado', color: '#6a1b9a' }
+                'NÃ£o Iniciado': { icon: 'â³', css: 'st-aguardando', color: '#e65100' },
+                'Cancelado': { icon: 'â›”', css: 'st-cancelado', color: '#6a1b9a' },
+                'Aprovado': { icon: 'âœ…', css: 'st-homologado', color: '#2e7d32' },
+                'Reprovado': { icon: 'âŒ', css: 'st-reprovado', color: '#c62828' },
+                'Em execuÃ§Ã£o': { icon: 'ðŸ”„', css: 'st-em-homologacao', color: '#1565c0' },
+                'Bloqueado': { icon: 'ðŸš«', css: 'st-cancelado', color: '#6a1b9a' }
             };
 
-            // Gerar cards dinâmicos para cada status encontrado
-            let statusCardsHtml = `<div class="section-title">Status dos Cenários — Total: ${totalCenarios} casos</div>`;
+            // Gerar cards dinÃ¢micos para cada status encontrado
+            let statusCardsHtml = `<div class="section-title">Status dos CenÃ¡rios â€” Total: ${totalCenarios} casos</div>`;
             statusCardsHtml += '<div class="status-grid">';
             // Ordenar: primeiro os com mais itens
             const sortedStatuses = Object.entries(cenarioStatusCounts).sort((a, b) => b[1] - a[1]);
@@ -654,7 +654,7 @@
             statusCardsHtml += '</div>';
             mainContent.innerHTML += statusCardsHtml;
 
-            // SEÇÃO 2 - Progresso geral (reflete realidade)
+            // SEÃ‡ÃƒO 2 - Progresso geral (reflete realidade)
             const progressSegments = buildProgressSegments(progressStatusCounts, totalCenariosAlocados);
             mainContent.innerHTML += `
                 <div class="progress-section">
@@ -668,36 +668,36 @@
                     </div>
                 </div>`;
 
-            // SEÇÃO 3 - Homologadores (extraídos da aba cenários)
-            // Listar homologadores únicos que aparecem nos cenários
+            // SEÃ‡ÃƒO 3 - Homologadores (extraÃ­dos da aba cenÃ¡rios)
+            // Listar homologadores Ãºnicos que aparecem nos cenÃ¡rios
             const homologadoresFromCenarios = [...new Set(
                 cenarios.map(c => c.homologador).filter(h => h && h.trim() !== '')
             )];
             mainContent.innerHTML += `<div class="section-title">Homologadores</div>`;
             mainContent.innerHTML += `<div class="homologadores-grid">${buildHomologadoresCards(homologadoresFromCenarios)}</div>`;
 
-            // SEÇÃO 4 - Charts
+            // SEÃ‡ÃƒO 4 - Charts
             mainContent.innerHTML += `
                 <div class="charts-grid">
                     <div class="chart-card">
-                        <h3>Cenários por Categoria de Batimento</h3>
+                        <h3>CenÃ¡rios por Categoria de Batimento</h3>
                         <div class="chart-container"><canvas id="chartCategoria"></canvas></div>
                     </div>
                     <div class="chart-card">
-                        <h3>Cenários por Homologador</h3>
+                        <h3>CenÃ¡rios por Homologador</h3>
                         <div class="chart-container"><canvas id="chartHomologadores"></canvas></div>
                     </div>
                     <div class="chart-card full-width">
-                        <h3>Cenários por Grupo</h3>
+                        <h3>CenÃ¡rios por Grupo</h3>
                         <div class="chart-container"><canvas id="chartGrupo"></canvas></div>
                     </div>
                 </div>`;
 
-            // SEÇÃO 5 - Tabela
+            // SEÃ‡ÃƒO 5 - Tabela
             mainContent.innerHTML += `
                 <div class="table-card">
                     <div class="table-header">
-                        <h3>Detalhamento dos Cenários de Homologação</h3>
+                        <h3>Detalhamento dos CenÃ¡rios de HomologaÃ§Ã£o</h3>
                         <div class="table-filter">
                             <button class="filter-btn active" data-filter="all">Todos</button>
                             ${Object.keys(cenarioStatusCounts).map(st => 
@@ -709,12 +709,12 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Cenário</th>
+                                    <th>CenÃ¡rio</th>
                                     <th>Homologador</th>
                                     <th>Status</th>
-                                    <th>Descrição</th>
+                                    <th>DescriÃ§Ã£o</th>
                                     <th>Categoria</th>
-                                    <th>Classificação</th>
+                                    <th>ClassificaÃ§Ã£o</th>
                                     <th>Motivo</th>
                                     <th>Grupo</th>
                                 </tr>
@@ -776,20 +776,20 @@
             const filtered = filters.includes('all') ? cenarios : cenarios.filter(c => {
                 let st = (c.status || '').trim();
                 if (c.cancelado && !st) st = 'Cancelado';
-                else if (!st) st = 'Não Iniciado';
+                else if (!st) st = 'NÃ£o Iniciado';
                 return filters.includes(st);
             });
             tbody.innerHTML = filtered.map(c => {
                 const badgeClass = getBadgeClass(c.classificacao);
                 const classLabel = c.classificacao.replace(/_/g, ' ');
                 return `<tr class="${c.cancelado ? 'cancelado' : ''}">
-                    <td><strong>${c.id}</strong>${c.cancelado ? ' ⛔' : ''}</td>
-                    <td>${c.homologador || '—'}</td>
-                    <td>${c.status || '—'}</td>
+                    <td><strong>${c.id}</strong>${c.cancelado ? ' â›”' : ''}</td>
+                    <td>${c.homologador || 'â€”'}</td>
+                    <td>${c.status || 'â€”'}</td>
                     <td>${c.desc.substring(0, 80)}${c.desc.length > 80 ? '...' : ''}</td>
                     <td>${c.categoria}</td>
                     <td><span class="badge ${badgeClass}">${classLabel}</span></td>
-                    <td style="font-size:11px;">${c.motivo || '—'}</td>
+                    <td style="font-size:11px;">${c.motivo || 'â€”'}</td>
                     <td><span class="grupo-tag">${c.grupo}</span></td>
                 </tr>`;
             }).join('');
@@ -821,16 +821,16 @@
 
         function getGenericStatusConfig(status) {
             const s = status.toLowerCase();
-            if (s.includes('aprovad') || s.includes('ok') || s.includes('pass')) return { icon: '✅', css: 'st-homologado', color: '#2e7d32' };
-            if (s.includes('reprovad') || s.includes('falh') || s.includes('erro')) return { icon: '❌', css: 'st-reprovado', color: '#c62828' };
-            if (s.includes('execu') || s.includes('andamento') || s.includes('progress')) return { icon: '🔄', css: 'st-em-homologacao', color: '#1565c0' };
-            if (s.includes('cancel') || s.includes('bloqu')) return { icon: '⛔', css: 'st-cancelado', color: '#6a1b9a' };
-            if (s.includes('ressalva') || s.includes('parcial')) return { icon: '⚠️', css: 'st-ressalvas', color: '#f57f17' };
-            return { icon: '📋', css: 'st-aguardando', color: '#e65100' };
+            if (s.includes('aprovad') || s.includes('ok') || s.includes('pass')) return { icon: 'âœ…', css: 'st-homologado', color: '#2e7d32' };
+            if (s.includes('reprovad') || s.includes('falh') || s.includes('erro')) return { icon: 'âŒ', css: 'st-reprovado', color: '#c62828' };
+            if (s.includes('execu') || s.includes('andamento') || s.includes('progress')) return { icon: 'ðŸ”„', css: 'st-em-homologacao', color: '#1565c0' };
+            if (s.includes('cancel') || s.includes('bloqu')) return { icon: 'â›”', css: 'st-cancelado', color: '#6a1b9a' };
+            if (s.includes('ressalva') || s.includes('parcial')) return { icon: 'âš ï¸', css: 'st-ressalvas', color: '#f57f17' };
+            return { icon: 'ðŸ“‹', css: 'st-aguardando', color: '#e65100' };
         }
 
         function getStatusLabel(normalized) {
-            const labels = { 'homologado': 'Homologado com sucesso', 'ressalvas': 'Homologado com ressalvas', 'em-homologacao': 'Em Homologação', 'aguardando': 'Aguardando', 'reprovado': 'Reprovado', 'cancelado': 'Cenário cancelado' };
+            const labels = { 'homologado': 'Homologado com sucesso', 'ressalvas': 'Homologado com ressalvas', 'em-homologacao': 'Em HomologaÃ§Ã£o', 'aguardando': 'Aguardando', 'reprovado': 'Reprovado', 'cancelado': 'CenÃ¡rio cancelado' };
             return labels[normalized] || normalized;
         }
 
@@ -838,20 +838,20 @@
             if (total === 0) return { bar: '', legend: '' };
 
             const statusColorMap = {
-                'Não Iniciado': '#e65100',
+                'NÃ£o Iniciado': '#e65100',
                 'Cancelado': '#6a1b9a',
                 'Aprovado': '#2e7d32',
                 'Reprovado': '#c62828',
-                'Em execução': '#1565c0',
+                'Em execuÃ§Ã£o': '#1565c0',
                 'Bloqueado': '#546e7a'
             };
 
             let bar = '';
             let legend = '';
 
-            // Ordenar: aprovados primeiro, depois em execução, depois não iniciados, etc
+            // Ordenar: aprovados primeiro, depois em execuÃ§Ã£o, depois nÃ£o iniciados, etc
             const sorted = Object.entries(statusCounts).sort((a, b) => {
-                const order = ['Aprovado', 'Em execução', 'Não Iniciado', 'Reprovado', 'Cancelado', 'Bloqueado'];
+                const order = ['Aprovado', 'Em execuÃ§Ã£o', 'NÃ£o Iniciado', 'Reprovado', 'Cancelado', 'Bloqueado'];
                 const idxA = order.findIndex(o => a[0].toLowerCase().includes(o.toLowerCase()));
                 const idxB = order.findIndex(o => b[0].toLowerCase().includes(o.toLowerCase()));
                 return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
@@ -902,7 +902,7 @@
             }).join('');
         }
 
-        // Charts - TUDO baseado na aba cenários
+        // Charts - TUDO baseado na aba cenÃ¡rios
         function renderCharts(activeCenarios, allCenarios) {
             Object.values(chartInstances).forEach(c => c.destroy());
             chartInstances = {};
@@ -916,7 +916,7 @@
                 type: 'bar',
                 data: {
                     labels: catLabels,
-                    datasets: [{ label: 'Cenários', data: catLabels.map(l => catCount[l]), backgroundColor: '#2980b9', borderRadius: 6, barThickness: 20 }]
+                    datasets: [{ label: 'CenÃ¡rios', data: catLabels.map(l => catCount[l]), backgroundColor: '#2980b9', borderRadius: 6, barThickness: 20 }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, indexAxis: 'y',
@@ -925,10 +925,10 @@
                 }
             });
 
-            // Chart 2 - Cenários por Homologador (Donut) - baseado na coluna Homologador dos cenários
+            // Chart 2 - CenÃ¡rios por Homologador (Donut) - baseado na coluna Homologador dos cenÃ¡rios
             const hCount = {};
             allCenarios.forEach(c => {
-                const h = c.homologador && c.homologador.trim() !== '' ? c.homologador.trim() : 'Não atribuído';
+                const h = c.homologador && c.homologador.trim() !== '' ? c.homologador.trim() : 'NÃ£o atribuÃ­do';
                 hCount[h] = (hCount[h] || 0) + 1;
             });
             const hLabels = Object.keys(hCount).sort((a, b) => hCount[b] - hCount[a]);
@@ -957,7 +957,7 @@
                 type: 'bar',
                 data: {
                     labels: grupoLabels.map(g => g.replace('Grupo ', 'G').replace(' - ', ': ')),
-                    datasets: [{ label: 'Cenários', data: grupoLabels.map(l => grupoCount[l]), backgroundColor: grupoLabels.map((_, i) => groupColors[i % groupColors.length]), borderRadius: 6 }]
+                    datasets: [{ label: 'CenÃ¡rios', data: grupoLabels.map(l => grupoCount[l]), backgroundColor: grupoLabels.map((_, i) => groupColors[i % groupColors.length]), borderRadius: 6 }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
@@ -974,17 +974,18 @@
         async function loadUltimaAtualizacao() {
             try {
                 const response = await fetch('ultima-atualizacao.json?t=' + Date.now());
-                if (!response.ok) throw new Error('Arquivo não encontrado');
+                if (!response.ok) throw new Error('Arquivo nÃ£o encontrado');
                 const data = await response.json();
                 const el = document.getElementById('ultima-atualizacao');
                 if (el && data.dataHoraCompleta) {
-                    el.innerHTML = `Última atualização: <strong>${data.dataHoraCompleta}</strong>`;
+                    el.innerHTML = `Ãšltima atualizaÃ§Ã£o: <strong>${data.dataHoraCompleta}</strong>`;
                 }
             } catch (e) {
                 const el = document.getElementById('ultima-atualizacao');
-                if (el) el.textContent = 'Atualização automática a cada 30s';
+                if (el) el.textContent = 'AtualizaÃ§Ã£o automÃ¡tica a cada 30s';
             }
         }
     </script>
 </body>
 </html>
+

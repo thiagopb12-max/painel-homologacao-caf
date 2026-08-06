@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evolução da Homologação - SIBE</title>
+    <title>EvoluÃ§Ã£o da HomologaÃ§Ã£o - SIBE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -174,20 +174,20 @@
     <header class="header">
         <div class="header-left">
             <div class="header-logo">
-                <img src="Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+                <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
             </div>
             <div class="header-divider"></div>
             <div class="header-title">
-                <h1>Painel de Homologação — SIBE</h1>
-                <p>Sistema de Benefícios do Servidor</p>
+                <h1>Painel de HomologaÃ§Ã£o â€” SIBE</h1>
+                <p>Sistema de BenefÃ­cios do Servidor</p>
             </div>
         </div>
     </header>
 
     <nav class="nav-bar">
-        <a href="../index.html" class="nav-link">🏠 Início</a>
-        <a href="visao-atual.html" class="nav-link">📊 Visão Atual</a>
-        <a href="evolucao.html" class="nav-link active">📈 Evolução</a>
+        <a href="../index.html" class="nav-link">ðŸ  InÃ­cio</a>
+        <a href="visao-atual.html" class="nav-link">ðŸ“Š VisÃ£o Atual</a>
+        <a href="evolucao.html" class="nav-link active">ðŸ“ˆ EvoluÃ§Ã£o</a>
     </nav>
 
     <main class="main" id="main-content">
@@ -198,8 +198,8 @@
     </main>
 
     <footer class="footer">
-        <img src="Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
-        <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação SIBE</p>
+        <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+        <p><strong>DATAPREV</strong> â€” Dados para cidadania â€¢ HomologaÃ§Ã£o SIBE</p>
     </footer>
 
     <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
@@ -209,12 +209,12 @@
 
         // Cores para cada status
         const STATUS_COLORS = {
-            'Pendente de cenário': '#e65100',
-            'Em Correção': '#f57f17',
-            'Em Análise': '#1565c0',
+            'Pendente de cenÃ¡rio': '#e65100',
+            'Em CorreÃ§Ã£o': '#f57f17',
+            'Em AnÃ¡lise': '#1565c0',
             'Homologado com sucesso': '#2e7d32',
             'Homologado com ressalva': '#7cb342',
-            'Disponível para reteste': '#00bcd4',
+            'DisponÃ­vel para reteste': '#00bcd4',
             'Reprovado': '#c62828'
         };
 
@@ -230,12 +230,12 @@
 
                 // Encontrar aba ResumoDiario
                 const sheetName = workbook.SheetNames.find(n => n.toLowerCase().includes('resumo'));
-                if (!sheetName) throw new Error('Aba ResumoDiario não encontrada na planilha');
+                if (!sheetName) throw new Error('Aba ResumoDiario nÃ£o encontrada na planilha');
 
                 const sheet = workbook.Sheets[sheetName];
                 const data = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
 
-                if (data.length < 2) throw new Error('Aba ResumoDiario está vazia');
+                if (data.length < 2) throw new Error('Aba ResumoDiario estÃ¡ vazia');
 
                 // Headers (linha 1)
                 const headers = data[0].map(h => (h || '').toString().trim());
@@ -245,7 +245,7 @@
                 const colData = headers.findIndex(h => h.toLowerCase() === 'data');
                 const colTotal = headers.findIndex(h => h.toLowerCase() === 'total');
 
-                // Colunas de status (tudo que não é hora, data ou total)
+                // Colunas de status (tudo que nÃ£o Ã© hora, data ou total)
                 const statusCols = [];
                 headers.forEach((h, i) => {
                     if (i !== colHora && i !== colData && i !== colTotal && h !== '') {
@@ -253,7 +253,7 @@
                     }
                 });
 
-                // Ler registros (só linhas com data preenchida)
+                // Ler registros (sÃ³ linhas com data preenchida)
                 const registros = [];
                 for (let i = 1; i < data.length; i++) {
                     const row = data[i];
@@ -262,7 +262,7 @@
                     let dataVal = colData >= 0 ? row[colData] : '';
                     let horaVal = colHora >= 0 ? row[colHora] : '';
 
-                    // Converter hora serial do Excel para formato legível
+                    // Converter hora serial do Excel para formato legÃ­vel
                     if (typeof horaVal === 'number') {
                         const totalMinutes = Math.round(horaVal * 24 * 60);
                         const hours = Math.floor(totalMinutes / 60);
@@ -272,7 +272,7 @@
                         horaVal = (horaVal || '').toString().trim();
                     }
 
-                    // Converter serial number do Excel para data legível
+                    // Converter serial number do Excel para data legÃ­vel
                     if (typeof dataVal === 'number') {
                         const utcDays = dataVal - 25569;
                         const date = new Date(Date.UTC(1970, 0, 1 + utcDays));
@@ -313,7 +313,7 @@
                 console.error(error);
                 document.getElementById('main-content').innerHTML = `
                     <div class="empty-state">
-                        <h3>❌ Erro ao carregar dados</h3>
+                        <h3>âŒ Erro ao carregar dados</h3>
                         <p>${error.message}</p>
                     </div>`;
             }
@@ -333,10 +333,10 @@
                 return parseDate(a.data) - parseDate(b.data);
             });
 
-            // GRÁFICO DE EVOLUÇÃO
+            // GRÃFICO DE EVOLUÃ‡ÃƒO
             mainContent.innerHTML += `
                 <div class="chart-card">
-                    <h3>Evolução Diária da Homologação</h3>
+                    <h3>EvoluÃ§Ã£o DiÃ¡ria da HomologaÃ§Ã£o</h3>
                     <div class="chart-container-tall"><canvas id="chartEvolucao"></canvas></div>
                 </div>`;
 
@@ -375,10 +375,10 @@
                 }
             }, 100);
 
-            // COMPARAÇÃO ENTRE DIAS
+            // COMPARAÃ‡ÃƒO ENTRE DIAS
             if (registros.length >= 2) {
                 let compHtml = `<div class="chart-card">
-                    <h3>Variação entre Dias</h3>
+                    <h3>VariaÃ§Ã£o entre Dias</h3>
                     <table style="width:100%;border-collapse:collapse;font-size:13px;">
                         <thead style="background:#f8fafc;">
                             <tr>
@@ -399,8 +399,8 @@
                         if (idx > 0) {
                             const prev = registros[idx-1].status[status] || 0;
                             const delta = val - prev;
-                            if (delta > 0) diff = `<span style="color:#2e7d32;font-size:10px;margin-left:4px;">▲${delta}</span>`;
-                            else if (delta < 0) diff = `<span style="color:#c62828;font-size:10px;margin-left:4px;">▼${Math.abs(delta)}</span>`;
+                            if (delta > 0) diff = `<span style="color:#2e7d32;font-size:10px;margin-left:4px;">â–²${delta}</span>`;
+                            else if (delta < 0) diff = `<span style="color:#c62828;font-size:10px;margin-left:4px;">â–¼${Math.abs(delta)}</span>`;
                         }
                         compHtml += `<td style="padding:8px 12px;text-align:center;border-bottom:1px solid #f3f4f6;">${val}${diff}</td>`;
                     });
@@ -450,3 +450,4 @@
     </script>
 </body>
 </html>
+
