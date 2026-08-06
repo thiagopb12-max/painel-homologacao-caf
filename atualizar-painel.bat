@@ -1,14 +1,21 @@
 @echo off
 chcp 65001 >nul
 echo ==========================================
-echo   ATUALIZAR PAINEL DE HOMOLOGACAO CAF
+echo   ATUALIZAR PAINEL DE HOMOLOGACAO
+echo   DTP.095850 - FPSE / SIBE / PAT / FI
 echo ==========================================
 echo.
 
 cd /d "%~dp0"
 
 echo [1/2] Registrando timestamp da atualizacao...
-powershell -ExecutionPolicy Bypass -Command "$json = @{ data = (Get-Date -Format 'yyyy-MM-dd'); hora = (Get-Date -Format 'HH:mm:ss'); dataHoraCompleta = (Get-Date -Format 'dd/MM/yyyy HH:mm:ss') } | ConvertTo-Json; $json | Out-File -FilePath 'ultima-atualizacao.json' -Encoding UTF8"
+powershell -ExecutionPolicy Bypass -Command ^
+    "$ts = @{ data = (Get-Date -Format 'yyyy-MM-dd'); hora = (Get-Date -Format 'HH:mm:ss'); dataHoraCompleta = (Get-Date -Format 'dd/MM/yyyy HH:mm:ss') } | ConvertTo-Json; ^
+    $ts | Out-File -FilePath 'ultima-atualizacao.json' -Encoding UTF8; ^
+    $ts | Out-File -FilePath 'fpse/ultima-atualizacao.json' -Encoding UTF8; ^
+    if (Test-Path 'sibe') { $ts | Out-File -FilePath 'sibe/ultima-atualizacao.json' -Encoding UTF8 }; ^
+    if (Test-Path 'pat') { $ts | Out-File -FilePath 'pat/ultima-atualizacao.json' -Encoding UTF8 }; ^
+    if (Test-Path 'fluxo-integrado') { $ts | Out-File -FilePath 'fluxo-integrado/ultima-atualizacao.json' -Encoding UTF8 }"
 
 echo.
 echo [2/2] Enviando para o GitHub...
@@ -25,7 +32,13 @@ if %errorlevel%==0 (
 ) else (
     echo.
     echo Nenhuma alteracao detectada.
-    echo Edite o arquivo CAF.xlsx e tente novamente.
+    echo Edite uma das planilhas e tente novamente.
+    echo.
+    echo Planilhas esperadas:
+    echo   fpse\CAF.xlsx
+    echo   sibe\SIBE.xlsx
+    echo   pat\PAT.xlsx
+    echo   fluxo-integrado\FLUXO.xlsx
 )
 
 echo.
