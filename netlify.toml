@@ -1,0 +1,26 @@
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Content-Type = "text/html; charset=UTF-8"
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/*.xlsx"
+  [headers.values]
+    Content-Type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/*.json"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
