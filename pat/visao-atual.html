@@ -263,6 +263,9 @@
 
         let chartInstances = {};
 
+        const HOMOLOG_START = new Date('2026-08-10T00:00:00');
+        const HOMOLOG_END = new Date('2026-08-14T23:59:59');
+
         function updateTime() {
             const now = new Date();
             const timeStr = now.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
@@ -273,7 +276,18 @@
 
             const countdownEl = document.getElementById('header-countdown');
             if (countdownEl) {
-                countdownEl.innerHTML = `<div class="countdown-label">Homologação</div><div class="countdown-value">Em andamento</div>`;
+                if (now < HOMOLOG_START) {
+                    const diff = HOMOLOG_START - now;
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    countdownEl.innerHTML = `<div class="countdown-label">Início em</div><div class="countdown-value">${days} dia${days !== 1 ? 's' : ''}</div>`;
+                } else if (now <= HOMOLOG_END) {
+                    const diff = HOMOLOG_END - now;
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    countdownEl.innerHTML = `<div class="countdown-label">⏱ Restam</div><div class="countdown-value">${days}d ${hours}h</div>`;
+                } else {
+                    countdownEl.innerHTML = `<div class="countdown-label">Homologação</div><div class="countdown-value">Encerrada</div>`;
+                }
             }
         }
         setInterval(updateTime, 1000);
