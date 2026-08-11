@@ -358,7 +358,7 @@
                 if (c.cancelado) {
                     st = 'Cancelado';
                 } else if (!st) {
-                    st = 'Não Iniciado';
+                    st = 'Não Executado';
                 }
                 cenarioStatusCounts[st] = (cenarioStatusCounts[st] || 0) + 1;
             });
@@ -369,7 +369,7 @@
             const progressStatusCounts = {};
             let totalCenariosAlocados = 0;
             cenarios.filter(c => !c.cancelado).forEach(c => {
-                let st = (c.status || '').trim() || 'Não Iniciado';
+                let st = (c.status || '').trim() || 'Não Executado';
                 progressStatusCounts[st] = (progressStatusCounts[st] || 0) + 1;
                 totalCenariosAlocados++;
             });
@@ -393,10 +393,12 @@
                 </div>`;
 
             // Gráfico circular de progresso
+            // Status considerados "pendentes" (não avaliados) no PAT
+            const statusPendente = ['não executado', 'não iniciado', ''];
             const totalParaAvaliar = cenarios.filter(c => !c.cancelado).length;
             const avaliados = cenarios.filter(c => {
                 const st = (c.status || '').trim().toLowerCase();
-                return st !== '' && st !== 'não iniciado' && !c.cancelado;
+                return !statusPendente.includes(st) && !c.cancelado;
             }).length;
             const naoIniciados = totalParaAvaliar - avaliados;
             const pctAvaliado = totalParaAvaliar > 0 ? Math.round((avaliados / totalParaAvaliar) * 100) : 0;
@@ -573,7 +575,7 @@
             if (!tbody) return;
 
             const filtered = cenarios.filter(c => {
-                let st = (c.status || '').trim() || 'Não Iniciado';
+                let st = (c.status || '').trim() || 'Não Executado';
                 if (c.cancelado) st = 'Cancelado';
                 const statusOk = filters.status.includes('all') || filters.status.includes(st);
                 const canalOk = filters.canal.includes('all') || filters.canal.includes(c.canal);
