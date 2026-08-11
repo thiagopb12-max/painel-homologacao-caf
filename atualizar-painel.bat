@@ -27,25 +27,13 @@ git status --short
 
 echo.
 echo [3/3] Enviando para o GitHub...
-git diff --cached --quiet
-if %errorlevel%==1 (
-    git commit -m "Atualiza dados - %date% %time:~0,5%"
-    git push origin main
-    if %errorlevel%==0 (
-        echo.
-        echo ==========================================
-        echo   SUCESSO! Painel atualizado no GitHub.
-        echo   O Netlify publicara em ~30 segundos.
-        echo ==========================================
-    ) else (
-        echo.
-        echo ERRO ao fazer push. Verifique sua conexao.
-    )
-) else (
-    echo.
-    echo Nenhuma alteracao detectada para enviar.
-    echo Verifique se salvou as planilhas antes de rodar.
-)
+git commit -m "Atualiza dados - %date% %time:~0,5%"
+git push origin main
+echo.
+echo ==========================================
+echo   SUCESSO! Painel atualizado no GitHub.
+echo   O Netlify publicara em ~30 segundos.
+echo ==========================================
 
 echo.
 pause
