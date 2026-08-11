@@ -335,7 +335,8 @@
 
                 cenarios.push({
                     id: numero.toString().trim(),
-                    tipo: (row['Tipo de teste'] || row['Tipo'] || '').toString().trim(),
+                    canal: (row['Canal'] || '').toString().trim(),
+                    liberado: (row['Liberado para teste'] || '').toString().trim(),
                     homologador: (row['Homologador'] || '').toString().trim(),
                     status: statusValue,
                     desc: (row['Cenário de teste'] || row['Cenario de teste'] || row['Descrição'] || row['Descricao'] || '').toString().trim(),
@@ -363,26 +364,13 @@
 
             const totalCenarios = cenarios.length;
 
-            // Para o progresso dos homologadores
-            const homologadoresCenarios = {};
-            cenarios.forEach(c => {
-                if (c.homologador && c.homologador.trim() !== '') {
-                    const nome = c.homologador.trim();
-                    if (!homologadoresCenarios[nome]) homologadoresCenarios[nome] = [];
-                    let st = (c.status || '').trim();
-                    if (!st && c.cancelado) st = 'Cancelado';
-                    else if (!st) st = 'Não Iniciado';
-                    homologadoresCenarios[nome].push(st);
-                }
-            });
-
+            // Para o progresso — baseado no status de todos os cenários ativos
             const progressStatusCounts = {};
             let totalCenariosAlocados = 0;
-            Object.values(homologadoresCenarios).forEach(statuses => {
-                statuses.forEach(st => {
-                    progressStatusCounts[st] = (progressStatusCounts[st] || 0) + 1;
-                    totalCenariosAlocados++;
-                });
+            cenarios.filter(c => !c.cancelado).forEach(c => {
+                let st = (c.status || '').trim() || 'Não Iniciado';
+                progressStatusCounts[st] = (progressStatusCounts[st] || 0) + 1;
+                totalCenariosAlocados++;
             });
 
             const cenariosFinalizados = Object.entries(progressStatusCounts)
@@ -480,36 +468,53 @@
                     </div>
                 </div>`;
 
-            // Homologadores
-            const homologadoresFromCenarios = [...new Set(
-                cenarios.map(c => c.homologador).filter(h => h && h.trim() !== '')
-            )];
-            mainContent.innerHTML += `<div class="section-title">Homologadores</div>`;
-            mainContent.innerHTML += `<div class="homologadores-grid">${buildHomologadoresCards(homologadoresFromCenarios)}</div>`;
-
+            // Homologadores — não há coluna de homologador no PAT, omitir seção
             // Charts
             mainContent.innerHTML += `
                 <div class="charts-grid">
                     <div class="chart-card">
-                        <h3>Cenários por Tipo de Teste</h3>
-                        <div class="chart-container"><canvas id="chartTipo"></canvas></div>
+                        <h3>Cenários por Canal</h3>
+                        <div class="chart-container"><canvas id="chartCanal"></canvas></div>
                     </div>
                     <div class="chart-card">
-                        <h3>Cenários por Homologador</h3>
-                        <div class="chart-container"><canvas id="chartHomologadores"></canvas></div>
+                        <h3>Cenários por Liberado para Teste</h3>
+                        <div class="chart-container"><canvas id="chartLiberado"></canvas></div>
                     </div>
                 </div>`;
 
-            // Tabela
+            // Filtros disponíveis
+            const canais = [...new Set(cenarios.map(c => c.canal).filter(Boolean))];
+            const liberados = [...new Set(cenarios.map(c => c.liberado).filter(Boolean))];
+
+            // Tabela com filtros por Status, Canal e Liberado
             mainContent.innerHTML += `
                 <div class="table-card">
                     <div class="table-header">
                         <h3>Detalhamento dos Cenários de Homologação</h3>
-                        <div class="table-filter">
-                            <button class="filter-btn active" data-filter="all">Todos</button>
-                            ${Object.keys(cenarioStatusCounts).map(st =>
-                                `<button class="filter-btn" data-filter="${st}">${st}</button>`
-                            ).join('')}
+                        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+                            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                <span style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;">Status:</span>
+                                <div class="table-filter" id="filter-status">
+                                    <button class="filter-btn active" data-group="status" data-filter="all">Todos</button>
+                                    ${Object.keys(cenarioStatusCounts).map(st =>
+                                        `<button class="filter-btn" data-group="status" data-filter="${st}">${st}</button>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                <span style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;">Canal:</span>
+                                <div class="table-filter" id="filter-canal">
+                                    <button class="filter-btn active" data-group="canal" data-filter="all">Todos</button>
+                                    ${canais.map(c => `<button class="filter-btn" data-group="canal" data-filter="${c}">${c}</button>`).join('')}
+                                </div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                <span style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;">Liberado:</span>
+                                <div class="table-filter" id="filter-liberado">
+                                    <button class="filter-btn active" data-group="liberado" data-filter="all">Todos</button>
+                                    ${liberados.map(l => `<button class="filter-btn" data-group="liberado" data-filter="${l}">${l}</button>`).join('')}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="table-wrapper">
@@ -517,9 +522,9 @@
                             <thead>
                                 <tr>
                                     <th>Número</th>
-                                    <th>Tipo de Teste</th>
-                                    <th>Homologador</th>
+                                    <th>Canal</th>
                                     <th>Status</th>
+                                    <th>Liberado para Teste</th>
                                     <th>Descrição</th>
                                 </tr>
                             </thead>
@@ -529,35 +534,32 @@
                 </div>`;
 
             window._cenarios = cenarios;
-            window._activeFilters = ['all'];
-            renderTable(['all']);
+            window._activeFilters = { status: ['all'], canal: ['all'], liberado: ['all'] };
+            renderTable(window._activeFilters);
 
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
+                    const group = this.dataset.group;
                     const filter = this.dataset.filter;
+                    const filters = window._activeFilters;
+
                     if (filter === 'all') {
-                        window._activeFilters = ['all'];
-                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        filters[group] = ['all'];
+                        document.querySelectorAll(`.filter-btn[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
                         this.classList.add('active');
                     } else {
-                        const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
-                        if (window._activeFilters.includes('all')) {
-                            window._activeFilters = [];
-                            allBtn.classList.remove('active');
-                        }
-                        if (window._activeFilters.includes(filter)) {
-                            window._activeFilters = window._activeFilters.filter(f => f !== filter);
+                        const allBtn = document.querySelector(`.filter-btn[data-group="${group}"][data-filter="all"]`);
+                        if (filters[group].includes('all')) { filters[group] = []; allBtn.classList.remove('active'); }
+                        if (filters[group].includes(filter)) {
+                            filters[group] = filters[group].filter(f => f !== filter);
                             this.classList.remove('active');
                         } else {
-                            window._activeFilters.push(filter);
+                            filters[group].push(filter);
                             this.classList.add('active');
                         }
-                        if (window._activeFilters.length === 0) {
-                            window._activeFilters = ['all'];
-                            allBtn.classList.add('active');
-                        }
+                        if (filters[group].length === 0) { filters[group] = ['all']; allBtn.classList.add('active'); }
                     }
-                    renderTable(window._activeFilters);
+                    renderTable(filters);
                 });
             });
 
@@ -566,23 +568,24 @@
 
         function renderTable(filters) {
             const cenarios = window._cenarios || [];
-     
             const tbody = document.getElementById('cenarios-tbody');
             if (!tbody) return;
 
-            const filtered = filters.includes('all') ? cenarios : cenarios.filter(c => {
-                let st = (c.status || '').trim();
-                if (c.cancelado && !st) st = 'Cancelado';
-                else if (!st) st = 'Não Iniciado';
-                return filters.includes(st);
+            const filtered = cenarios.filter(c => {
+                let st = (c.status || '').trim() || 'Não Iniciado';
+                if (c.cancelado) st = 'Cancelado';
+                const statusOk = filters.status.includes('all') || filters.status.includes(st);
+                const canalOk = filters.canal.includes('all') || filters.canal.includes(c.canal);
+                const liberadoOk = filters.liberado.includes('all') || filters.liberado.includes(c.liberado);
+                return statusOk && canalOk && liberadoOk;
             });
 
             tbody.innerHTML = filtered.map(c => {
                 return `<tr class="${c.cancelado ? 'cancelado' : ''}">
                     <td><strong>${c.id}</strong>${c.cancelado ? ' ⛔' : ''}</td>
-                    <td>${c.tipo || '—'}</td>
-                    <td>${c.homologador || '—'}</td>
+                    <td>${c.canal || '—'}</td>
                     <td>${c.status || '—'}</td>
+                    <td>${c.liberado || '—'}</td>
                     <td>${c.desc.substring(0, 100)}${c.desc.length > 100 ? '...' : ''}</td>
                 </tr>`;
             }).join('');
@@ -668,19 +671,19 @@
             Object.values(chartInstances).forEach(c => c.destroy());
             chartInstances = {};
 
-            // Chart 1 - Tipo de Teste (Bar horizontal)
-            const tipoCount = {};
+            // Chart 1 - Canal (Bar horizontal)
+            const canalCount = {};
             activeCenarios.forEach(c => {
-                const tipo = c.tipo && c.tipo.trim() !== '' ? c.tipo.trim() : 'Não informado';
-                tipoCount[tipo] = (tipoCount[tipo] || 0) + 1;
+                const canal = c.canal && c.canal.trim() !== '' ? c.canal.trim() : 'Não informado';
+                canalCount[canal] = (canalCount[canal] || 0) + 1;
             });
-            const tipoLabels = Object.keys(tipoCount).sort((a, b) => tipoCount[b] - tipoCount[a]);
+            const canalLabels = Object.keys(canalCount).sort((a, b) => canalCount[b] - canalCount[a]);
 
-            chartInstances.tipo = new Chart(document.getElementById('chartTipo'), {
+            chartInstances.tipo = new Chart(document.getElementById('chartCanal'), {
                 type: 'bar',
                 data: {
-                    labels: tipoLabels,
-                    datasets: [{ label: 'Cenários', data: tipoLabels.map(l => tipoCount[l]), backgroundColor: '#2980b9', borderRadius: 6, barThickness: 20 }]
+                    labels: canalLabels,
+                    datasets: [{ label: 'Cenários', data: canalLabels.map(l => canalCount[l]), backgroundColor: '#f57c00', borderRadius: 6, barThickness: 20 }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false, indexAxis: 'y',
@@ -692,22 +695,22 @@
                 }
             });
 
-            // Chart 2 - Cenários por Homologador (Donut)
-            const hCount = {};
+            // Chart 2 - Liberado para Teste (Donut)
+            const libCount = {};
             allCenarios.forEach(c => {
-                const h = c.homologador && c.homologador.trim() !== '' ? c.homologador.trim() : 'Não atribuído';
-                hCount[h] = (hCount[h] || 0) + 1;
+                const lib = c.liberado && c.liberado.trim() !== '' ? c.liberado.trim() : 'Não informado';
+                libCount[lib] = (libCount[lib] || 0) + 1;
             });
-            const hLabels = Object.keys(hCount).sort((a, b) => hCount[b] - hCount[a]);
-            const hColors = ['#1565c0','#2e7d32','#c62828','#6a1b9a','#e65100','#f57f17','#00695c','#283593','#78909c','#ec407a'];
+            const libLabels = Object.keys(libCount).sort((a, b) => libCount[b] - libCount[a]);
+            const libColors = ['#2e7d32', '#c62828', '#1565c0', '#e65100', '#f57f17'];
 
-            chartInstances.homologadores = new Chart(document.getElementById('chartHomologadores'), {
+            chartInstances.homologadores = new Chart(document.getElementById('chartLiberado'), {
                 type: 'doughnut',
                 data: {
-                    labels: hLabels,
+                    labels: libLabels,
                     datasets: [{
-                        data: hLabels.map(l => hCount[l]),
-                        backgroundColor: hLabels.map((_, i) => hColors[i % hColors.length]),
+                        data: libLabels.map(l => libCount[l]),
+                        backgroundColor: libLabels.map((_, i) => libColors[i % libColors.length]),
                         borderWidth: 2, borderColor: '#fff'
                     }]
                 },
