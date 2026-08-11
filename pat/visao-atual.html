@@ -331,7 +331,7 @@
                 // Aceitar qualquer linha onde o número não esteja vazio
                 if (!numero || numero.toString().trim() === '') continue;
 
-                const statusValue = (row['Status do teste'] || row['Status'] || '').toString().trim();
+                const statusValue = (row['Status do teste'] || row['Status do teste '] || row['Status'] || '').toString().trim();
                 const cancelado = statusValue === 'Cancelado';
 
                 cenarios.push({
