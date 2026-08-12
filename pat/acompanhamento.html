@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acompanhamento - PAT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --azul-escuro: #1a5276;
+            --azul-medio: #2980b9;
+            --ciano: #00bcd4;
+            --verde: #2e7d32;
+            --amarelo: #f9a825;
+            --verde-claro: #aed581;
+            --laranja: #f57c00;
+            --cinza-claro: #f5f7fa;
+            --cinza-texto: #2d2d2d;
+            --branco: #ffffff;
+            --sombra: 0 2px 12px rgba(0,0,0,0.08);
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+            background: var(--cinza-claro);
+            color: var(--cinza-texto);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--azul-escuro) 0%, var(--azul-medio) 50%, var(--ciano) 100%);
+            color: var(--branco);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .header-logo img { height: 54px; width: auto; border-radius: 6px; }
+        .header-divider { width: 2px; height: 44px; background: rgba(255,255,255,0.3); }
+        .header-title h1 { font-size: 18px; font-weight: 600; }
+        .header-title p { font-size: 13px; opacity: 0.85; font-weight: 300; }
+
+        .tagline-bar {
+            background: linear-gradient(90deg, var(--amarelo), var(--verde-claro));
+            padding: 6px 40px; font-size: 12px; font-weight: 600;
+            color: var(--azul-escuro); display: flex; align-items: center; gap: 8px;
+        }
+
+        nav {
+            background: var(--branco);
+            padding: 12px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex; gap: 8px; flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 8px 20px; border-radius: 20px; font-size: 13px;
+            font-weight: 600; text-decoration: none; color: var(--cinza-texto);
+            border: 1px solid #e5e7eb; transition: all 0.2s;
+        }
+        .nav-link:hover { background: #f3f4f6; }
+        .nav-link.active { background: var(--azul-medio); color: var(--branco); border-color: var(--azul-medio); }
+
+        .main { max-width: 1600px; margin: 0 auto; padding: 32px 40px; }
+
+        .loading {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; padding: 80px 20px; gap: 16px;
+        }
+        .loading-spinner {
+            width: 48px; height: 48px;
+            border: 4px solid #e5e7eb; border-top-color: var(--azul-medio);
+            border-radius: 50%; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .section-title {
+            font-size: 18px; font-weight: 700; color: var(--azul-escuro);
+            margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+        }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(180deg, var(--ciano), var(--azul-medio)); border-radius: 2px; }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px; margin-bottom: 32px;
+        }
+        .kpi-card {
+            background: var(--branco); border-radius: var(--radius);
+            padding: 20px; box-shadow: var(--sombra); border-top: 4px solid var(--azul-medio);
+            text-align: center;
+        }
+        .kpi-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #6b7280; margin-bottom: 6px; }
+        .kpi-value { font-size: 30px; font-weight: 800; color: var(--azul-escuro); }
+
+        /* Testador cards */
+        .testadores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px; margin-bottom: 32px;
+        }
+
+        .testador-card {
+            background: var(--branco); border-radius: var(--radius);
+            padding: 20px; box-shadow: var(--sombra);
+            display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .testador-header {
+            display: flex; align-items: center; gap: 12px;
+        }
+
+        .testador-avatar {
+            width: 42px; height: 42px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 700; color: var(--branco); flex-shrink: 0;
+        }
+
+        .testador-name { font-size: 14px; font-weight: 700; color: var(--azul-escuro); }
+        .testador-total { font-size: 11px; color: #6b7280; }
+
+        .testador-stats { display: flex; flex-direction: column; gap: 6px; }
+
+        .stat-row {
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 12px;
+        }
+
+        .stat-label { display: flex; align-items: center; gap: 6px; }
+        .stat-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .stat-count { font-weight: 700; }
+
+        .mini-bar {
+            height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; margin-top: 4px;
+        }
+        .mini-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+
+        /* Charts */
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+        .chart-card { background: var(--branco); border-radius: var(--radius); padding: 24px; box-shadow: var(--sombra); }
+        .chart-card h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
+        .chart-card.full-width { grid-column: 1 / -1; }
+        .chart-container { position: relative; height: 280px; }
+
+        /* Filtros */
+        .filter-bar {
+            background: var(--branco); border-radius: var(--radius); padding: 16px 24px;
+            box-shadow: var(--sombra); margin-bottom: 16px;
+            display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+        }
+
+        .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .filter-label { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; white-space: nowrap; }
+
+        .filter-btn {
+            padding: 5px 12px; border: 1px solid #e5e7eb; border-radius: 16px;
+            font-size: 12px; font-weight: 500; cursor: pointer;
+            background: var(--branco); color: var(--cinza-texto); font-family: inherit; transition: all 0.2s;
+        }
+        .filter-btn.active, .filter-btn:hover { background: var(--azul-medio); color: var(--branco); border-color: var(--azul-medio); }
+
+        /* Tabela */
+        .table-card { background: var(--branco); border-radius: var(--radius); box-shadow: var(--sombra); overflow: hidden; margin-bottom: 32px; }
+        .table-header { padding: 16px 24px; border-bottom: 1px solid #e5e7eb; }
+        .table-header h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); }
+        .table-wrapper { overflow-x: auto; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        thead { background: #f8fafc; position: sticky; top: 0; z-index: 1; }
+        th {
+            padding: 10px 12px; text-align: left; font-weight: 600; color: #4b5563;
+            font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px;
+            border-bottom: 2px solid #e5e7eb; white-space: nowrap; cursor: pointer;
+        }
+        th:hover { background: #f1f5f9; }
+        th .sort-icon { margin-left: 4px; opacity: 0.4; }
+        th.sorted .sort-icon { opacity: 1; }
+
+        td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+        tr:hover { background: #f8fafc; }
+
+        td.desc-col { white-space: pre-wrap; word-break: break-word; max-width: 300px; line-height: 1.4; }
+
+        .badge-status {
+            display: inline-block; padding: 2px 8px; border-radius: 10px;
+            font-size: 10px; font-weight: 600; white-space: nowrap;
+        }
+        .badge-aprovado { background: #e8f5e9; color: #2e7d32; }
+        .badge-reprovado { background: #fbe9e7; color: #c62828; }
+        .badge-nao-exec { background: #f3f4f6; color: #9ca3af; }
+        .badge-reteste { background: #e3f2fd; color: #1565c0; }
+        .badge-ag-correcao { background: #fff3e0; color: #e65100; }
+
+        .footer {
+            background: var(--azul-escuro); color: rgba(255,255,255,0.7);
+            text-align: center; padding: 20px 40px; font-size: 12px;
+            display: flex; align-items: center; justify-content: center; gap: 16px;
+        }
+        .footer img { height: 40px; border-radius: 4px; }
+        .footer strong { color: var(--branco); }
+
+        @media (max-width: 1024px) { .charts-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .header { flex-direction: column; gap: 12px; padding: 20px; } .main { padding: 20px; } nav { padding: 12px 20px; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="header-logo">
+                <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+            </div>
+            <div class="header-divider"></div>
+            <div class="header-title">
+                <h1>Acompanhamento de Testes — PAT</h1>
+                <p>Portal de Atendimento do INSS</p>
+            </div>
+        </div>
+        <div style="font-size:13px;opacity:0.9;" id="current-time"></div>
+    </header>
+
+    <div class="tagline-bar">
+        <span>Dados para cidadania</span>
+        <span>•</span>
+        <span>Acompanhamento detalhado por testador e cenário</span>
+    </div>
+
+    <nav>
+        <a href="../index.html" class="nav-link">🏠 Início</a>
+        <a href="visao-atual.html" class="nav-link">📊 Visão Atual</a>
+        <a href="evolucao.html" class="nav-link">📈 Evolução</a>
+        <a href="acompanhamento.html" class="nav-link active">🔍 Acompanhamento</a>
+    </nav>
+
+    <main class="main" id="main-content">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Carregando dados da planilha...</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+        <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação PAT</p>
+    </footer>
+
+    <script>
+        const XLSX_FILE = '00_PAT_HOMOLOGACAO_AD_BI.xlsx';
+        const STATUS_NAO_EXEC = ['não executado', 'nao executado', ''];
+
+        const STATUS_COLORS = {
+            'Aprovado': '#2e7d32',
+            'Reprovado': '#c62828',
+            'Disponível para reteste': '#1565c0',
+            'Aguardando Correção': '#e65100',
+            'Ag Correção': '#e65100',
+            'Não executado': '#9ca3af'
+        };
+
+        const AVATAR_COLORS = [
+            'linear-gradient(135deg,#1565c0,#42a5f5)',
+            'linear-gradient(135deg,#2e7d32,#66bb6a)',
+            'linear-gradient(135deg,#c62828,#ef5350)',
+            'linear-gradient(135deg,#6a1b9a,#ab47bc)',
+            'linear-gradient(135deg,#e65100,#ff8a65)',
+            'linear-gradient(135deg,#f57f17,#ffca28)',
+            'linear-gradient(135deg,#00695c,#26a69a)',
+            'linear-gradient(135deg,#283593,#5c6bc0)'
+        ];
+
+        function getStatusColor(status) {
+            return STATUS_COLORS[status] || '#78909c';
+        }
+
+        function getBadgeClass(status) {
+            const s = (status || '').toLowerCase();
+            if (s.includes('aprovado')) return 'badge-aprovado';
+            if (s.includes('reprovado')) return 'badge-reprovado';
+            if (s.includes('reteste') || s.includes('disponível')) return 'badge-reteste';
+            if (s.includes('correção') || s.includes('correcao') || s.includes('ag ')) return 'badge-ag-correcao';
+            return 'badge-nao-exec';
+        }
+
+        function isNaoExec(status) {
+            return STATUS_NAO_EXEC.includes((status || '').toLowerCase().trim());
+        }
+
+        function updateTime() {
+            const el = document.getElementById('current-time');
+            if (el) el.textContent = new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        async function loadData() {
+            try {
+                const response = await fetch(XLSX_FILE + '?t=' + Date.now());
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+
+                const sheetName = workbook.SheetNames.find(n => n.toLowerCase().includes('acomp'));
+                if (!sheetName) throw new Error('Aba ACOMPANHAMENTO não encontrada');
+
+                const sheet = workbook.Sheets[sheetName];
+                const raw = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+
+                // Linha 7 (índice 6) = headers reais
+                const headerRow = raw[6];
+                const numCol = 1;     // # (coluna B = index 1)
+                const libCol = 2;     // LIBERADO
+                const macroCol = 3;   // MACROPROCESSO
+                const ctCol = 4;      // CASO DE TESTE
+                const canalCol = 5;   // CANAL
+                const papelCol = 6;   // PAPEL
+                const fluxoCol = 7;   // FLUXO
+                const paramCol = 8;   // PARÂMETROS
+                const resultCol = 9;  // RESULTADO ESPERADO
+
+                // Detectar colunas de testadores (a partir da col 10 = índice 10)
+                const testadores = [];
+                for (let c = 10; c < headerRow.length; c++) {
+                    const name = (headerRow[c] || '').toString().trim();
+                    if (name) testadores.push({ name, colIdx: c });
+                }
+
+                // Ler dados (linha 8 em diante = índice 7+)
+                const cenarios = [];
+                for (let r = 7; r < raw.length; r++) {
+                    const row = raw[r];
+                    const num = (row[numCol] || '').toString().trim();
+                    if (!num || isNaN(parseInt(num))) continue;
+
+                    const ct = {};
+                    ct.num = num;
+                    ct.liberado = (row[libCol] || '').toString().trim();
+                    ct.macro = (row[macroCol] || '').toString().trim();
+                    ct.caso = (row[ctCol] || '').toString().trim();
+                    ct.canal = (row[canalCol] || '').toString().trim();
+                    ct.papel = (row[papelCol] || '').toString().trim();
+                    ct.fluxo = (row[fluxoCol] || '').toString().trim();
+                    ct.params = (row[paramCol] || '').toString().trim();
+                    ct.resultado = (row[resultCol] || '').toString().trim();
+                    ct.testes = {};
+
+                    testadores.forEach(t => {
+                        ct.testes[t.name] = (row[t.colIdx] || '').toString().trim();
+                    });
+
+                    cenarios.push(ct);
+                }
+
+                renderPage(cenarios, testadores);
+            } catch (err) {
+                document.getElementById('main-content').innerHTML = `
+                    <div class="loading">
+                        <p style="color:#c62828;font-weight:600;">❌ Erro ao carregar a planilha</p>
+                        <p>${err.message}</p>
+                    </div>`;
+            }
+        }
+
+        function renderPage(cenarios, testadores) {
+            const main = document.getElementById('main-content');
+            main.innerHTML = '';
+
+            const liberados = cenarios.filter(c => c.liberado.toLowerCase() === 'sim');
+            const totalCenarios = cenarios.length;
+            const totalLiberados = liberados.length;
+
+            // Contagem global de status (excluindo não executado)
+            const globalStatus = {};
+            cenarios.forEach(c => {
+                testadores.forEach(t => {
+                    const s = c.testes[t.name];
+                    if (!isNaoExec(s)) {
+                        globalStatus[s] = (globalStatus[s] || 0) + 1;
+                    }
+                });
+            });
+
+            const totalExec = Object.values(globalStatus).reduce((a, b) => a + b, 0);
+            const totalAprov = globalStatus['Aprovado'] || 0;
+            const totalReprov = globalStatus['Reprovado'] || 0;
+
+            // KPIs
+            main.innerHTML += `
+                <div class="kpi-grid">
+                    <div class="kpi-card" style="border-top-color:var(--azul-medio)">
+                        <div class="kpi-label">Total de Cenários</div>
+                        <div class="kpi-value">${totalCenarios}</div>
+                    </div>
+                    <div class="kpi-card" style="border-top-color:#2e7d32">
+                        <div class="kpi-label">Liberados para Teste</div>
+                        <div class="kpi-value">${totalLiberados}</div>
+                    </div>
+                    <div class="kpi-card" style="border-top-color:#00bcd4">
+                        <div class="kpi-label">Execuções Realizadas</div>
+                        <div class="kpi-value">${totalExec}</div>
+                    </div>
+                    <div class="kpi-card" style="border-top-color:#2e7d32">
+                        <div class="kpi-label">Aprovados</div>
+                        <div class="kpi-value">${totalAprov}</div>
+                    </div>
+                    <div class="kpi-card" style="border-top-color:#c62828">
+                        <div class="kpi-label">Reprovados</div>
+                        <div class="kpi-value">${totalReprov}</div>
+                    </div>
+                    <div class="kpi-card" style="border-top-color:#f57f17">
+                        <div class="kpi-label">Testadores</div>
+                        <div class="kpi-value">${testadores.length}</div>
+                    </div>
+                </div>`;
+
+            // Cards por testador (apenas os que executaram algo)
+            const testadoresAtivos = testadores.filter(t => {
+                return cenarios.some(c => !isNaoExec(c.testes[t.name]));
+            });
+
+            if (testadoresAtivos.length > 0) {
+                main.innerHTML += `<div class="section-title">Desempenho por Testador</div>`;
+                let cardsHtml = '<div class="testadores-grid">';
+
+                testadoresAtivos.forEach((t, idx) => {
+                    const stats = {};
+                    let executados = 0;
+                    cenarios.forEach(c => {
+                        const s = c.testes[t.name];
+                        if (!isNaoExec(s)) {
+                            stats[s] = (stats[s] || 0) + 1;
+                            executados++;
+                        }
+                    });
+
+                    const aprov = stats['Aprovado'] || 0;
+                    const reprov = stats['Reprovado'] || 0;
+                    const pct = executados > 0 ? Math.round((aprov / executados) * 100) : 0;
+                    const initials = t.name.substring(0, 2).toUpperCase();
+                    const color = AVATAR_COLORS[idx % AVATAR_COLORS.length];
+
+                    const statusRows = Object.entries(stats).sort((a, b) => b[1] - a[1]).map(([s, n]) => `
+                        <div class="stat-row">
+                            <div class="stat-label">
+                                <div class="stat-dot" style="background:${getStatusColor(s)}"></div>
+                                ${s}
+                            </div>
+                            <span class="stat-count">${n}</span>
+                        </div>`).join('');
+
+                    cardsHtml += `
+                        <div class="testador-card">
+                            <div class="testador-header">
+                                <div class="testador-avatar" style="background:${color}">${initials}</div>
+                                <div>
+                                    <div class="testador-name">${t.name}</div>
+                                    <div class="testador-total">${executados} execução${executados !== 1 ? 'ões' : ''} • ${pct}% aprovados</div>
+                                </div>
+                            </div>
+                            <div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%;background:#2e7d32;"></div></div>
+                            <div class="testador-stats">${statusRows}</div>
+                        </div>`;
+                });
+
+                cardsHtml += '</div>';
+                main.innerHTML += cardsHtml;
+            }
+
+            // Gráficos
+            main.innerHTML += `
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Execuções por Testador</h3>
+                        <div class="chart-container"><canvas id="chartTestadores"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Distribuição Global de Status</h3>
+                        <div class="chart-container"><canvas id="chartStatus"></canvas></div>
+                    </div>
+                </div>`;
+
+            // Tabela completa com filtros
+            const canais = [...new Set(cenarios.map(c => c.canal).filter(Boolean))];
+            const liberadoOpts = [...new Set(cenarios.map(c => c.liberado).filter(Boolean))];
+
+            main.innerHTML += `<div class="section-title">Detalhamento dos Cenários</div>`;
+            main.innerHTML += `
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <span class="filter-label">Canal:</span>
+                        <button class="filter-btn active" data-group="canal" data-filter="all">Todos</button>
+                        ${canais.map(c => `<button class="filter-btn" data-group="canal" data-filter="${c}">${c}</button>`).join('')}
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Liberado:</span>
+                        <button class="filter-btn active" data-group="lib" data-filter="all">Todos</button>
+                        ${liberadoOpts.map(l => `<button class="filter-btn" data-group="lib" data-filter="${l}">${l}</button>`).join('')}
+                    </div>
+                </div>`;
+
+            // Monta tabela — colunas fixas + apenas testadores com execuções
+            main.innerHTML += `
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>Resultados por Cenário e Testador</h3>
+                        <p style="font-size:12px;color:#6b7280;margin-top:4px;">Exibindo apenas testadores com ao menos uma execução. Colunas clicáveis para ordenação.</p>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="acomp-table">
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable(0)">#<span class="sort-icon">↕</span></th>
+                                    <th onclick="sortTable(1)">Liberado<span class="sort-icon">↕</span></th>
+                                    <th onclick="sortTable(2)">Canal<span class="sort-icon">↕</span></th>
+                                    <th onclick="sortTable(3)">Papel<span class="sort-icon">↕</span></th>
+                                    <th>Caso de Teste</th>
+                                    ${testadoresAtivos.map(t => `<th onclick="sortTable()">${t.name}<span class="sort-icon">↕</span></th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody id="acomp-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>`;
+
+            window._acompData = { cenarios, testadoresAtivos };
+            window._acompFilters = { canal: 'all', lib: 'all' };
+            renderTable();
+
+            // Filtros
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const group = this.dataset.group;
+                    const filter = this.dataset.filter;
+                    document.querySelectorAll(`.filter-btn[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    window._acompFilters[group] = filter;
+                    renderTable();
+                });
+            });
+
+            // Render charts
+            setTimeout(() => {
+                // Chart testadores
+                const tLabels = testadoresAtivos.map(t => t.name);
+                const tAprov = testadoresAtivos.map(t => {
+                    return cenarios.filter(c => c.testes[t.name] === 'Aprovado').length;
+                });
+                const tReprov = testadoresAtivos.map(t => {
+                    return cenarios.filter(c => c.testes[t.name] === 'Reprovado').length;
+                });
+                const tOther = testadoresAtivos.map(t => {
+                    return cenarios.filter(c => {
+                        const s = c.testes[t.name];
+                        return !isNaoExec(s) && s !== 'Aprovado' && s !== 'Reprovado';
+                    }).length;
+                });
+
+                new Chart(document.getElementById('chartTestadores'), {
+                    type: 'bar',
+                    data: {
+                        labels: tLabels,
+                        datasets: [
+                            { label: 'Aprovado', data: tAprov, backgroundColor: '#2e7d32', borderRadius: 4 },
+                            { label: 'Reprovado', data: tReprov, backgroundColor: '#c62828', borderRadius: 4 },
+                            { label: 'Outros', data: tOther, backgroundColor: '#f57f17', borderRadius: 4 }
+                        ]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 12 } } },
+                        scales: {
+                            x: { stacked: true, grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } },
+                            y: { stacked: true, grid: { color: '#f3f4f6' }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 }, stepSize: 1 } }
+                        }
+                    }
+                });
+
+                // Chart status donut
+                const sLabels = Object.keys(globalStatus);
+                new Chart(document.getElementById('chartStatus'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: sLabels,
+                        datasets: [{
+                            data: sLabels.map(s => globalStatus[s]),
+                            backgroundColor: sLabels.map(s => getStatusColor(s)),
+                            borderWidth: 2, borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 12 } } }
+                    }
+                });
+            }, 100);
+        }
+
+        function renderTable() {
+            const { cenarios, testadoresAtivos } = window._acompData;
+            const { canal, lib } = window._acompFilters;
+            const tbody = document.getElementById('acomp-tbody');
+            if (!tbody) return;
+
+            const filtered = cenarios.filter(c => {
+                const canalOk = canal === 'all' || c.canal === canal;
+                const libOk = lib === 'all' || c.liberado === lib;
+                return canalOk && libOk;
+            });
+
+            tbody.innerHTML = filtered.map(c => {
+                const testesCols = testadoresAtivos.map(t => {
+                    const s = c.testes[t.name];
+                    if (isNaoExec(s)) return `<td><span class="badge-status badge-nao-exec">—</span></td>`;
+                    return `<td><span class="badge-status ${getBadgeClass(s)}">${s}</span></td>`;
+                }).join('');
+
+                return `<tr>
+                    <td><strong>${c.num}</strong></td>
+                    <td>${c.liberado}</td>
+                    <td>${c.canal}</td>
+                    <td style="font-size:11px;">${c.papel}</td>
+                    <td class="desc-col">${c.caso}</td>
+                    ${testesCols}
+                </tr>`;
+            }).join('');
+        }
+
+        let sortDir = 1;
+        function sortTable(colIdx) {
+            const { cenarios } = window._acompData;
+            const keys = ['num', 'liberado', 'canal', 'papel', 'caso'];
+            const key = keys[colIdx];
+            if (!key) return;
+            window._acompData.cenarios = cenarios.sort((a, b) => {
+                const av = isNaN(a[key]) ? a[key] : parseInt(a[key]);
+                const bv = isNaN(b[key]) ? b[key] : parseInt(b[key]);
+                return av > bv ? sortDir : av < bv ? -sortDir : 0;
+            });
+            sortDir *= -1;
+            renderTable();
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
