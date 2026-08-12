@@ -316,21 +316,40 @@
 
                 // Linha 7 (índice 6) = headers reais
                 const headerRow = raw[6];
-                const numCol = 1;     // # (coluna B = index 1)
-                const libCol = 2;     // LIBERADO
-                const macroCol = 3;   // MACROPROCESSO
-                const ctCol = 4;      // CASO DE TESTE
-                const canalCol = 5;   // CANAL
-                const papelCol = 6;   // PAPEL
-                const fluxoCol = 7;   // FLUXO
-                const paramCol = 8;   // PARÂMETROS
-                const resultCol = 9;  // RESULTADO ESPERADO
+                
+                // Debug: log para ver o que foi lido
+                console.log('Total linhas raw:', raw.length);
+                console.log('Header row (idx 6):', headerRow);
+                console.log('Linha 8 (idx 7):', raw[7]);
 
-                // Detectar colunas de testadores (a partir da col 10 = índice 10)
+                // Encontrar índice de cada coluna pelos nomes no header
+                function findCol(names) {
+                    for (const name of names) {
+                        const idx = headerRow.findIndex(h => (h||'').toString().toLowerCase().includes(name.toLowerCase()));
+                        if (idx >= 0) return idx;
+                    }
+                    return -1;
+                }
+
+                const numCol = findCol(['#']);
+                const libCol = findCol(['liberado']);
+                const macroCol = findCol(['macro', 'macro']);
+                const ctCol = findCol(['caso de teste', 'caso']);
+                const canalCol = findCol(['canal']);
+                const papelCol = findCol(['papel']);
+                const fluxoCol = findCol(['fluxo']);
+                const paramCol = findCol(['parâm', 'param']);
+                const resultCol = findCol(['resultado']);
+
+                console.log('Cols encontradas:', { numCol, libCol, macroCol, ctCol, canalCol, papelCol });
+
+                // Detectar colunas de testadores (qualquer coluna após resultCol que tenha nome)
                 const testadores = [];
                 for (let c = 10; c < headerRow.length; c++) {
                     const name = (headerRow[c] || '').toString().trim();
-                    if (name) testadores.push({ name, colIdx: c });
+                    if (name && !['#','LIBERADO','MACROPROCESSO','CASO DE TESTE','CANAL','PAPEL','FLUXO','PARÂMETROS','RESULTADO ESPERADO'].includes(name.toUpperCase())) {
+                        testadores.push({ name, colIdx: c });
+                    }
                 }
 
                 // Ler dados (linha 8 em diante = índice 7+)
