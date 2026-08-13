@@ -316,6 +316,13 @@ function parseSheetMonitoramento(workbook) {
 
     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
 
+    // Debug temporario
+    console.log('Total rows:', rows.length);
+    for (let i = 0; i < Math.min(12, rows.length); i++) {
+        const nonEmpty = rows[i].filter(v => v !== '');
+        if (nonEmpty.length > 0) console.log('Row', i, ':', JSON.stringify(rows[i].slice(0,12)));
+    }
+
     // Row 8 (index 7) = header; Data from row 9 (index 8)
     const HEADER_IDX = 7;
     const DATA_START  = 8;
