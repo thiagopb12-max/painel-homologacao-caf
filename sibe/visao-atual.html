@@ -316,48 +316,56 @@ function parseSheetMonitoramento(workbook) {
 
     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
 
-    // Debug temporario
-    console.log('Total rows:', rows.length);
-    for (let i = 0; i < Math.min(12, rows.length); i++) {
-        const nonEmpty = rows[i].filter(v => v !== '');
-        if (nonEmpty.length > 0) console.log('Row', i, ':', JSON.stringify(rows[i].slice(0,12)));
-    }
-
-    // Row 8 (index 7) = header; Data from row 9 (index 8)
+    // O UsedRange começa na coluna C (Excel), então o SheetJS compacta:
+    // índice 0 = ID (col C), índice 1 = Cenário (col D),
+    // índice 2..5 = homologadores, índice 6 = '#', índice 7 = Geral
     const HEADER_IDX = 7;
     const DATA_START  = 8;
     const headerRow   = rows[HEADER_IDX] || [];
 
-    // Detect homologador columns dynamically: indices 4–8, skip empty and 'Geral'
+    // Detectar homologadores: entre índice 2 e último, excluindo '#' e 'Geral'
     const homologadores = [];
-    for (let ci = 4; ci <= 8; ci++) {
+    for (let ci = 2; ci < headerRow.length; ci++) {
         const name = (headerRow[ci] || '').toString().trim();
-        if (name && name.toLowerCase() !== 'geral') {
-            homologadores.push({ name, colIdx: ci });
-        }
+        if (!name) continue;
+        if (name === '#' || name.toLowerCase() === 'geral') continue;
+        homologadores.push({ name, colIdx: ci });
+    }
+
+    // Índice da coluna Geral
+    const geralIdx = headerRow.findIndex(h => (h || '').toString().toLowerCase().trim() === 'geral');
+
+    function normalizeStatus(v) {
+        const s = (v || '').toString().trim().toUpperCase();
+        if (s === 'APROVADO' || s === 'SUCESSO' || s === 'OK') return 'Sucesso';
+        if (s === 'REPROVADO' || s === 'FALHA') return 'Falha';
+        if (s === 'SUGESTAO' || s === 'SUGESTÃO' || s === 'MELHORIA') return 'Sugestão';
+        if (s === '' || s === 'NAO EXECUTADO' || s === 'NÃO EXECUTADO') return 'Não Executado';
+        if (s === 'CANCELADO') return 'Cancelado';
+        return v.toString().trim();
     }
 
     const cenarios = [];
     for (let ri = DATA_START; ri < rows.length; ri++) {
         const row = rows[ri];
-        const idRaw = row[2]; // C3 – ID
-        // Skip rows without numeric ID (category headers or empty)
+        const idRaw = row[0]; // índice 0 = ID
         if (idRaw === null || idRaw === undefined || idRaw === '') continue;
         const id = idRaw.toString().trim();
         if (!id || isNaN(Number(id))) continue;
 
-        const desc  = (row[3]  || '').toString().trim(); // C4
-        const geral = (row[9]  || '').toString().trim(); // C10
+        const desc  = (row[1] || '').toString().trim();
+        const geralRaw = geralIdx >= 0 ? row[geralIdx] : '';
+        const geral = normalizeStatus(geralRaw) || 'Não Executado';
 
         const homologadoresMap = {};
         homologadores.forEach(h => {
-            homologadoresMap[h.name] = (row[h.colIdx] || '').toString().trim();
+            homologadoresMap[h.name] = normalizeStatus(row[h.colIdx]);
         });
 
         cenarios.push({
             id,
             desc,
-            geral: geral || 'Não Executado',
+            geral,
             homologadores: homologadoresMap,
             cancelado: geral === 'Cancelado'
         });
