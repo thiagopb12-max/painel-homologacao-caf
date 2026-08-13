@@ -511,6 +511,11 @@
             const liberadoOpts = [...new Set(cenarios.map(c => c.liberado).filter(Boolean))];
 
             main.innerHTML += `<div class="section-title">Detalhamento dos Cenários</div>`;
+            // Status únicos executados
+            const statusOpts = [...new Set(
+                cenarios.flatMap(c => testadoresAtivos.map(t => c.testes[t.name]).filter(s => !isNaoExec(s)))
+            )].sort();
+
             main.innerHTML += `
                 <div class="filter-bar">
                     <div class="filter-group">
@@ -522,6 +527,12 @@
                         <span class="filter-label">Liberado:</span>
                         <button class="filter-btn active" data-group="lib" data-filter="all">Todos</button>
                         ${liberadoOpts.map(l => `<button class="filter-btn" data-group="lib" data-filter="${l}">${l}</button>`).join('')}
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Status:</span>
+                        <button class="filter-btn active" data-group="status" data-filter="all">Todos</button>
+                        <button class="filter-btn" data-group="status" data-filter="__exec__">Com execução</button>
+                        ${statusOpts.map(s => `<button class="filter-btn" data-group="status" data-filter="${s}">${s}</button>`).join('')}
                     </div>
                 </div>`;
 
@@ -550,7 +561,7 @@
                 </div>`;
 
             window._acompData = { cenarios, testadoresAtivos };
-            window._acompFilters = { canal: 'all', lib: 'all' };
+            window._acompFilters = { canal: 'all', lib: 'all', status: 'all' };
             renderTable();
 
             // Filtros
@@ -624,14 +635,22 @@
 
         function renderTable() {
             const { cenarios, testadoresAtivos } = window._acompData;
-            const { canal, lib } = window._acompFilters;
+            const { canal, lib, status } = window._acompFilters;
             const tbody = document.getElementById('acomp-tbody');
             if (!tbody) return;
 
             const filtered = cenarios.filter(c => {
                 const canalOk = canal === 'all' || c.canal === canal;
                 const libOk = lib === 'all' || c.liberado === lib;
-                return canalOk && libOk;
+                let statusOk = true;
+                if (status === '__exec__') {
+                    // mostrar cenários onde ao menos um testador executou
+                    statusOk = testadoresAtivos.some(t => !isNaoExec(c.testes[t.name]));
+                } else if (status !== 'all') {
+                    // mostrar cenários onde ao menos um testador tem esse status
+                    statusOk = testadoresAtivos.some(t => c.testes[t.name] === status);
+                }
+                return canalOk && libOk && statusOk;
             });
 
             tbody.innerHTML = filtered.map(c => {
