@@ -26,26 +26,20 @@
             --sombra: 0 2px 12px rgba(0,0,0,0.08);
             --radius: 12px;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, sans-serif;
             background: var(--cinza-claro);
             color: var(--cinza-texto);
             line-height: 1.6;
         }
-
         .header {
             background: linear-gradient(135deg, var(--azul-escuro) 0%, var(--azul-medio) 50%, var(--ciano) 100%);
             color: var(--branco);
             padding: 20px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
-
         .header-left { display: flex; align-items: center; gap: 20px; }
         .header-logo img { height: 54px; width: auto; border-radius: 6px; }
         .header-divider { width: 2px; height: 44px; background: rgba(255,255,255,0.3); }
@@ -53,21 +47,15 @@
         .header-title h1 { font-size: 18px; font-weight: 600; }
         .header-title p { font-size: 13px; opacity: 0.85; font-weight: 300; }
         .header-right { display: flex; align-items: center; gap: 16px; }
-
         .header-badge {
             background: rgba(255,255,255,0.15);
             border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 20px;
-            padding: 6px 16px;
-            font-size: 12px;
-            font-weight: 500;
+            border-radius: 20px; padding: 6px 16px;
+            font-size: 12px; font-weight: 500;
             animation: pulse 2s infinite;
         }
-
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-
         .header-time { font-size: 13px; opacity: 0.9; }
-
         .header-countdown {
             font-size: 11px; opacity: 0.85;
             background: rgba(255,255,255,0.1); border-radius: 8px;
@@ -75,39 +63,12 @@
         }
         .header-countdown .countdown-label { font-weight: 300; }
         .header-countdown .countdown-value { font-weight: 700; font-size: 13px; }
-
-        .progress-circle-section {
-            background: var(--branco); border-radius: var(--radius);
-            padding: 32px; box-shadow: var(--sombra); margin-bottom: 32px;
-            display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap;
-        }
-
-        .progress-circle-wrapper { position: relative; width: 180px; height: 180px; }
-        .progress-circle-wrapper svg { transform: rotate(-90deg); width: 180px; height: 180px; }
-        .progress-circle-wrapper .circle-bg { fill: none; stroke: #e5e7eb; stroke-width: 14; }
-        .progress-circle-wrapper .circle-fg { fill: none; stroke-width: 14; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
-
-        .progress-circle-text {
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); text-align: center;
-        }
-        .progress-circle-text .pct { font-size: 36px; font-weight: 800; color: var(--azul-escuro); }
-        .progress-circle-text .pct-label { font-size: 12px; color: #6b7280; font-weight: 500; }
-
-        .progress-circle-info { display: flex; flex-direction: column; gap: 12px; }
-        .progress-circle-info h3 { font-size: 18px; font-weight: 700; color: var(--azul-escuro); margin-bottom: 4px; }
-        .progress-circle-info .info-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--cinza-texto); }
-        .progress-circle-info .info-row .info-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-        .progress-circle-info .info-row .info-count { font-weight: 700; min-width: 24px; }
-
         .tagline-bar {
             background: linear-gradient(90deg, var(--amarelo), var(--verde-claro));
             padding: 6px 40px; font-size: 12px; font-weight: 600;
             color: var(--azul-escuro); display: flex; align-items: center; gap: 8px;
         }
-
         .main { max-width: 1440px; margin: 0 auto; padding: 32px 40px; }
-
         .loading {
             display: flex; flex-direction: column; align-items: center;
             justify-content: center; padding: 80px 20px; gap: 16px;
@@ -119,7 +80,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading p { font-size: 14px; color: #6b7280; }
-
         .refresh-info {
             background: var(--branco); border-radius: var(--radius);
             padding: 12px 24px; box-shadow: var(--sombra); margin-bottom: 24px;
@@ -132,9 +92,33 @@
             font-family: inherit; cursor: pointer; transition: background 0.2s;
         }
         .refresh-info button:hover { background: var(--azul-escuro); }
-
+        .progress-circle-section {
+            background: var(--branco); border-radius: var(--radius);
+            padding: 32px; box-shadow: var(--sombra); margin-bottom: 32px;
+            display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap;
+        }
+        .progress-circle-wrapper { position: relative; width: 180px; height: 180px; }
+        .progress-circle-wrapper svg { transform: rotate(-90deg); width: 180px; height: 180px; }
+        .progress-circle-wrapper .circle-bg { fill: none; stroke: #e5e7eb; stroke-width: 14; }
+        .progress-circle-wrapper .circle-fg { fill: none; stroke-width: 14; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
+        .progress-circle-text {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); text-align: center;
+        }
+        .progress-circle-text .pct { font-size: 36px; font-weight: 800; color: var(--azul-escuro); }
+        .progress-circle-text .pct-label { font-size: 12px; color: #6b7280; font-weight: 500; }
+        .progress-circle-info { display: flex; flex-direction: column; gap: 12px; }
+        .progress-circle-info h3 { font-size: 18px; font-weight: 700; color: var(--azul-escuro); margin-bottom: 4px; }
+        .progress-circle-info .info-row { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--cinza-texto); }
+        .progress-circle-info .info-row .info-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        .progress-circle-info .info-row .info-count { font-weight: 700; min-width: 24px; }
+        .section-title {
+            font-size: 18px; font-weight: 700; color: var(--azul-escuro);
+            margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+        }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(180deg, var(--ciano), var(--azul-medio)); border-radius: 2px; }
         .status-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 16px; margin-bottom: 32px;
         }
         .status-card {
@@ -146,62 +130,70 @@
         .status-card .status-icon { font-size: 24px; margin-bottom: 8px; }
         .status-card .status-count { font-size: 32px; font-weight: 800; color: var(--azul-escuro); }
         .status-card .status-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
-        .status-card.st-homologado { border-left-color: #2e7d32; }
-        .status-card.st-homologado .status-label { color: #2e7d32; }
-        .status-card.st-ressalvas { border-left-color: #f57f17; }
-        .status-card.st-ressalvas .status-label { color: #f57f17; }
-        .status-card.st-em-homologacao { border-left-color: #1565c0; }
-        .status-card.st-em-homologacao .status-label { color: #1565c0; }
-        .status-card.st-aguardando { border-left-color: #e65100; }
-        .status-card.st-aguardando .status-label { color: #e65100; }
-        .status-card.st-reprovado { border-left-color: #c62828; }
-        .status-card.st-reprovado .status-label { color: #c62828; }
-        .status-card.st-cancelado { border-left-color: #6a1b9a; }
-        .status-card.st-cancelado .status-label { color: #6a1b9a; }
-
+        .status-card.st-sucesso { border-left-color: #2e7d32; }
+        .status-card.st-sucesso .status-label { color: #2e7d32; }
+        .status-card.st-falha { border-left-color: #c62828; }
+        .status-card.st-falha .status-label { color: #c62828; }
+        .status-card.st-sugestao { border-left-color: #f57f17; }
+        .status-card.st-sugestao .status-label { color: #f57f17; }
+        .status-card.st-nao-executado { border-left-color: #9ca3af; }
+        .status-card.st-nao-executado .status-label { color: #9ca3af; }
+        .kpi-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px; margin-bottom: 32px;
+        }
+        .kpi-card {
+            background: var(--branco); border-radius: var(--radius);
+            padding: 18px 16px; box-shadow: var(--sombra); text-align: center;
+            border-top: 4px solid var(--azul-medio);
+        }
+        .kpi-card .kpi-count { font-size: 30px; font-weight: 800; color: var(--azul-escuro); }
+        .kpi-card .kpi-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280; margin-top: 4px; }
+        .progress-section { margin-bottom: 32px; }
+        .progress-bar-container { background: var(--branco); border-radius: var(--radius); padding: 24px; box-shadow: var(--sombra); }
+        .progress-bar-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .progress-bar-title h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); }
+        .hml-progress-item { margin-bottom: 16px; }
+        .hml-progress-item:last-child { margin-bottom: 0; }
+        .hml-progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: var(--cinza-texto); }
+        .hml-progress-label .hml-pct { font-weight: 700; color: var(--azul-medio); }
+        .progress-bar { height: 12px; background: #e5e7eb; border-radius: 6px; overflow: hidden; display: flex; }
+        .progress-segment { height: 100%; transition: width 0.5s ease; }
+        .progress-legend { display: flex; gap: 20px; margin-top: 12px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6b7280; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .homologadores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .homologador-card { background: var(--branco); border-radius: var(--radius); padding: 20px; box-shadow: var(--sombra); display: flex; align-items: center; gap: 16px; }
+        .homologador-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: var(--branco); flex-shrink: 0; }
+        .homologador-info h4 { font-size: 14px; font-weight: 600; color: var(--cinza-texto); }
+        .homologador-info .hml-stats { font-size: 12px; color: #6b7280; margin-top: 4px; }
         .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
         .chart-card { background: var(--branco); border-radius: var(--radius); padding: 24px; box-shadow: var(--sombra); }
         .chart-card.full-width { grid-column: 1 / -1; }
         .chart-card h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e5e7eb; }
         .chart-container { position: relative; height: 280px; }
-
-        .section-title {
-            font-size: 18px; font-weight: 700; color: var(--azul-escuro);
-            margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
-        }
-        .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(180deg, var(--ciano), var(--azul-medio)); border-radius: 2px; }
-
-        .homologadores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 32px; }
-        .homologador-card { background: var(--branco); border-radius: var(--radius); padding: 20px; box-shadow: var(--sombra); display: flex; align-items: center; gap: 16px; }
-        .homologador-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: var(--branco); flex-shrink: 0; }
-        .homologador-info h4 { font-size: 14px; font-weight: 600; color: var(--cinza-texto); }
-
         .table-card { background: var(--branco); border-radius: var(--radius); box-shadow: var(--sombra); overflow: hidden; margin-bottom: 32px; }
-        .table-header { padding: 20px 24px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .table-header { padding: 20px 24px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
         .table-header h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); }
         .table-filter { display: flex; gap: 8px; flex-wrap: wrap; }
         .filter-btn { padding: 6px 14px; border: 1px solid #e5e7eb; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; background: var(--branco); color: var(--cinza-texto); font-family: inherit; transition: all 0.2s; }
         .filter-btn.active, .filter-btn:hover { background: var(--azul-medio); color: var(--branco); border-color: var(--azul-medio); }
-
         .table-wrapper { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
         thead { background: #f8fafc; }
         th { padding: 12px 16px; text-align: left; font-weight: 600; color: #4b5563; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #e5e7eb; white-space: nowrap; }
-        td { padding: 12px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+        td { padding: 11px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+        td.desc-cell { white-space: pre-wrap; word-break: break-word; max-width: 380px; font-size: 12px; line-height: 1.5; }
         tr:hover { background: #f8fafc; }
-        tr.cancelado td { opacity: 0.5; }
-
-        .progress-section { margin-bottom: 32px; }
-        .progress-bar-container { background: var(--branco); border-radius: var(--radius); padding: 24px; box-shadow: var(--sombra); }
-        .progress-bar-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .progress-bar-title h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); }
-        .progress-bar-title span { font-size: 24px; font-weight: 800; color: var(--azul-medio); }
-        .progress-bar { height: 14px; background: #e5e7eb; border-radius: 7px; overflow: hidden; display: flex; }
-        .progress-segment { height: 100%; transition: width 0.5s ease; }
-        .progress-legend { display: flex; gap: 20px; margin-top: 12px; flex-wrap: wrap; }
-        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6b7280; }
-        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
-
+        .badge {
+            display: inline-block; padding: 3px 10px; border-radius: 12px;
+            font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap;
+        }
+        .badge-sucesso    { background: #2e7d32; }
+        .badge-falha      { background: #c62828; }
+        .badge-sugestao   { background: #f57f17; }
+        .badge-nao-exec   { background: #9ca3af; }
+        .badge-default    { background: #6b7280; }
         .footer {
             background: var(--azul-escuro); color: rgba(255,255,255,0.7);
             text-align: center; padding: 20px 40px; font-size: 12px;
@@ -209,531 +201,542 @@
         }
         .footer img { height: 40px; border-radius: 4px; }
         .footer strong { color: var(--branco); }
-
         @media (max-width: 1024px) { .charts-grid { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .header { flex-direction: column; gap: 16px; padding: 20px; } .main { padding: 20px; } .status-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 16px; padding: 20px; }
+            .main { padding: 20px; }
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .status-grid { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-left">
-            <div class="header-logo">
-                <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
-            </div>
-            <div class="header-divider"></div>
-            <div class="header-title">
-                <h1>Painel de Homologação — SIBE</h1>
-                <p>Sistema Integrado de Benefícios</p>
-            </div>
-        </div>
-        <div class="header-right">
-            <div class="header-badge">🔴 AO VIVO</div>
-            <div class="header-time" id="current-time"></div>
-            <div class="header-countdown" id="header-countdown"></div>
-        </div>
-    </header>
 
-    <div class="tagline-bar">
-        <span>Dados para cidadania</span>
-        <span>•</span>
-        <span>Acompanhamento em tempo real da homologação</span>
+<header class="header">
+    <div class="header-left">
+        <div class="header-logo">
+            <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+        </div>
+        <div class="header-divider"></div>
+        <div class="header-title">
+            <h1>Painel de Homologação — SIBE</h1>
+            <p>Sistema Integrado de Benefícios</p>
+        </div>
     </div>
+    <div class="header-right">
+        <div class="header-badge">🔴 AO VIVO</div>
+        <div class="header-time" id="current-time"></div>
+        <div class="header-countdown" id="header-countdown"></div>
+    </div>
+</header>
 
-    <nav style="background: var(--branco); padding: 12px 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; gap: 8px;">
-        <a href="../index.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">🏠 Início</a>
-        <a href="visao-atual.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; background: var(--azul-medio); color: white; border: 1px solid var(--azul-medio);">📊 Visão Atual</a>
-        <a href="evolucao.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">📈 Evolução</a>
-    </nav>
+<div class="tagline-bar">
+    <span>Dados para cidadania</span>
+    <span>•</span>
+    <span>Acompanhamento em tempo real da homologação</span>
+</div>
 
-    <main class="main" id="main-content">
-        <div class="loading" id="loading">
-            <div class="loading-spinner"></div>
-            <p>Carregando dados da planilha...</p>
-        </div>
-    </main>
+<nav style="background: var(--branco); padding: 12px 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; gap: 8px;">
+    <a href="../index.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">🏠 Início</a>
+    <a href="visao-atual.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; background: var(--azul-medio); color: white; border: 1px solid var(--azul-medio);">📊 Visão Atual</a>
+    <a href="evolucao.html" style="padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb;">📈 Evolução</a>
+</nav>
 
-    <footer class="footer">
-        <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
-        <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação SIBE • Atualizado em <span id="footer-time"></span></p>
-    </footer>
+<main class="main" id="main-content">
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+        <p>Carregando dados da planilha...</p>
+    </div>
+</main>
 
-    <script>
-        const XLSX_FILE = 'SIBE.xlsx';
-        const REFRESH_INTERVAL = 30000;
+<footer class="footer">
+    <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+    <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação SIBE • Atualizado em <span id="footer-time"></span></p>
+</footer>
 
-        let chartInstances = {};
+<script>
+'use strict';
+const XLSX_FILE = 'SIBE.xlsx';
+const REFRESH_INTERVAL = 30000;
+let chartInstances = {};
 
-        const HOMOLOG_START = new Date('2026-08-10T00:00:00');
-        const HOMOLOG_END = new Date('2026-08-14T23:59:59');
+const HOMOLOG_START = new Date('2026-08-10T00:00:00');
+const HOMOLOG_END   = new Date('2026-08-14T23:59:59');
 
-        function updateTime() {
-            const now = new Date();
-            const timeStr = now.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
-            const el1 = document.getElementById('current-time');
-            const el2 = document.getElementById('footer-time');
-            if (el1) el1.textContent = timeStr;
-            if (el2) el2.textContent = timeStr;
+const STATUS_COLORS = {
+    'Sucesso':        '#2e7d32',
+    'Falha':          '#c62828',
+    'Sugestão':       '#f57f17',
+    'Não Executado':  '#9ca3af'
+};
 
-            const countdownEl = document.getElementById('header-countdown');
-            if (countdownEl) {
-                if (now < HOMOLOG_START) {
-                    const diff = HOMOLOG_START - now;
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    countdownEl.innerHTML = `<div class="countdown-label">Início em</div><div class="countdown-value">${days} dia${days !== 1 ? 's' : ''}</div>`;
-                } else if (now <= HOMOLOG_END) {
-                    const diff = HOMOLOG_END - now;
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    countdownEl.innerHTML = `<div class="countdown-label">⏱ Restam</div><div class="countdown-value">${days}d ${hours}h</div>`;
-                } else {
-                    countdownEl.innerHTML = `<div class="countdown-label">Homologação</div><div class="countdown-value">Encerrada</div>`;
-                }
-            }
+function statusBadgeClass(v) {
+    const s = (v || '').trim();
+    if (s === 'Sucesso')       return 'badge-sucesso';
+    if (s === 'Falha')         return 'badge-falha';
+    if (s === 'Sugestão')      return 'badge-sugestao';
+    if (s === 'Não Executado') return 'badge-nao-exec';
+    return 'badge-default';
+}
+
+function statusColor(v) {
+    return STATUS_COLORS[(v || '').trim()] || '#6b7280';
+}
+
+function updateTime() {
+    const now = new Date();
+    const timeStr = now.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
+    const el1 = document.getElementById('current-time');
+    const el2 = document.getElementById('footer-time');
+    if (el1) el1.textContent = timeStr;
+    if (el2) el2.textContent = timeStr;
+
+    const countdownEl = document.getElementById('header-countdown');
+    if (!countdownEl) return;
+    if (now < HOMOLOG_START) {
+        const diff = HOMOLOG_START - now;
+        const days = Math.floor(diff / (1000*60*60*24));
+        countdownEl.innerHTML = `<div class="countdown-label">Início em</div><div class="countdown-value">${days} dia${days!==1?'s':''}</div>`;
+    } else if (now <= HOMOLOG_END) {
+        const diff = HOMOLOG_END - now;
+        const days  = Math.floor(diff / (1000*60*60*24));
+        const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+        countdownEl.innerHTML = `<div class="countdown-label">⏱ Restam</div><div class="countdown-value">${days}d ${hours}h</div>`;
+    } else {
+        countdownEl.innerHTML = `<div class="countdown-label">Homologação</div><div class="countdown-value">Encerrada</div>`;
+    }
+}
+setInterval(updateTime, 1000);
+updateTime();
+
+// ── Parser ──────────────────────────────────────────────────────────────────
+function parseSheetMonitoramento(workbook) {
+    const sheet = workbook.Sheets['Monitoramento'];
+    if (!sheet) throw new Error('Aba "Monitoramento" não encontrada no arquivo SIBE.xlsx');
+
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+
+    // Row 8 (index 7) = header; Data from row 9 (index 8)
+    const HEADER_IDX = 7;
+    const DATA_START  = 8;
+    const headerRow   = rows[HEADER_IDX] || [];
+
+    // Detect homologador columns dynamically: indices 4–8, skip empty and 'Geral'
+    const homologadores = [];
+    for (let ci = 4; ci <= 8; ci++) {
+        const name = (headerRow[ci] || '').toString().trim();
+        if (name && name.toLowerCase() !== 'geral') {
+            homologadores.push({ name, colIdx: ci });
         }
-        setInterval(updateTime, 1000);
-        updateTime();
+    }
 
-        async function loadSpreadsheet() {
-            try {
-                const response = await fetch(XLSX_FILE + '?t=' + Date.now());
-                const arrayBuffer = await response.arrayBuffer();
-                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-                const cenariosData = parseSheetCenarios(workbook);
-                renderDashboard(cenariosData);
-            } catch (error) {
-                console.error('Erro ao carregar planilha:', error);
-                document.getElementById('main-content').innerHTML = `
-                    <div class="loading">
-                        <p style="color: #c62828; font-weight: 600;">❌ Erro ao carregar a planilha</p>
-                        <p>${error.message}</p>
-                        <p style="margin-top: 12px; font-size: 12px; color: #6b7280;">
-                            Certifique-se de que o arquivo <strong>SIBE.xlsx</strong> está na mesma pasta.<br>
-                            Para rodar localmente: <code>python -m http.server 8080</code>
-                        </p>
-                    </div>`;
-            }
+    const cenarios = [];
+    for (let ri = DATA_START; ri < rows.length; ri++) {
+        const row = rows[ri];
+        const idRaw = row[2]; // C3 – ID
+        // Skip rows without numeric ID (category headers or empty)
+        if (idRaw === null || idRaw === undefined || idRaw === '') continue;
+        const id = idRaw.toString().trim();
+        if (!id || isNaN(Number(id))) continue;
+
+        const desc  = (row[3]  || '').toString().trim(); // C4
+        const geral = (row[9]  || '').toString().trim(); // C10
+
+        const homologadoresMap = {};
+        homologadores.forEach(h => {
+            homologadoresMap[h.name] = (row[h.colIdx] || '').toString().trim();
+        });
+
+        cenarios.push({
+            id,
+            desc,
+            geral: geral || 'Não Executado',
+            homologadores: homologadoresMap,
+            cancelado: geral === 'Cancelado'
+        });
+    }
+    return { cenarios, homologadores: homologadores.map(h => h.name) };
+}
+
+// ── Load ─────────────────────────────────────────────────────────────────────
+async function loadSpreadsheet() {
+    try {
+        const response = await fetch(XLSX_FILE + '?t=' + Date.now());
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+        const { cenarios, homologadores } = parseSheetMonitoramento(workbook);
+        renderDashboard(cenarios, homologadores);
+    } catch (error) {
+        console.error('Erro ao carregar planilha:', error);
+        document.getElementById('main-content').innerHTML = `
+            <div class="loading">
+                <p style="color:#c62828;font-weight:600;">❌ Erro ao carregar a planilha</p>
+                <p>${error.message}</p>
+                <p style="margin-top:12px;font-size:12px;color:#6b7280;">
+                    Certifique-se de que o arquivo <strong>SIBE.xlsx</strong> está na mesma pasta.<br>
+                    Para rodar localmente: <code>python -m http.server 8080</code>
+                </p>
+            </div>`;
+    }
+}
+
+async function loadUltimaAtualizacao() {
+    try {
+        const r = await fetch('ultima-atualizacao.json?t=' + Date.now());
+        if (!r.ok) throw new Error('not found');
+        const data = await r.json();
+        const el = document.getElementById('ultima-atualizacao');
+        if (el && data.dataHoraCompleta) {
+            el.innerHTML = `Última atualização: <strong>${data.dataHoraCompleta}</strong>`;
         }
+    } catch (_) {
+        const el = document.getElementById('ultima-atualizacao');
+        if (el) el.textContent = 'Atualização automática a cada 30s';
+    }
+}
 
-        function parseSheetCenarios(workbook) {
-            // Encontrar aba Cenarios_hml ou que contenha "cenario"
-            const sheetName = workbook.SheetNames.find(n =>
-                n === 'Cenarios_hml' || n.toLowerCase().includes('cenario')
-            ) || workbook.SheetNames[0];
+// ── Render ───────────────────────────────────────────────────────────────────
+function renderDashboard(cenarios, homologadores) {
+    const main = document.getElementById('main-content');
+    main.innerHTML = '';
 
-            const sheet = workbook.Sheets[sheetName];
-            const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+    // Refresh bar
+    main.innerHTML += `
+        <div class="refresh-info">
+            <span>📊 Dados carregados de <strong>SIBE.xlsx</strong> — <span id="ultima-atualizacao">Carregando...</span></span>
+            <button onclick="loadSpreadsheet()">🔄 Atualizar Agora</button>
+        </div>`;
 
-            const cenarios = [];
-            for (const row of json) {
-                // Coluna de número do cenário
-                const numero = row['Número do cenário'] || row['Numero do cenario'] || row['Número do Cenário'] || row['Numero do Cenario'] || '';
-                // Aceitar qualquer linha onde o número não esteja vazio
-                if (!numero || numero.toString().trim() === '') continue;
+    // ── KPI counts (based on geral) ──────────────────────────────────────────
+    const totalCenarios = cenarios.length;
+    const kpiCounts = { 'Sucesso': 0, 'Falha': 0, 'Sugestão': 0, 'Não Executado': 0 };
+    const geralCounts = {};
 
-                const statusValue = (row['Status do teste'] || row['Status'] || '').toString().trim();
-                const cancelado = statusValue === 'Cancelado';
+    cenarios.forEach(c => {
+        const g = c.geral || 'Não Executado';
+        geralCounts[g] = (geralCounts[g] || 0) + 1;
+        if (kpiCounts.hasOwnProperty(g)) kpiCounts[g]++;
+    });
 
-                cenarios.push({
-                    id: numero.toString().trim(),
-                    tipo: (row['Tipo de teste'] || row['Tipo'] || '').toString().trim(),
-                    homologador: (row['Homologador'] || '').toString().trim(),
-                    status: statusValue,
-                    desc: (row['Cenário de teste'] || row['Cenario de teste'] || row['Descrição'] || row['Descricao'] || '').toString().trim(),
-                    cancelado: cancelado
-                });
-            }
-            return cenarios;
-        }
+    // Progress % = geral !== 'Não Executado' and geral !== ''
+    const executados = cenarios.filter(c => c.geral && c.geral !== 'Não Executado' && c.geral !== '').length;
+    const pctProgress = totalCenarios > 0 ? Math.round((executados / totalCenarios) * 100) : 0;
+    const circumference = 2 * Math.PI * 72;
+    const dashOffset = circumference - (pctProgress / 100) * circumference;
+    const circleColor = pctProgress === 100 ? '#2e7d32' : pctProgress >= 50 ? '#f9a825' : '#2980b9';
 
-        function renderDashboard(cenarios) {
-            const activeCenarios = cenarios.filter(c => !c.cancelado);
-            const cancelados = cenarios.filter(c => c.cancelado);
+    // Progress circle
+    main.innerHTML += `
+        <div class="progress-circle-section">
+            <div class="progress-circle-wrapper">
+                <svg viewBox="0 0 180 180">
+                    <circle class="circle-bg" cx="90" cy="90" r="72"/>
+                    <circle class="circle-fg" cx="90" cy="90" r="72"
+                        stroke="${circleColor}"
+                        stroke-dasharray="${circumference}"
+                        stroke-dashoffset="${dashOffset}"/>
+                </svg>
+                <div class="progress-circle-text">
+                    <div class="pct">${pctProgress}%</div>
+                    <div class="pct-label">executados</div>
+                </div>
+            </div>
+            <div class="progress-circle-info">
+                <h3>Progresso da Homologação</h3>
+                <div class="info-row"><div class="info-dot" style="background:${circleColor}"></div><span class="info-count">${executados}</span> cenários executados</div>
+                <div class="info-row"><div class="info-dot" style="background:#e5e7eb"></div><span class="info-count">${totalCenarios - executados}</span> não executados</div>
+                <div class="info-row" style="margin-top:8px;font-size:12px;color:#6b7280;">Total de cenários: <strong style="margin-left:4px;">${totalCenarios}</strong></div>
+            </div>
+        </div>`;
 
-            // Status counts dos cenários
-            const cenarioStatusCounts = {};
-            cenarios.forEach(c => {
-                let st = (c.status || '').trim();
-                if (c.cancelado) {
-                    st = 'Cancelado';
-                } else if (!st) {
-                    st = 'Não Iniciado';
-                }
-                cenarioStatusCounts[st] = (cenarioStatusCounts[st] || 0) + 1;
+    // ── KPI section ──────────────────────────────────────────────────────────
+    const kpiIcons = { 'Sucesso': '✅', 'Falha': '❌', 'Sugestão': '💡', 'Não Executado': '⏳' };
+    const kpiColors = { 'Sucesso': '#2e7d32', 'Falha': '#c62828', 'Sugestão': '#f57f17', 'Não Executado': '#9ca3af' };
+    let kpiHtml = `<div class="section-title">KPIs da Homologação — Total: ${totalCenarios} cenários</div>`;
+    kpiHtml += '<div class="kpi-grid">';
+    kpiHtml += `<div class="kpi-card" style="border-top-color:var(--azul-medio);">
+        <div class="kpi-count">${totalCenarios}</div>
+        <div class="kpi-label">Total Cenários</div>
+    </div>`;
+    ['Sucesso','Falha','Sugestão','Não Executado'].forEach(k => {
+        kpiHtml += `<div class="kpi-card" style="border-top-color:${kpiColors[k]};">
+            <div class="kpi-count" style="color:${kpiColors[k]};">${kpiCounts[k]}</div>
+            <div class="kpi-label">${kpiIcons[k]} ${k}</div>
+        </div>`;
+    });
+    kpiHtml += '</div>';
+    main.innerHTML += kpiHtml;
+
+    // ── Status cards (unique geral values) ───────────────────────────────────
+    let statusCardsHtml = `<div class="section-title">Status por Geral</div>`;
+    statusCardsHtml += '<div class="status-grid">';
+    const statusCssMap = { 'Sucesso':'st-sucesso','Falha':'st-falha','Sugestão':'st-sugestao','Não Executado':'st-nao-executado' };
+    const statusIconMap = { 'Sucesso':'✅','Falha':'❌','Sugestão':'💡','Não Executado':'⏳' };
+    Object.entries(geralCounts).sort((a,b)=>b[1]-a[1]).forEach(([status, count]) => {
+        const css  = statusCssMap[status] || 'st-nao-executado';
+        const icon = statusIconMap[status] || '📋';
+        statusCardsHtml += `
+            <div class="status-card ${css}">
+                <div class="status-icon">${icon}</div>
+                <div class="status-count">${count}</div>
+                <div class="status-label">${status}</div>
+            </div>`;
+    });
+    statusCardsHtml += '</div>';
+    main.innerHTML += statusCardsHtml;
+
+    // ── Progress bar "Progresso Por Homologadores" ───────────────────────────
+    if (homologadores.length > 0) {
+        let progHtml = `<div class="progress-section"><div class="progress-bar-container">`;
+        progHtml += `<div class="progress-bar-title"><h3>Progresso Por Homologadores</h3></div>`;
+
+        const legendColors = ['#2e7d32','#c62828','#f57f17','#9ca3af'];
+        const legendLabels = ['Sucesso','Falha','Sugestão','Não Executado'];
+
+        homologadores.forEach(hml => {
+            const vals = cenarios.map(c => (c.homologadores[hml] || 'Não Executado').trim());
+            const total = vals.length;
+            const done  = vals.filter(v => v && v !== 'Não Executado' && v !== '').length;
+            const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+            const counts = { 'Sucesso':0,'Falha':0,'Sugestão':0,'Não Executado':0 };
+            vals.forEach(v => { if (counts.hasOwnProperty(v)) counts[v]++; else counts['Não Executado']++; });
+
+            let barSegments = '';
+            legendLabels.forEach((lbl, li) => {
+                const segPct = total > 0 ? (counts[lbl] / total * 100).toFixed(1) : 0;
+                barSegments += `<div class="progress-segment" style="width:${segPct}%;background:${legendColors[li]};" title="${lbl}: ${counts[lbl]}"></div>`;
             });
-
-            const totalCenarios = cenarios.length;
-
-            // Para o progresso dos homologadores
-            const homologadoresCenarios = {};
-            cenarios.forEach(c => {
-                if (c.homologador && c.homologador.trim() !== '') {
-                    const nome = c.homologador.trim();
-                    if (!homologadoresCenarios[nome]) homologadoresCenarios[nome] = [];
-                    let st = (c.status || '').trim();
-                    if (!st && c.cancelado) st = 'Cancelado';
-                    else if (!st) st = 'Não Iniciado';
-                    homologadoresCenarios[nome].push(st);
-                }
-            });
-
-            const progressStatusCounts = {};
-            let totalCenariosAlocados = 0;
-            Object.values(homologadoresCenarios).forEach(statuses => {
-                statuses.forEach(st => {
-                    progressStatusCounts[st] = (progressStatusCounts[st] || 0) + 1;
-                    totalCenariosAlocados++;
-                });
-            });
-
-            const cenariosFinalizados = Object.entries(progressStatusCounts)
-                .filter(([st]) => {
-                    const s = st.toLowerCase();
-                    return s.includes('aprovad') || s.includes('ok') || s.includes('pass') || s.includes('sucesso');
-                })
-                .reduce((acc, [, count]) => acc + count, 0);
-            const progressPercent = totalCenariosAlocados > 0 ? Math.round((cenariosFinalizados / totalCenariosAlocados) * 100) : 0;
-
-            const mainContent = document.getElementById('main-content');
-            mainContent.innerHTML = '';
-
-            // Refresh bar
-            mainContent.innerHTML += `
-                <div class="refresh-info">
-                    <span>📊 Dados carregados de <strong>SIBE.xlsx</strong> — <span id="ultima-atualizacao">Carregando última atualização...</span></span>
-                    <button onclick="loadSpreadsheet()">🔄 Atualizar Agora</button>
+            progHtml += `
+                <div class="hml-progress-item">
+                    <div class="hml-progress-label">
+                        <span>${hml}</span>
+                        <span class="hml-pct">${done}/${total} (${pct}%)</span>
+                    </div>
+                    <div class="progress-bar">${barSegments}</div>
                 </div>`;
+        });
 
-            // Gráfico circular de progresso
-            const totalParaAvaliar = cenarios.filter(c => !c.cancelado).length;
-            const avaliados = cenarios.filter(c => {
-                const st = (c.status || '').trim().toLowerCase();
-                return st !== '' && st !== 'não iniciado' && !c.cancelado;
+        // legend
+        progHtml += `<div class="progress-legend">`;
+        legendLabels.forEach((lbl,li) => {
+            progHtml += `<div class="legend-item"><div class="legend-dot" style="background:${legendColors[li]};"></div>${lbl}</div>`;
+        });
+        progHtml += `</div></div></div>`;
+        main.innerHTML += progHtml;
+    }
+
+    // ── Homologadores cards ──────────────────────────────────────────────────
+    if (homologadores.length > 0) {
+        const avatarColors = [
+            'linear-gradient(135deg,#1565c0,#42a5f5)',
+            'linear-gradient(135deg,#2e7d32,#66bb6a)',
+            'linear-gradient(135deg,#c62828,#ef5350)',
+            'linear-gradient(135deg,#6a1b9a,#ab47bc)',
+            'linear-gradient(135deg,#e65100,#ff8a65)',
+            'linear-gradient(135deg,#f57f17,#ffca28)',
+            'linear-gradient(135deg,#00695c,#26a69a)',
+            'linear-gradient(135deg,#283593,#5c6bc0)'
+        ];
+        let hmlCardsHtml = `<div class="section-title">Homologadores</div><div class="homologadores-grid">`;
+        homologadores.forEach((nome, i) => {
+            const words   = nome.split(/[\s\-]+/).filter(w => w.length > 1);
+            const initials = words.slice(0,2).map(w => w[0].toUpperCase()).join('');
+            const color    = avatarColors[i % avatarColors.length];
+            const done     = cenarios.filter(c => {
+                const v = (c.homologadores[nome] || '').trim();
+                return v && v !== 'Não Executado';
             }).length;
-            const naoIniciados = totalParaAvaliar - avaliados;
-            const pctAvaliado = totalParaAvaliar > 0 ? Math.round((avaliados / totalParaAvaliar) * 100) : 0;
-
-            const circumference = 2 * Math.PI * 72;
-            const dashOffset = circumference - (pctAvaliado / 100) * circumference;
-            const circleColor = pctAvaliado === 100 ? '#2e7d32' : pctAvaliado >= 50 ? '#f9a825' : '#2980b9';
-
-            mainContent.innerHTML += `
-                <div class="progress-circle-section">
-                    <div class="progress-circle-wrapper">
-                        <svg viewBox="0 0 180 180">
-                            <circle class="circle-bg" cx="90" cy="90" r="72"/>
-                            <circle class="circle-fg" cx="90" cy="90" r="72"
-                                stroke="${circleColor}"
-                                stroke-dasharray="${circumference}"
-                                stroke-dashoffset="${dashOffset}"/>
-                        </svg>
-                        <div class="progress-circle-text">
-                            <div class="pct">${pctAvaliado}%</div>
-                            <div class="pct-label">avaliados</div>
-                        </div>
-                    </div>
-                    <div class="progress-circle-info">
-                        <h3>Progresso da Homologação</h3>
-                        <div class="info-row"><div class="info-dot" style="background:${circleColor}"></div><span class="info-count">${avaliados}</span> cenários avaliados</div>
-                        <div class="info-row"><div class="info-dot" style="background:#e5e7eb"></div><span class="info-count">${naoIniciados}</span> cenários pendentes</div>
-                        <div class="info-row"><div class="info-dot" style="background:#6a1b9a"></div><span class="info-count">${cancelados.length}</span> cenários cancelados</div>
-                        <div class="info-row" style="margin-top:8px; font-size:12px; color:#6b7280;">Total de cenários válidos: <strong style="margin-left:4px;">${totalParaAvaliar}</strong></div>
-                    </div>
-                </div>`;
-
-            // Status colors
-            const statusColors = {
-                'Não Iniciado': { icon: '⏳', css: 'st-aguardando', color: '#e65100' },
-                'Cancelado': { icon: '⛔', css: 'st-cancelado', color: '#6a1b9a' },
-                'Aprovado': { icon: '✅', css: 'st-homologado', color: '#2e7d32' },
-                'Reprovado': { icon: '❌', css: 'st-reprovado', color: '#c62828' },
-                'Em execução': { icon: '🔄', css: 'st-em-homologacao', color: '#1565c0' },
-                'Bloqueado': { icon: '🚫', css: 'st-cancelado', color: '#6a1b9a' }
-            };
-
-            // Cards de status
-            let statusCardsHtml = `<div class="section-title">Status dos Cenários — Total: ${totalCenarios} casos</div>`;
-            statusCardsHtml += '<div class="status-grid">';
-            const sortedStatuses = Object.entries(cenarioStatusCounts).sort((a, b) => b[1] - a[1]);
-            sortedStatuses.forEach(([status, count]) => {
-                const config = statusColors[status] || getGenericStatusConfig(status);
-                statusCardsHtml += `
-                    <div class="status-card ${config.css}">
-                        <div class="status-icon">${config.icon}</div>
-                        <div class="status-count">${count}</div>
-                        <div class="status-label">${status}</div>
-                    </div>`;
-            });
-            statusCardsHtml += '</div>';
-            mainContent.innerHTML += statusCardsHtml;
-
-            // Progresso por homologadores
-            const progressSegments = buildProgressSegments(progressStatusCounts, totalCenariosAlocados);
-            mainContent.innerHTML += `
-                <div class="progress-section">
-                    <div class="progress-bar-container">
-                        <div class="progress-bar-title">
-                            <h3>Progresso Por Homologadores</h3>
-                            <span>${progressPercent}%</span>
-                        </div>
-                        <div class="progress-bar">${progressSegments.bar}</div>
-                        <div class="progress-legend">${progressSegments.legend}</div>
-                    </div>
-                </div>`;
-
-            // Homologadores
-            const homologadoresFromCenarios = [...new Set(
-                cenarios.map(c => c.homologador).filter(h => h && h.trim() !== '')
-            )];
-            mainContent.innerHTML += `<div class="section-title">Homologadores</div>`;
-            mainContent.innerHTML += `<div class="homologadores-grid">${buildHomologadoresCards(homologadoresFromCenarios)}</div>`;
-
-            // Charts
-            mainContent.innerHTML += `
-                <div class="charts-grid">
-                    <div class="chart-card">
-                        <h3>Cenários por Tipo de Teste</h3>
-                        <div class="chart-container"><canvas id="chartTipo"></canvas></div>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Cenários por Homologador</h3>
-                        <div class="chart-container"><canvas id="chartHomologadores"></canvas></div>
-                    </div>
-                </div>`;
-
-            // Tabela
-            mainContent.innerHTML += `
-                <div class="table-card">
-                    <div class="table-header">
-                        <h3>Detalhamento dos Cenários de Homologação</h3>
-                        <div class="table-filter">
-                            <button class="filter-btn active" data-filter="all">Todos</button>
-                            ${Object.keys(cenarioStatusCounts).map(st =>
-                                `<button class="filter-btn" data-filter="${st}">${st}</button>`
-                            ).join('')}
-                        </div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Número</th>
-                                    <th>Tipo de Teste</th>
-                                    <th>Homologador</th>
-                                    <th>Status</th>
-                                    <th>Descrição</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cenarios-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>`;
-
-            window._cenarios = cenarios;
-            window._activeFilters = ['all'];
-            renderTable(['all']);
-
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const filter = this.dataset.filter;
-                    if (filter === 'all') {
-                        window._activeFilters = ['all'];
-                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    } else {
-                        const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
-                        if (window._activeFilters.includes('all')) {
-                            window._activeFilters = [];
-                            allBtn.classList.remove('active');
-                        }
-                        if (window._activeFilters.includes(filter)) {
-                            window._activeFilters = window._activeFilters.filter(f => f !== filter);
-                            this.classList.remove('active');
-                        } else {
-                            window._activeFilters.push(filter);
-                            this.classList.add('active');
-                        }
-                        if (window._activeFilters.length === 0) {
-                            window._activeFilters = ['all'];
-                            allBtn.classList.add('active');
-                        }
-                    }
-                    renderTable(window._activeFilters);
-                });
-            });
-
-            renderCharts(activeCenarios, cenarios);
-        }
-
-        function renderTable(filters) {
-            const cenarios = window._cenarios || [];
-            const tbody = document.getElementById('cenarios-tbody');
-            if (!tbody) return;
-
-            const filtered = filters.includes('all') ? cenarios : cenarios.filter(c => {
-                let st = (c.status || '').trim();
-                if (c.cancelado && !st) st = 'Cancelado';
-                else if (!st) st = 'Não Iniciado';
-                return filters.includes(st);
-            });
-
-            tbody.innerHTML = filtered.map(c => {
-                return `<tr class="${c.cancelado ? 'cancelado' : ''}">
-                    <td><strong>${c.id}</strong>${c.cancelado ? ' ⛔' : ''}</td>
-                    <td>${c.tipo || '—'}</td>
-                    <td>${c.homologador || '—'}</td>
-                    <td>${c.status || '—'}</td>
-                    <td>${c.desc.substring(0, 100)}${c.desc.length > 100 ? '...' : ''}</td>
-                </tr>`;
-            }).join('');
-        }
-
-        function getGenericStatusConfig(status) {
-            const s = status.toLowerCase();
-            if (s.includes('aprovad') || s.includes('ok') || s.includes('pass') || s.includes('sucesso')) return { icon: '✅', css: 'st-homologado', color: '#2e7d32' };
-            if (s.includes('reprovad') || s.includes('falh') || s.includes('erro')) return { icon: '❌', css: 'st-reprovado', color: '#c62828' };
-            if (s.includes('execu') || s.includes('andamento') || s.includes('progress')) return { icon: '🔄', css: 'st-em-homologacao', color: '#1565c0' };
-            if (s.includes('cancel') || s.includes('bloqu')) return { icon: '⛔', css: 'st-cancelado', color: '#6a1b9a' };
-            if (s.includes('ressalva') || s.includes('parcial')) return { icon: '⚠️', css: 'st-ressalvas', color: '#f57f17' };
-            return { icon: '📋', css: 'st-aguardando', color: '#e65100' };
-        }
-
-        function buildProgressSegments(statusCounts, total) {
-            if (total === 0) return { bar: '', legend: '' };
-
-            const statusColorMap = {
-                'Não Iniciado': '#e65100',
-                'Cancelado': '#6a1b9a',
-                'Aprovado': '#2e7d32',
-                'Reprovado': '#c62828',
-                'Em execução': '#1565c0',
-                'Bloqueado': '#546e7a'
-            };
-
-            let bar = '';
-            let legend = '';
-
-            const sorted = Object.entries(statusCounts).sort((a, b) => {
-                const order = ['Aprovado', 'Em execução', 'Não Iniciado', 'Reprovado', 'Cancelado', 'Bloqueado'];
-                const idxA = order.findIndex(o => a[0].toLowerCase().includes(o.toLowerCase()));
-                const idxB = order.findIndex(o => b[0].toLowerCase().includes(o.toLowerCase()));
-                return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
-            });
-
-            sorted.forEach(([status, count]) => {
-                const pct = (count / total * 100).toFixed(1);
-                const color = statusColorMap[status] || getProgressColor(status);
-                bar += `<div class="progress-segment" style="width: ${pct}%; background: ${color};" title="${status}: ${count}"></div>`;
-                legend += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div>${status} (${count} de ${total})</div>`;
-            });
-
-            return { bar, legend };
-        }
-
-        function getProgressColor(status) {
-            const s = status.toLowerCase();
-            if (s.includes('aprovad') || s.includes('sucesso') || s.includes('ok')) return '#2e7d32';
-            if (s.includes('reprovad') || s.includes('falh')) return '#c62828';
-            if (s.includes('execu') || s.includes('andamento')) return '#1565c0';
-            if (s.includes('cancel') || s.includes('bloqu')) return '#6a1b9a';
-            if (s.includes('ressalva')) return '#f57f17';
-            return '#e65100';
-        }
-
-        function buildHomologadoresCards(homologadoresNomes) {
-            const avatarColors = [
-                'linear-gradient(135deg, #1565c0, #42a5f5)',
-                'linear-gradient(135deg, #2e7d32, #66bb6a)',
-                'linear-gradient(135deg, #c62828, #ef5350)',
-                'linear-gradient(135deg, #6a1b9a, #ab47bc)',
-                'linear-gradient(135deg, #e65100, #ff8a65)',
-                'linear-gradient(135deg, #f57f17, #ffca28)',
-                'linear-gradient(135deg, #00695c, #26a69a)',
-                'linear-gradient(135deg, #283593, #5c6bc0)'
-            ];
-
-            return homologadoresNomes.map((nome, i) => {
-                const initials = nome.split(' ').filter(w => w.length > 2).slice(0, 2).map(w => w[0].toUpperCase()).join('');
-                const color = avatarColors[i % avatarColors.length];
-                return `<div class="homologador-card">
-                    <div class="homologador-avatar" style="background: ${color};">${initials}</div>
+            hmlCardsHtml += `
+                <div class="homologador-card">
+                    <div class="homologador-avatar" style="background:${color};">${initials}</div>
                     <div class="homologador-info">
                         <h4>${nome}</h4>
+                        <div class="hml-stats">${done} de ${cenarios.length} avaliados</div>
                     </div>
                 </div>`;
-            }).join('');
-        }
+        });
+        hmlCardsHtml += '</div>';
+        main.innerHTML += hmlCardsHtml;
+    }
 
-        function renderCharts(activeCenarios, allCenarios) {
-            Object.values(chartInstances).forEach(c => c.destroy());
-            chartInstances = {};
+    // ── Charts ───────────────────────────────────────────────────────────────
+    main.innerHTML += `
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Resultado Geral por Cenário</h3>
+                <div class="chart-container"><canvas id="chartGeral"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <h3>Resultado por Homologador</h3>
+                <div class="chart-container"><canvas id="chartHomologadores"></canvas></div>
+            </div>
+        </div>`;
 
-            // Chart 1 - Tipo de Teste (Bar horizontal)
-            const tipoCount = {};
-            activeCenarios.forEach(c => {
-                const tipo = c.tipo && c.tipo.trim() !== '' ? c.tipo.trim() : 'Não informado';
-                tipoCount[tipo] = (tipoCount[tipo] || 0) + 1;
-            });
-            const tipoLabels = Object.keys(tipoCount).sort((a, b) => tipoCount[b] - tipoCount[a]);
+    // ── Table with filters ───────────────────────────────────────────────────
+    const geralOptions = Object.keys(geralCounts).sort();
+    let tableHtml = `
+        <div class="table-card">
+            <div class="table-header">
+                <h3>Detalhamento dos Cenários</h3>
+                <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                        <span style="font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;">Geral:</span>
+                        <div class="table-filter" id="filter-geral">
+                            <button class="filter-btn active" data-filter="all">Todos</button>
+                            ${geralOptions.map(g => `<button class="filter-btn" data-filter="${g}">${g}</button>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Geral</th>
+                            ${homologadores.map(h => `<th>${h}</th>`).join('')}
+                            <th>Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cenarios-tbody"></tbody>
+                </table>
+            </div>
+        </div>`;
+    main.innerHTML += tableHtml;
 
-            chartInstances.tipo = new Chart(document.getElementById('chartTipo'), {
-                type: 'bar',
-                data: {
-                    labels: tipoLabels,
-                    datasets: [{ label: 'Cenários', data: tipoLabels.map(l => tipoCount[l]), backgroundColor: '#2980b9', borderRadius: 6, barThickness: 20 }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } },
-                        y: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } }
-                    }
+    // store & render table
+    window._sibeData = { cenarios, homologadores };
+    window._sibeFilter = 'all';
+    renderTable('all');
+
+    document.querySelectorAll('#filter-geral .filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('#filter-geral .filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            window._sibeFilter = this.dataset.filter;
+            renderTable(window._sibeFilter);
+        });
+    });
+
+    // render charts after DOM is ready
+    renderCharts(cenarios, homologadores);
+    loadUltimaAtualizacao();
+}
+
+function renderTable(filterGeral) {
+    const { cenarios, homologadores } = window._sibeData || { cenarios:[], homologadores:[] };
+    const tbody = document.getElementById('cenarios-tbody');
+    if (!tbody) return;
+
+    const filtered = filterGeral === 'all' ? cenarios : cenarios.filter(c => c.geral === filterGeral);
+
+    tbody.innerHTML = filtered.map(c => {
+        const hmlCells = homologadores.map(h => {
+            const v = c.homologadores[h] || '';
+            const badge = v ? `<span class="badge ${statusBadgeClass(v)}">${v}</span>` : '<span style="color:#9ca3af;font-size:12px;">—</span>';
+            return `<td>${badge}</td>`;
+        }).join('');
+        const geralBadge = `<span class="badge ${statusBadgeClass(c.geral)}">${c.geral}</span>`;
+        return `<tr>
+            <td><strong>${c.id}</strong></td>
+            <td>${geralBadge}</td>
+            ${hmlCells}
+            <td class="desc-cell">${c.desc}</td>
+        </tr>`;
+    }).join('');
+}
+
+function renderCharts(cenarios, homologadores) {
+    Object.values(chartInstances).forEach(c => c.destroy());
+    chartInstances = {};
+
+    // Chart 1 – Resultado Geral por Cenário (horizontal bar)
+    const geralCounts = {};
+    cenarios.forEach(c => { geralCounts[c.geral] = (geralCounts[c.geral] || 0) + 1; });
+    const geralLabels = Object.keys(geralCounts).sort((a,b) => geralCounts[b] - geralCounts[a]);
+    const geralValues = geralLabels.map(l => geralCounts[l]);
+    const geralBgColors = geralLabels.map(l => statusColor(l));
+
+    const canvasGeral = document.getElementById('chartGeral');
+    if (canvasGeral) {
+        chartInstances.geral = new Chart(canvasGeral, {
+            type: 'bar',
+            data: {
+                labels: geralLabels,
+                datasets: [{
+                    label: 'Cenários',
+                    data: geralValues,
+                    backgroundColor: geralBgColors,
+                    borderRadius: 6,
+                    barThickness: 22
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } },
+                    y: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } }
                 }
-            });
-
-            // Chart 2 - Cenários por Homologador (Donut)
-            const hCount = {};
-            allCenarios.forEach(c => {
-                const h = c.homologador && c.homologador.trim() !== '' ? c.homologador.trim() : 'Não atribuído';
-                hCount[h] = (hCount[h] || 0) + 1;
-            });
-            const hLabels = Object.keys(hCount).sort((a, b) => hCount[b] - hCount[a]);
-            const hColors = ['#1565c0','#2e7d32','#c62828','#6a1b9a','#e65100','#f57f17','#00695c','#283593','#78909c','#ec407a'];
-
-            chartInstances.homologadores = new Chart(document.getElementById('chartHomologadores'), {
-                type: 'doughnut',
-                data: {
-                    labels: hLabels,
-                    datasets: [{
-                        data: hLabels.map(l => hCount[l]),
-                        backgroundColor: hLabels.map((_, i) => hColors[i % hColors.length]),
-                        borderWidth: 2, borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 12 } } }
-                }
-            });
-        }
-
-        loadSpreadsheet();
-        loadUltimaAtualizacao();
-
-        async function loadUltimaAtualizacao() {
-            try {
-                const response = await fetch('ultima-atualizacao.json?t=' + Date.now());
-                if (!response.ok) throw new Error('Arquivo não encontrado');
-                const data = await response.json();
-                const el = document.getElementById('ultima-atualizacao');
-                if (el && data.dataHoraCompleta) {
-                    el.innerHTML = `Última atualização: <strong>${data.dataHoraCompleta}</strong>`;
-                }
-            } catch (e) {
-                const el = document.getElementById('ultima-atualizacao');
-                if (el) el.textContent = 'Atualização automática a cada 30s';
             }
-        }
-    </script>
+        });
+    }
+
+    // Chart 2 – Resultado por Homologador (grouped bar)
+    const statusLabels = ['Sucesso', 'Falha', 'Sugestão', 'Não Executado'];
+    const statusDatasets = statusLabels.map((lbl, li) => {
+        const colors = ['#2e7d32','#c62828','#f57f17','#9ca3af'];
+        const data = homologadores.map(h => {
+            return cenarios.filter(c => {
+                const v = (c.homologadores[h] || '').trim();
+                return v === lbl;
+            }).length;
+        });
+        return {
+            label: lbl,
+            data,
+            backgroundColor: colors[li],
+            borderRadius: 4,
+            barThickness: 14
+        };
+    });
+
+    const canvasHml = document.getElementById('chartHomologadores');
+    if (canvasHml && homologadores.length > 0) {
+        chartInstances.homologadores = new Chart(canvasHml, {
+            type: 'bar',
+            data: { labels: homologadores, datasets: statusDatasets },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 12 } }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } } },
+                    y: { grid: { color: '#f0f0f0' }, ticks: { font: { family: 'Plus Jakarta Sans', size: 11 } }, beginAtZero: true }
+                }
+            }
+        });
+    } else if (canvasHml) {
+        // No homologadores — show geral doughnut instead
+        chartInstances.homologadores = new Chart(canvasHml, {
+            type: 'doughnut',
+            data: {
+                labels: geralLabels,
+                datasets: [{ data: geralValues, backgroundColor: geralBgColors, borderWidth: 2, borderColor: '#fff' }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11 }, padding: 12 } } }
+            }
+        });
+    }
+}
+
+// ── Bootstrap ─────────────────────────────────────────────────────────────────
+loadSpreadsheet();
+setInterval(loadSpreadsheet, REFRESH_INTERVAL);
+</script>
 </body>
 </html>
