@@ -142,6 +142,7 @@
         <a href="visao-atual.html" class="nav-link active">📊 Visão Atual</a>
         <a href="evolucao.html" class="nav-link">📈 Evolução</a>
         <a href="acompanhamento.html" class="nav-link">🔍 Acompanhamento</a>
+        <a href="massa-cnis.html" class="nav-link">🧪 Massa CNIS</a>
     </nav>
 
     <main class="main" id="main-content">
@@ -158,7 +159,7 @@
 
     <script>
         const XLSX_FILE = 'Massa_CPFs_FPSE.xlsx';
-        const HOMOLOG_START = new Date('2026-08-19T00:00:00');
+        const HOMOLOG_START = new Date('2026-08-17T00:00:00');
         const HOMOLOG_END   = new Date('2026-08-20T23:59:59');
 
         let chartInstances = {};
@@ -359,38 +360,6 @@
                     </div>
                 </div>`;
 
-            // ---- Massa de CPFs ----
-            const homologadores = [...new Set(massaCpfs.map(m => m.homologador).filter(Boolean))];
-            main.innerHTML += `
-                <div class="section-title">Massa de CPFs Disponíveis</div>
-                <div class="table-card">
-                    <div class="table-header"><h3>CPFs da Homologação</h3></div>
-                    <div class="table-filter-bar">
-                        <span class="filter-label">Homologador:</span>
-                        <select class="filter-select" id="filtro-hom">
-                            <option value="">Todos</option>
-                            ${homologadores.map(h=>`<option value="${h}">${h}</option>`).join('')}
-                        </select>
-                        <span class="filter-label" style="margin-left:16px;">CPF Utilizado:</span>
-                        <button class="filter-btn active" data-group="util" data-filter="all">Todos</button>
-                        <button class="filter-btn" data-group="util" data-filter="Sim">Sim</button>
-                        <button class="filter-btn" data-group="util" data-filter="Não">Não</button>
-                    </div>
-                    <div class="table-wrapper">
-                        <table>
-                            <thead><tr>
-                                <th>CPF</th>
-                                <th>Período Validado</th>
-                                <th>Período Invalidado</th>
-                                <th>Período Pendente</th>
-                                <th>Homologador</th>
-                                <th>CPF Utilizado</th>
-                            </tr></thead>
-                            <tbody id="massa-tbody"></tbody>
-                        </table>
-                    </div>
-                </div>`;
-
             // ---- Cenários table ----
             const allStatus = [...new Set(cenarios.map(c => c.status))].sort();
             main.innerHTML += `
@@ -417,25 +386,10 @@
 
             window._massaCpfs = massaCpfs;
             window._cenarios  = cenarios;
-            window._massaFilters = { hom: '', util: 'all' };
             window._cenFilters   = { status: ['all'] };
 
-            renderMassaTable();
             renderCenariosTable();
 
-            // Filter events - massa
-            document.getElementById('filtro-hom').addEventListener('change', function() {
-                window._massaFilters.hom = this.value;
-                renderMassaTable();
-            });
-            document.querySelectorAll('.filter-btn[data-group="util"]').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-btn[data-group="util"]').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    window._massaFilters.util = this.dataset.filter;
-                    renderMassaTable();
-                });
-            });
             // Filter events - cenarios
             document.querySelectorAll('.filter-btn[data-group="cen-status"]').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -496,33 +450,6 @@
                     }
                 });
             }, 100);
-        }
-
-        function renderMassaTable() {
-            const { hom, util } = window._massaFilters;
-            const tbody = document.getElementById('massa-tbody');
-            if (!tbody) return;
-            const rows = window._massaCpfs.filter(m => {
-                const homOk = !hom || m.homologador === hom;
-                const utilOk = util === 'all' || m.cpfUtilizado === util;
-                return homOk && utilOk;
-            });
-            tbody.innerHTML = rows.map(m => {
-                const uBadge = (m.cpfUtilizado||'').toLowerCase() === 'sim'
-                    ? '<span class="badge badge-sim">Sim</span>'
-                    : '<span class="badge badge-nao">' + (m.cpfUtilizado || '—') + '</span>';
-                const yesNo = v => (v||'').toLowerCase() === 'sim'
-                    ? '<span class="badge badge-aprovado">Sim</span>'
-                    : '<span class="badge badge-nao-exec">' + (v || '—') + '</span>';
-                return `<tr>
-                    <td><strong>${m.cpf}</strong></td>
-                    <td>${yesNo(m.validado)}</td>
-                    <td>${yesNo(m.invalidado)}</td>
-                    <td>${yesNo(m.pendente)}</td>
-                    <td>${m.homologador || '—'}</td>
-                    <td>${uBadge}</td>
-                </tr>`;
-            }).join('') || '<tr><td colspan="6" style="text-align:center;color:#6b7280;padding:32px;">Nenhum CPF encontrado</td></tr>';
         }
 
         function renderCenariosTable() {

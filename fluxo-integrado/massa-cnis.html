@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Massa de Teste CNIS — Fluxo Integrado</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --azul-escuro: #1a5276;
+            --azul-medio: #2980b9;
+            --ciano: #00bcd4;
+            --verde: #2e7d32;
+            --amarelo: #f9a825;
+            --verde-claro: #aed581;
+            --cinza-claro: #f5f7fa;
+            --cinza-texto: #2d2d2d;
+            --branco: #ffffff;
+            --sombra: 0 2px 12px rgba(0,0,0,0.08);
+            --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif; background: var(--cinza-claro); color: var(--cinza-texto); line-height: 1.6; }
+
+        .header { background: linear-gradient(135deg, var(--azul-escuro) 0%, var(--azul-medio) 50%, var(--ciano) 100%); color: var(--branco); padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .header-logo img { height: 54px; border-radius: 6px; }
+        .header-divider { width: 2px; height: 44px; background: rgba(255,255,255,0.3); }
+        .header-title h1 { font-size: 18px; font-weight: 600; }
+        .header-title p { font-size: 13px; opacity: 0.85; font-weight: 300; }
+        .header-time { font-size: 13px; opacity: 0.9; }
+
+        .tagline-bar { background: linear-gradient(90deg, var(--amarelo), var(--verde-claro)); padding: 6px 40px; font-size: 12px; font-weight: 600; color: var(--azul-escuro); display: flex; align-items: center; gap: 8px; }
+
+        nav { background: var(--branco); padding: 12px 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; gap: 8px; flex-wrap: wrap; }
+        .nav-link { padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb; transition: all 0.2s; }
+        .nav-link:hover { background: #f3f4f6; }
+        .nav-link.active { background: var(--azul-medio); color: var(--branco); border-color: var(--azul-medio); }
+
+        .main { max-width: 1440px; margin: 0 auto; padding: 32px 40px; }
+
+        .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; gap: 16px; }
+        .loading-spinner { width: 48px; height: 48px; border: 4px solid #e5e7eb; border-top-color: var(--azul-medio); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .section-title { font-size: 18px; font-weight: 700; color: var(--azul-escuro); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(180deg, var(--ciano), var(--azul-medio)); border-radius: 2px; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .kpi-card { background: var(--branco); border-radius: var(--radius); padding: 20px; box-shadow: var(--sombra); border-top: 4px solid var(--azul-medio); text-align: center; }
+        .kpi-count { font-size: 30px; font-weight: 800; color: var(--azul-escuro); }
+        .kpi-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #6b7280; margin-top: 4px; }
+
+        .filter-bar { background: var(--branco); border-radius: var(--radius); padding: 16px 24px; box-shadow: var(--sombra); margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+        .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .filter-label { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; white-space: nowrap; }
+        .filter-btn { padding: 5px 12px; border: 1px solid #e5e7eb; border-radius: 16px; font-size: 12px; font-weight: 500; cursor: pointer; background: var(--branco); color: var(--cinza-texto); font-family: inherit; transition: all 0.2s; }
+        .filter-btn.active, .filter-btn:hover { background: var(--azul-medio); color: var(--branco); border-color: var(--azul-medio); }
+        .filter-input { padding: 6px 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 12px; font-family: inherit; color: var(--cinza-texto); }
+        .filter-select { padding: 5px 10px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 12px; font-family: inherit; color: var(--cinza-texto); background: var(--branco); }
+
+        .table-card { background: var(--branco); border-radius: var(--radius); box-shadow: var(--sombra); overflow: hidden; margin-bottom: 32px; }
+        .table-header { padding: 20px 24px; border-bottom: 1px solid #e5e7eb; }
+        .table-header h3 { font-size: 15px; font-weight: 600; color: var(--azul-escuro); }
+        .table-header p { font-size: 12px; color: #6b7280; margin-top: 4px; }
+        .table-wrapper { overflow-x: auto; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        thead { background: #f8fafc; position: sticky; top: 0; z-index: 1; }
+        th { padding: 12px 16px; text-align: left; font-weight: 600; color: #4b5563; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid #e5e7eb; white-space: nowrap; cursor: pointer; user-select: none; }
+        th:hover { background: #f1f5f9; }
+        td { padding: 11px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; font-size: 12px; }
+        tr:hover { background: #f8fafc; }
+
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+        .badge-sim { background: #e8f5e9; color: #2e7d32; }
+        .badge-nao { background: #f3f4f6; color: #6b7280; }
+        .badge-utilizado { background: #fbe9e7; color: #c62828; }
+        .badge-disponivel { background: #e3f2fd; color: #1565c0; }
+
+        .count-info { font-size: 12px; color: #6b7280; margin-top: 8px; }
+
+        .footer { background: var(--azul-escuro); color: rgba(255,255,255,0.7); text-align: center; padding: 20px 40px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 16px; }
+        .footer img { height: 40px; border-radius: 4px; }
+        .footer strong { color: var(--branco); }
+
+        @media (max-width: 768px) { .header { flex-direction: column; gap: 12px; padding: 20px; } .main { padding: 20px; } nav { padding: 12px 20px; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="header-logo"><img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV"></div>
+            <div class="header-divider"></div>
+            <div class="header-title">
+                <h1>Massa de Teste CNIS — Fluxo Integrado</h1>
+                <p>Integração PAT · FPSE · SIBE</p>
+            </div>
+        </div>
+        <div class="header-time" id="current-time"></div>
+    </header>
+
+    <div class="tagline-bar">
+        <span>Dados para cidadania</span>
+        <span>•</span>
+        <span>CPFs disponíveis para homologação do Fluxo Integrado</span>
+    </div>
+
+    <nav>
+        <a href="../index.html" class="nav-link">🏠 Início</a>
+        <a href="visao-atual.html" class="nav-link">📊 Visão Atual</a>
+        <a href="evolucao.html" class="nav-link">📈 Evolução</a>
+        <a href="acompanhamento.html" class="nav-link">🔍 Acompanhamento</a>
+        <a href="massa-cnis.html" class="nav-link active">🧪 Massa CNIS</a>
+    </nav>
+
+    <main class="main" id="main-content">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Carregando dados da planilha...</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+        <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação Fluxo Integrado</p>
+    </footer>
+
+    <script>
+        const XLSX_FILE = 'Massa_CPFs_FPSE.xlsx';
+
+        function updateTime() {
+            const el = document.getElementById('current-time');
+            if (el) el.textContent = new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        async function loadData() {
+            try {
+                const res = await fetch(XLSX_FILE + '?t=' + Date.now());
+                const buf = await res.arrayBuffer();
+                const wb  = XLSX.read(buf, { type: 'array' });
+
+                // Encontrar aba Massa_HML_B31_FLUXO_INTEGRADO
+                const massaSheetName = wb.SheetNames.find(n =>
+                    n.toUpperCase().includes('MASSA') || n.toUpperCase().includes('HML_B31')
+                ) || wb.SheetNames[0];
+
+                const raw = XLSX.utils.sheet_to_json(wb.Sheets[massaSheetName], { header: 1, defval: '' });
+
+                // Headers linha 1
+                const headers = raw[0] || [];
+                const cpfs = [];
+
+                for (let i = 1; i < raw.length; i++) {
+                    const r = raw[i];
+                    const cpf = (r[0] || '').toString().trim();
+                    if (!cpf) continue;
+                    const obj = {};
+                    headers.forEach((h, idx) => { obj[h.toString().trim()] = (r[idx] || '').toString().trim(); });
+                    cpfs.push(obj);
+                }
+
+                renderPage(cpfs, headers.map(h => h.toString().trim()).filter(Boolean));
+            } catch(err) {
+                document.getElementById('main-content').innerHTML = `
+                    <div class="loading">
+                        <p style="color:#c62828;font-weight:600;">❌ Erro ao carregar a planilha</p>
+                        <p>${err.message}</p>
+                    </div>`;
+            }
+        }
+
+        function renderPage(cpfs, headers) {
+            const main = document.getElementById('main-content');
+            main.innerHTML = '';
+
+            const cpfCol = headers[0];
+            const homCol = headers.find(h => h.toUpperCase().includes('HOMOLOG')) || '';
+            const utilCol = headers.find(h => h.toUpperCase().includes('UTILIZADO') || h.toUpperCase().includes('CPF UTIL')) || '';
+
+            // KPIs
+            const total = cpfs.length;
+            const utilizados = cpfs.filter(c => (c[utilCol] || '').toUpperCase() === 'SIM').length;
+            const disponiveis = total - utilizados;
+            const homologadores = [...new Set(cpfs.map(c => c[homCol]).filter(Boolean))];
+
+            main.innerHTML += `
+                <div class="kpi-grid">
+                    <div class="kpi-card" style="border-top-color:var(--azul-medio)">
+                        <div class="kpi-count">${total}</div>
+                        <div class="kpi-label">Total de CPFs</div>
+                    </div>
+                    <div class="kpi-card" style="border-top-color:#2e7d32">
+                        <div class="kpi-count">${disponiveis}</div>
+                        <div class="kpi-label">Disponíveis</div>
+                    </div>
+                    <div class="kpi-card" style="border-top-color:#c62828">
+                        <div class="kpi-count">${utilizados}</div>
+                        <div class="kpi-label">Utilizados</div>
+                    </div>
+                    <div class="kpi-card" style="border-top-color:#f57f17">
+                        <div class="kpi-count">${homologadores.length}</div>
+                        <div class="kpi-label">Homologadores</div>
+                    </div>
+                </div>`;
+
+            // Filtros
+            main.innerHTML += `<div class="section-title">Filtros</div>
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <span class="filter-label">CPF:</span>
+                        <input type="text" class="filter-input" id="filtro-cpf" placeholder="Buscar CPF..." oninput="aplicarFiltros()">
+                    </div>
+                    ${homCol ? `<div class="filter-group">
+                        <span class="filter-label">Homologador:</span>
+                        <select class="filter-select" id="filtro-hom" onchange="aplicarFiltros()">
+                            <option value="">Todos</option>
+                            ${homologadores.map(h=>`<option value="${h}">${h}</option>`).join('')}
+                        </select>
+                    </div>` : ''}
+                    ${utilCol ? `<div class="filter-group">
+                        <span class="filter-label">CPF Utilizado:</span>
+                        <button class="filter-btn active" data-filter="all" onclick="setUtilFiltro(this,'all')">Todos</button>
+                        <button class="filter-btn" data-filter="SIM" onclick="setUtilFiltro(this,'SIM')">Sim</button>
+                        <button class="filter-btn" data-filter="NAO" onclick="setUtilFiltro(this,'NAO')">Não</button>
+                    </div>` : ''}
+                </div>`;
+
+            // Tabela
+            main.innerHTML += `<div class="section-title">Massa de CPFs Disponíveis</div>
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>CPFs para Homologação — Fluxo Integrado B31</h3>
+                        <p>Aba: Massa_HML_B31_FLUXO_INTEGRADO</p>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr>
+                                ${headers.map((h, i) => `<th onclick="sortBy(${i})">${h} <span style="opacity:0.4">↕</span></th>`).join('')}
+                            </tr></thead>
+                            <tbody id="massa-tbody"></tbody>
+                        </table>
+                    </div>
+                    <div style="padding:12px 24px;border-top:1px solid #f3f4f6;">
+                        <span class="count-info" id="count-info">Mostrando ${total} CPFs</span>
+                    </div>
+                </div>`;
+
+            window._massaData = { cpfs, headers, cpfCol, homCol, utilCol };
+            window._massaFilters = { cpf: '', hom: '', util: 'all' };
+            window._sortState = { col: -1, dir: 1 };
+            renderTable();
+        }
+
+        function aplicarFiltros() {
+            window._massaFilters.cpf = document.getElementById('filtro-cpf').value.trim();
+            const homEl = document.getElementById('filtro-hom');
+            if (homEl) window._massaFilters.hom = homEl.value;
+            renderTable();
+        }
+
+        function setUtilFiltro(btn, val) {
+            document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            window._massaFilters.util = val;
+            renderTable();
+        }
+
+        function sortBy(colIdx) {
+            if (window._sortState.col === colIdx) window._sortState.dir *= -1;
+            else { window._sortState.col = colIdx; window._sortState.dir = 1; }
+            renderTable();
+        }
+
+        function renderTable() {
+            const { cpfs, headers, cpfCol, homCol, utilCol } = window._massaData;
+            const { cpf, hom, util } = window._massaFilters;
+            const { col, dir } = window._sortState;
+
+            let filtered = cpfs.filter(c => {
+                const cpfOk = !cpf || (c[cpfCol] || '').includes(cpf);
+                const homOk = !hom || c[homCol] === hom;
+                let utilOk = true;
+                if (util === 'SIM') utilOk = (c[utilCol] || '').toUpperCase() === 'SIM';
+                else if (util === 'NAO') utilOk = (c[utilCol] || '').toUpperCase() !== 'SIM';
+                return cpfOk && homOk && utilOk;
+            });
+
+            if (col >= 0) {
+                const key = headers[col];
+                filtered = [...filtered].sort((a, b) => {
+                    const av = (a[key] || '').toLowerCase();
+                    const bv = (b[key] || '').toLowerCase();
+                    return av > bv ? dir : av < bv ? -dir : 0;
+                });
+            }
+
+            const tbody = document.getElementById('massa-tbody');
+            const countEl = document.getElementById('count-info');
+            if (!tbody) return;
+
+            if (countEl) countEl.textContent = `Mostrando ${filtered.length} de ${cpfs.length} CPFs`;
+
+            tbody.innerHTML = filtered.map(c => {
+                const cells = headers.map(h => {
+                    const val = c[h] || '—';
+                    const key = h.toUpperCase();
+
+                    // CPF Utilizado
+                    if (utilCol && h === utilCol) {
+                        return val.toUpperCase() === 'SIM'
+                            ? `<td><span class="badge badge-utilizado">Utilizado</span></td>`
+                            : `<td><span class="badge badge-disponivel">Disponível</span></td>`;
+                    }
+                    // Colunas SIM/NÃO
+                    if (key.includes('PERIODO') || key.includes('POSSUI')) {
+                        return val.toUpperCase() === 'SIM'
+                            ? `<td><span class="badge badge-sim">Sim</span></td>`
+                            : `<td><span class="badge badge-nao">${val}</span></td>`;
+                    }
+                    // CPF — destacar
+                    if (h === cpfCol) return `<td><strong>${val}</strong></td>`;
+                    return `<td>${val}</td>`;
+                }).join('');
+                return `<tr>${cells}</tr>`;
+            }).join('') || `<tr><td colspan="${headers.length}" style="text-align:center;color:#6b7280;padding:32px;">Nenhum CPF encontrado com os filtros selecionados</td></tr>`;
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
