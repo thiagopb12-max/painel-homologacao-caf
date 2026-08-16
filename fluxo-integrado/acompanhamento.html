@@ -214,11 +214,11 @@
                 const sheet = wb.Sheets[sheetName];
                 const raw   = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
 
-                // Header is at row index 7 (row 8 in Excel).
+                // Header is at row index 6 (row 7 in Excel — L7 contains testador names).
                 // UsedRange starts at col B, so SheetJS index 0 = col B (# field).
-                const headerRow = raw[7];
-                console.log('Header row (idx 7):', headerRow);
-                console.log('First data row (idx 8):', raw[8]);
+                const headerRow = raw[6];
+                console.log('Header row (idx 6):', headerRow);
+                console.log('First data row (idx 7):', raw[7]);
 
                 // Column indices per spec:
                 // 0=#, 1=LIBERADO, 2=MACROPROCESSO, 3=CASO DE TESTE, 4=CANAL,
@@ -240,9 +240,9 @@
                 }
                 console.log('Testadores detectados:', testadores.map(t=>t.name));
 
-                // Read data rows (index 8+), filter MACROPROCESSO === "Integração"
+                // Read data rows (index 7+), filter MACROPROCESSO === "Integração"
                 const cenarios = [];
-                for (let r = 8; r < raw.length; r++) {
+                for (let r = 7; r < raw.length; r++) {
                     const row = raw[r];
                     const macro = (row[IDX_MACRO] || '').toString().trim();
                     if (macro !== 'Integração') continue;
