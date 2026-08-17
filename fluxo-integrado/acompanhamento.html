@@ -221,18 +221,18 @@
                 console.log('First data row (idx 7):', raw[7]);
 
                 // Column indices per spec:
-                // 0=#, 1=LIBERADO, 2=MACROPROCESSO, 3=CASO DE TESTE, 4=CANAL,
-                // 5=PAPEL, 6=FLUXO, 7=PARÂMETROS, 8=RESULTADO ESPERADO, 9+= testadores
-                const IDX_NUM    = 0;
-                const IDX_MACRO  = 2;
-                const IDX_CASO   = 3;
-                const IDX_CANAL  = 4;
-                const IDX_PAPEL  = 5;
+                // 0=vazio(col A), 1=#, 2=LIBERADO, 3=MACROPROCESSO, 4=CASO DE TESTE, 5=CANAL,
+                // 6=PAPEL, 7=FLUXO, 8=PARÂMETROS, 9=RESULTADO ESPERADO, 10+= testadores
+                const IDX_NUM    = 1;
+                const IDX_MACRO  = 3;
+                const IDX_CASO   = 4;
+                const IDX_CANAL  = 5;
+                const IDX_PAPEL  = 6;
 
-                // Detect testador columns: all indices >= 9 with a non-empty, non-special name
+                // Detect testador columns: all indices >= 10 with a non-empty, non-special name
                 const fixedNames = ['#','LIBERADO','MACROPROCESSO','CASO DE TESTE','CANAL','PAPEL','FLUXO','PARÂMETROS','RESULTADO ESPERADO'];
                 const testadores = [];
-                for (let c = 9; c < headerRow.length; c++) {
+                for (let c = 10; c < headerRow.length; c++) {
                     const name = (headerRow[c] || '').toString().trim();
                     if (name && !fixedNames.map(n=>n.toUpperCase()).includes(name.toUpperCase())) {
                         testadores.push({ name, colIdx: c });
