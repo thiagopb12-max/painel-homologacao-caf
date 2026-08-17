@@ -216,6 +216,11 @@
                     </div>
                 </div>`;
 
+            // Detectar colunas de período
+            const validadoCol = headers.find(h => h.toUpperCase().includes('VALID') && h.toUpperCase().includes('PERIOD')) || '';
+            const invalidadoCol = headers.find(h => h.toUpperCase().includes('INVALID') && h.toUpperCase().includes('PERIOD')) || '';
+            const pendenteCol = headers.find(h => h.toUpperCase().includes('PENDENT') && h.toUpperCase().includes('PERIOD')) || '';
+
             // Filtros
             main.innerHTML += `<div class="section-title">Filtros</div>
                 <div class="filter-bar">
@@ -232,9 +237,27 @@
                     </div>` : ''}
                     ${utilCol ? `<div class="filter-group">
                         <span class="filter-label">CPF Utilizado:</span>
-                        <button class="filter-btn active" data-filter="all" onclick="setUtilFiltro(this,'all')">Todos</button>
-                        <button class="filter-btn" data-filter="SIM" onclick="setUtilFiltro(this,'SIM')">Sim</button>
-                        <button class="filter-btn" data-filter="NAO" onclick="setUtilFiltro(this,'NAO')">Não</button>
+                        <button class="filter-btn active" data-group="util" data-filter="all">Todos</button>
+                        <button class="filter-btn" data-group="util" data-filter="SIM">Sim</button>
+                        <button class="filter-btn" data-group="util" data-filter="NAO">Não</button>
+                    </div>` : ''}
+                    ${validadoCol ? `<div class="filter-group">
+                        <span class="filter-label">Período Validado:</span>
+                        <button class="filter-btn active" data-group="validado" data-filter="all">Todos</button>
+                        <button class="filter-btn" data-group="validado" data-filter="SIM">Sim</button>
+                        <button class="filter-btn" data-group="validado" data-filter="NAO">Não</button>
+                    </div>` : ''}
+                    ${invalidadoCol ? `<div class="filter-group">
+                        <span class="filter-label">Período Invalidado:</span>
+                        <button class="filter-btn active" data-group="invalidado" data-filter="all">Todos</button>
+                        <button class="filter-btn" data-group="invalidado" data-filter="SIM">Sim</button>
+                        <button class="filter-btn" data-group="invalidado" data-filter="NAO">Não</button>
+                    </div>` : ''}
+                    ${pendenteCol ? `<div class="filter-group">
+                        <span class="filter-label">Período Pendente:</span>
+                        <button class="filter-btn active" data-group="pendente" data-filter="all">Todos</button>
+                        <button class="filter-btn" data-group="pendente" data-filter="SIM">Sim</button>
+                        <button class="filter-btn" data-group="pendente" data-filter="NAO">Não</button>
                     </div>` : ''}
                 </div>`;
 
@@ -258,23 +281,27 @@
                     </div>
                 </div>`;
 
-            window._massaData = { cpfs, headers, cpfCol, homCol, utilCol };
-            window._massaFilters = { cpf: '', hom: '', util: 'all' };
+            window._massaData = { cpfs, headers, cpfCol, homCol, utilCol, validadoCol, invalidadoCol, pendenteCol };
+            window._massaFilters = { cpf: '', hom: '', util: 'all', validado: 'all', invalidado: 'all', pendente: 'all' };
             window._sortState = { col: -1, dir: 1 };
             renderTable();
-        }
+
+            // Bind filter buttons
+            document.querySelectorAll('.filter-btn[data-group]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const group = this.dataset.group;
+                    const filter = this.dataset.filter;
+                    document.querySelectorAll(`.filter-btn[data-group="${group}"]`).forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    window._massaFilters[group] = filter;
+                    renderTable();
+                });
+            });
 
         function aplicarFiltros() {
             window._massaFilters.cpf = document.getElementById('filtro-cpf').value.trim();
             const homEl = document.getElementById('filtro-hom');
             if (homEl) window._massaFilters.hom = homEl.value;
-            renderTable();
-        }
-
-        function setUtilFiltro(btn, val) {
-            document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            window._massaFilters.util = val;
             renderTable();
         }
 
@@ -284,18 +311,26 @@
             renderTable();
         }
 
+        function checkSN(val, filter) {
+            if (filter === 'all') return true;
+            if (filter === 'SIM') return (val || '').toUpperCase() === 'SIM';
+            if (filter === 'NAO') return (val || '').toUpperCase() !== 'SIM';
+            return true;
+        }
+
         function renderTable() {
-            const { cpfs, headers, cpfCol, homCol, utilCol } = window._massaData;
-            const { cpf, hom, util } = window._massaFilters;
+            const { cpfs, headers, cpfCol, homCol, utilCol, validadoCol, invalidadoCol, pendenteCol } = window._massaData;
+            const { cpf, hom, util, validado, invalidado, pendente } = window._massaFilters;
             const { col, dir } = window._sortState;
 
             let filtered = cpfs.filter(c => {
                 const cpfOk = !cpf || (c[cpfCol] || '').includes(cpf);
                 const homOk = !hom || c[homCol] === hom;
-                let utilOk = true;
-                if (util === 'SIM') utilOk = (c[utilCol] || '').toUpperCase() === 'SIM';
-                else if (util === 'NAO') utilOk = (c[utilCol] || '').toUpperCase() !== 'SIM';
-                return cpfOk && homOk && utilOk;
+                const utilOk = checkSN(c[utilCol], util);
+                const validadoOk = checkSN(c[validadoCol], validado);
+                const invalidadoOk = checkSN(c[invalidadoCol], invalidado);
+                const pendenteOk = checkSN(c[pendenteCol], pendente);
+                return cpfOk && homOk && utilOk && validadoOk && invalidadoOk && pendenteOk;
             });
 
             if (col >= 0) {
