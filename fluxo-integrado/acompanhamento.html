@@ -82,13 +82,17 @@
         table { width: 100%; border-collapse: collapse; font-size: 12px; }
         thead { background: #f8fafc; position: sticky; top: 0; z-index: 1; }
         th { padding: 10px 12px; text-align: left; font-weight: 600; color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid #e5e7eb; white-space: nowrap; }
-        td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+        th:nth-child(1) { width: 50px; }
+        th:nth-child(2) { width: 80px; }
+        th:nth-child(3) { width: 140px; }
+        td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; vertical-align: top; font-size: 12px; }
         tr:hover { background: #f8fafc; }
         tr.row-aprovado { background: #f0fdf4; }
         tr.row-aprovado:hover { background: #dcfce7; }
         tr.row-em-teste { background: #f5f0ff; }
         tr.row-em-teste:hover { background: #ede9fe; }
-        td.desc-col { white-space: pre-wrap; word-break: break-word; max-width: 320px; line-height: 1.4; }
+        td.nowrap-col { white-space: nowrap; }
+        td.desc-col { white-space: pre-wrap; word-break: break-word; max-width: 380px; font-size: 12px; line-height: 1.5; }
         .badge-status { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; white-space: nowrap; }
         .badge-aprovado { background: #e8f5e9; color: #2e7d32; }
         .badge-reprovado { background: #fbe9e7; color: #c62828; }
@@ -427,8 +431,8 @@
                                     <th>Canal</th>
                                     <th>Papel</th>
                                     ${hasStatus ? '<th>Status</th>' : ''}
-                                    <th>Caso de Teste</th>
                                     ${testadoresAtivos.map(t=>`<th>${t.name}</th>`).join('')}
+                                    <th>Caso de Teste</th>
                                 </tr>
                             </thead>
                             <tbody id="acomp-tbody"></tbody>
@@ -532,7 +536,7 @@
                     const badgeCls = st.includes('APROVAD') ? 'badge-status badge-aprovado' :
                                      st.includes('EM TESTE') || st.includes('EM_TESTE') ? 'badge-status' + ' " style="background:#ede9fe;color:#6a1b9a;' :
                                      'badge-status badge-nao-exec';
-                    statusBadge = `<td><span class="badge-status" style="${st.includes('APROVAD') ? 'background:#e8f5e9;color:#2e7d32' : st.includes('TESTE') ? 'background:#ede9fe;color:#6a1b9a' : 'background:#f3f4f6;color:#9ca3af'};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;white-space:nowrap;">${c.status}</span></td>`;
+                    statusBadge = `<td class="nowrap-col"><span class="badge-status" style="${st.includes('APROVAD') ? 'background:#e8f5e9;color:#2e7d32' : st.includes('TESTE') ? 'background:#ede9fe;color:#6a1b9a' : 'background:#f3f4f6;color:#9ca3af'};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;white-space:nowrap;">${c.status}</span></td>`;
                 }
 
                 const testeCols = testadoresAtivos.map(t => {
@@ -541,12 +545,12 @@
                     return `<td><span class="${getBadgeClass(s)}">${s}</span></td>`;
                 }).join('');
                 return `<tr class="${rowClass}">
-                    <td><strong>${c.num}</strong></td>
-                    <td>${c.canal || '—'}</td>
-                    <td style="font-size:11px;">${c.papel}</td>
+                    <td class="nowrap-col"><strong>${c.num}</strong></td>
+                    <td class="nowrap-col">${c.canal || '—'}</td>
+                    <td class="nowrap-col" style="font-size:11px;">${c.papel}</td>
                     ${c.status !== undefined ? statusBadge : ''}
-                    <td class="desc-col">${c.caso}</td>
                     ${testeCols}
+                    <td class="desc-col">${c.caso}</td>
                 </tr>`;
             }).join('') || `<tr><td colspan="${4 + testadoresAtivos.length}" style="text-align:center;color:#6b7280;padding:32px;">Nenhum cenário encontrado com os filtros selecionados</td></tr>`;
         }

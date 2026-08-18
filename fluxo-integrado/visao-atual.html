@@ -253,7 +253,8 @@
                     cenarios.push({
                         num, canal: (r[1]||'').toString().trim(),
                         cenario: (r[2]||'').toString().trim(),
-                        status: normalizeStatus(r[3])
+                        status: normalizeStatus(r[3]),
+                        qtdHomologadores: (r[4]||'').toString().trim()
                     });
                 }
 
@@ -337,6 +338,11 @@
                 </div>`;
 
             // ---- Status cards ----
+            const maxHomologadores = cenarios.reduce((max, c) => {
+                const v = parseInt(c.qtdHomologadores);
+                return !isNaN(v) && v > max ? v : max;
+            }, 0);
+
             main.innerHTML += `<div class="section-title">Status dos Cenários — Total: ${total} casos</div>
                 <div class="status-grid">
                     ${Object.entries(statusCounts).sort((a,b)=>b[1]-a[1]).map(([st,cnt])=>`
@@ -345,6 +351,12 @@
                             <div class="status-count">${cnt}</div>
                             <div class="status-label">${st}</div>
                         </div>`).join('')}
+                    ${maxHomologadores > 0 ? `
+                        <div class="status-card" style="border-left-color:#7b1fa2;">
+                            <div class="status-icon">👥</div>
+                            <div class="status-count" style="color:#7b1fa2;">${maxHomologadores}</div>
+                            <div class="status-label" style="color:#7b1fa2;">Max. Homologadores por Cenário</div>
+                        </div>` : ''}
                 </div>`;
 
             // ---- Charts ----
@@ -362,6 +374,10 @@
 
             // ---- Cenários table ----
             const allStatus = [...new Set(cenarios.map(c => c.status))].sort();
+            const allQtdHomolog = [...new Set(
+                cenarios.map(c => c.qtdHomologadores).filter(v => v !== '')
+            )].sort((a,b) => parseInt(a)-parseInt(b));
+
             main.innerHTML += `
                 <div class="section-title">Detalhamento dos Cenários</div>
                 <div class="table-card">
@@ -371,12 +387,19 @@
                         <button class="filter-btn active" data-group="cen-status" data-filter="all">Todos</button>
                         ${allStatus.map(s=>`<button class="filter-btn" data-group="cen-status" data-filter="${s}">${s}</button>`).join('')}
                     </div>
+                    ${allQtdHomolog.length > 0 ? `
+                    <div class="table-filter-bar" style="border-top:1px solid #e5e7eb;">
+                        <span class="filter-label">Qtd. Homologadores:</span>
+                        <button class="filter-btn active" data-group="cen-homolog" data-filter="all">Todos</button>
+                        ${allQtdHomolog.map(v=>`<button class="filter-btn" data-group="cen-homolog" data-filter="${v}">${v}</button>`).join('')}
+                    </div>` : ''}
                     <div class="table-wrapper">
                         <table>
                             <thead><tr>
                                 <th>Nº</th>
                                 <th>Canal</th>
                                 <th>Status</th>
+                                <th>Qtd. Homologadores</th>
                                 <th>Cenário de Teste</th>
                             </tr></thead>
                             <tbody id="cen-tbody"></tbody>
@@ -386,7 +409,7 @@
 
             window._massaCpfs = massaCpfs;
             window._cenarios  = cenarios;
-            window._cenFilters   = { status: ['all'] };
+            window._cenFilters   = { status: ['all'], homolog: ['all'] };
 
             renderCenariosTable();
 
@@ -411,6 +434,34 @@
                         }
                         if (window._cenFilters.status.length === 0) {
                             window._cenFilters.status = ['all'];
+                            allBtn.classList.add('active');
+                        }
+                    }
+                    renderCenariosTable();
+                });
+            });
+
+            // Filter events - qtd homologadores
+            document.querySelectorAll('.filter-btn[data-group="cen-homolog"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const f = this.dataset.filter;
+                    if (f === 'all') {
+                        window._cenFilters.homolog = ['all'];
+                        document.querySelectorAll('.filter-btn[data-group="cen-homolog"]').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        const allBtn = document.querySelector('.filter-btn[data-group="cen-homolog"][data-filter="all"]');
+                        const fs = window._cenFilters.homolog;
+                        if (fs.includes('all')) { window._cenFilters.homolog = []; allBtn.classList.remove('active'); }
+                        if (fs.includes(f)) {
+                            window._cenFilters.homolog = fs.filter(x => x !== f);
+                            this.classList.remove('active');
+                        } else {
+                            window._cenFilters.homolog.push(f);
+                            this.classList.add('active');
+                        }
+                        if (window._cenFilters.homolog.length === 0) {
+                            window._cenFilters.homolog = ['all'];
                             allBtn.classList.add('active');
                         }
                     }
@@ -453,18 +504,20 @@
         }
 
         function renderCenariosTable() {
-            const { status } = window._cenFilters;
+            const { status, homolog } = window._cenFilters;
             const tbody = document.getElementById('cen-tbody');
             if (!tbody) return;
             const rows = window._cenarios.filter(c =>
-                status.includes('all') || status.includes(c.status)
+                (status.includes('all') || status.includes(c.status)) &&
+                (homolog.includes('all') || homolog.includes(c.qtdHomologadores))
             );
             tbody.innerHTML = rows.map(c => `<tr>
                 <td><strong>${c.num}</strong></td>
                 <td>${c.canal || '—'}</td>
                 <td><span class="${getBadgeClass(c.status)}">${c.status}</span></td>
+                <td style="text-align:center;">${c.qtdHomologadores || '—'}</td>
                 <td style="white-space:pre-wrap;word-break:break-word;max-width:500px;font-size:12px;line-height:1.5;">${c.cenario}</td>
-            </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:#6b7280;padding:32px;">Nenhum cenário encontrado</td></tr>';
+            </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:#6b7280;padding:32px;">Nenhum cenário encontrado</td></tr>';
         }
 
         loadData();
