@@ -283,7 +283,7 @@
                     cenarios.some(c => !isNaoExec(c.testes[t.name]))
                 );
 
-                renderPage(cenarios, testadoresAtivos);
+                renderPage(cenarios, testadoresAtivos, IDX_STATUS >= 0);
             } catch (err) {
                 console.error(err);
                 document.getElementById('main-content').innerHTML = `
@@ -298,7 +298,7 @@
             }
         }
 
-        function renderPage(cenarios, testadoresAtivos) {
+        function renderPage(cenarios, testadoresAtivos, hasStatus) {
             const main = document.getElementById('main-content');
             main.innerHTML = '';
 
@@ -426,7 +426,7 @@
                                     <th>#</th>
                                     <th>Canal</th>
                                     <th>Papel</th>
-                                    ${IDX_STATUS >= 0 ? '<th>Status</th>' : ''}
+                                    ${hasStatus ? '<th>Status</th>' : ''}
                                     <th>Caso de Teste</th>
                                     ${testadoresAtivos.map(t=>`<th>${t.name}</th>`).join('')}
                                 </tr>
