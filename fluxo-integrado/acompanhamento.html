@@ -84,6 +84,10 @@
         th { padding: 10px 12px; text-align: left; font-weight: 600; color: #4b5563; font-size: 10px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 2px solid #e5e7eb; white-space: nowrap; }
         td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
         tr:hover { background: #f8fafc; }
+        tr.row-aprovado { background: #f0fdf4; }
+        tr.row-aprovado:hover { background: #dcfce7; }
+        tr.row-em-teste { background: #f5f0ff; }
+        tr.row-em-teste:hover { background: #ede9fe; }
         td.desc-col { white-space: pre-wrap; word-break: break-word; max-width: 320px; line-height: 1.4; }
         .badge-status { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; white-space: nowrap; }
         .badge-aprovado { background: #e8f5e9; color: #2e7d32; }
@@ -230,11 +234,18 @@
                 const IDX_PAPEL  = 6;
 
                 // Detect testador columns: all indices >= 10 with a non-empty, non-special name
+                // Also detect STATUS column if it exists
                 const fixedNames = ['#','LIBERADO','MACROPROCESSO','CASO DE TESTE','CANAL','PAPEL','FLUXO','PARÂMETROS','RESULTADO ESPERADO'];
                 const testadores = [];
+                let IDX_STATUS = -1;
                 for (let c = 10; c < headerRow.length; c++) {
                     const name = (headerRow[c] || '').toString().trim();
-                    if (name && !fixedNames.map(n=>n.toUpperCase()).includes(name.toUpperCase())) {
+                    if (!name) continue;
+                    if (name.toUpperCase() === 'STATUS') {
+                        IDX_STATUS = c;
+                        continue;
+                    }
+                    if (!fixedNames.map(n=>n.toUpperCase()).includes(name.toUpperCase())) {
                         testadores.push({ name, colIdx: c });
                     }
                 }
@@ -253,9 +264,10 @@
                     const ct = {
                         num,
                         macro,
-                        caso:  (row[IDX_CASO]  || '').toString().trim(),
-                        canal: (row[IDX_CANAL] || '').toString().trim(),
-                        papel: (row[IDX_PAPEL] || '').toString().trim(),
+                        caso:   (row[IDX_CASO]  || '').toString().trim(),
+                        canal:  (row[IDX_CANAL] || '').toString().trim(),
+                        papel:  (row[IDX_PAPEL] || '').toString().trim(),
+                        status: IDX_STATUS >= 0 ? (row[IDX_STATUS] || '').toString().trim() : '',
                         testes: {}
                     };
                     testadores.forEach(t => {
@@ -414,6 +426,7 @@
                                     <th>#</th>
                                     <th>Canal</th>
                                     <th>Papel</th>
+                                    ${IDX_STATUS >= 0 ? '<th>Status</th>' : ''}
                                     <th>Caso de Teste</th>
                                     ${testadoresAtivos.map(t=>`<th>${t.name}</th>`).join('')}
                                 </tr>
@@ -507,15 +520,31 @@
             });
 
             tbody.innerHTML = filtered.map(c => {
+                // Cor da linha baseada no status
+                const st = (c.status || '').toUpperCase().trim();
+                let rowClass = '';
+                if (st === 'APROVADO' || st === 'APROVADA') rowClass = 'row-aprovado';
+                else if (st === 'EM TESTE' || st === 'EM_TESTE') rowClass = 'row-em-teste';
+
+                // Badge de status
+                let statusBadge = '';
+                if (c.status) {
+                    const badgeCls = st.includes('APROVAD') ? 'badge-status badge-aprovado' :
+                                     st.includes('EM TESTE') || st.includes('EM_TESTE') ? 'badge-status' + ' " style="background:#ede9fe;color:#6a1b9a;' :
+                                     'badge-status badge-nao-exec';
+                    statusBadge = `<td><span class="badge-status" style="${st.includes('APROVAD') ? 'background:#e8f5e9;color:#2e7d32' : st.includes('TESTE') ? 'background:#ede9fe;color:#6a1b9a' : 'background:#f3f4f6;color:#9ca3af'};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;white-space:nowrap;">${c.status}</span></td>`;
+                }
+
                 const testeCols = testadoresAtivos.map(t => {
                     const s = c.testes[t.name];
                     if (isNaoExec(s)) return `<td><span class="badge-status badge-nao-exec" style="color:#9ca3af;">—</span></td>`;
                     return `<td><span class="${getBadgeClass(s)}">${s}</span></td>`;
                 }).join('');
-                return `<tr>
+                return `<tr class="${rowClass}">
                     <td><strong>${c.num}</strong></td>
                     <td>${c.canal || '—'}</td>
                     <td style="font-size:11px;">${c.papel}</td>
+                    ${c.status !== undefined ? statusBadge : ''}
                     <td class="desc-col">${c.caso}</td>
                     ${testeCols}
                 </tr>`;
