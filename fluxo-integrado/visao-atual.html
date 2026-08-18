@@ -338,10 +338,11 @@
                 </div>`;
 
             // ---- Status cards ----
-            const maxHomologadores = cenarios.reduce((max, c) => {
-                const v = parseInt(c.qtdHomologadores);
-                return !isNaN(v) && v > max ? v : max;
-            }, 0);
+            const emTesteComPoucos = cenarios.filter(c => {
+                const st = (c.status || '').toUpperCase().trim();
+                const qtd = parseInt(c.qtdHomologadores);
+                return (st === 'EM TESTE' || st === 'EM_TESTE') && !isNaN(qtd) && qtd < 3;
+            }).length;
 
             main.innerHTML += `<div class="section-title">Status dos Cenários — Total: ${total} casos</div>
                 <div class="status-grid">
@@ -351,11 +352,11 @@
                             <div class="status-count">${cnt}</div>
                             <div class="status-label">${st}</div>
                         </div>`).join('')}
-                    ${maxHomologadores > 0 ? `
+                    ${emTesteComPoucos > 0 || cenarios.some(c => (c.status||'').toUpperCase().includes('TESTE')) ? `
                         <div class="status-card" style="border-left-color:#7b1fa2;">
-                            <div class="status-icon">👥</div>
-                            <div class="status-count" style="color:#7b1fa2;">${maxHomologadores}</div>
-                            <div class="status-label" style="color:#7b1fa2;">Max. Homologadores por Cenário</div>
+                            <div class="status-icon">⚠️</div>
+                            <div class="status-count" style="color:#7b1fa2;">${emTesteComPoucos}</div>
+                            <div class="status-label" style="color:#7b1fa2;">Em teste com menos de 3 homologadores</div>
                         </div>` : ''}
                 </div>`;
 
