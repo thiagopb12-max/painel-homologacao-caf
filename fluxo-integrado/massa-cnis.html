@@ -74,6 +74,8 @@
         th:hover { background: #f1f5f9; }
         td { padding: 11px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; font-size: 12px; }
         tr:hover { background: #f8fafc; }
+        tr.row-utilizado { background: #fff0f0; }
+        tr.row-utilizado:hover { background: #fde8e8; }
 
         .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; white-space: nowrap; }
         .badge-sim { background: #e8f5e9; color: #2e7d32; }
@@ -350,6 +352,8 @@
             if (countEl) countEl.textContent = `Mostrando ${filtered.length} de ${cpfs.length} CPFs`;
 
             tbody.innerHTML = filtered.map(c => {
+                const isUtilizado = (c[utilCol] || '').toUpperCase() === 'SIM';
+                const rowClass = isUtilizado ? 'row-utilizado' : '';
                 const cells = headers.map(h => {
                     const val = c[h] || '—';
                     const key = h.toUpperCase();
@@ -370,7 +374,7 @@
                     if (h === cpfCol) return `<td><strong>${val}</strong></td>`;
                     return `<td>${val}</td>`;
                 }).join('');
-                return `<tr>${cells}</tr>`;
+                return `<tr class="${rowClass}">${cells}</tr>`;
             }).join('') || `<tr><td colspan="${headers.length}" style="text-align:center;color:#6b7280;padding:32px;">Nenhum CPF encontrado com os filtros selecionados</td></tr>`;
         }
 
