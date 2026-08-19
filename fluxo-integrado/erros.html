@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erros e Problemas — Fluxo Integrado</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --azul-escuro: #1a5276;
+            --azul-medio: #2980b9;
+            --ciano: #00bcd4;
+            --verde: #2e7d32;
+            --amarelo: #f9a825;
+            --verde-claro: #aed581;
+            --cinza-claro: #f5f7fa;
+            --cinza-texto: #2d2d2d;
+            --branco: #ffffff;
+            --sombra: 0 2px 12px rgba(0,0,0,0.08);
+            --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif; background: var(--cinza-claro); color: var(--cinza-texto); line-height: 1.6; }
+
+        .header { background: linear-gradient(135deg, var(--azul-escuro) 0%, var(--azul-medio) 50%, var(--ciano) 100%); color: var(--branco); padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .header-logo img { height: 54px; border-radius: 6px; }
+        .header-divider { width: 2px; height: 44px; background: rgba(255,255,255,0.3); }
+        .header-title h1 { font-size: 18px; font-weight: 600; }
+        .header-title p { font-size: 13px; opacity: 0.85; font-weight: 300; }
+        .header-time { font-size: 13px; opacity: 0.9; }
+
+        .tagline-bar { background: linear-gradient(90deg, var(--amarelo), var(--verde-claro)); padding: 6px 40px; font-size: 12px; font-weight: 600; color: var(--azul-escuro); display: flex; align-items: center; gap: 8px; }
+
+        nav { background: var(--branco); padding: 12px 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; gap: 8px; flex-wrap: wrap; }
+        .nav-link { padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; color: var(--cinza-texto); border: 1px solid #e5e7eb; transition: all 0.2s; }
+        .nav-link:hover { background: #f3f4f6; }
+        .nav-link.active { background: var(--azul-medio); color: var(--branco); border-color: var(--azul-medio); }
+
+        .main { max-width: 1440px; margin: 0 auto; padding: 32px 40px; }
+
+        .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; gap: 16px; }
+        .loading-spinner { width: 48px; height: 48px; border: 4px solid #e5e7eb; border-top-color: var(--azul-medio); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .kpi-card { background: var(--branco); border-radius: var(--radius); padding: 20px; box-shadow: var(--sombra); border-top: 4px solid var(--azul-medio); text-align: center; }
+        .kpi-count { font-size: 30px; font-weight: 800; color: var(--azul-escuro); }
+        .kpi-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #6b7280; margin-top: 4px; }
+
+        .section-title { font-size: 18px; font-weight: 700; color: var(--azul-escuro); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: linear-gradient(180deg, var(--ciano), var(--azul-medio)); border-radius: 2px; }
+
+        .filter-bar { background: var(--branco); border-radius: var(--radius); padding: 16px 24px; box-shadow: var(--sombra); margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+        .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .filter-label { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; white-space: nowrap; }
+        .filter-btn { padding: 5px 12px; border: 1px solid #e5e7eb; border-radius: 16px; font-size: 12px; font-weight: 500; cursor: pointer; background: var(--branco); color: var(--cinza-texto); font-family: inherit; transition: all 0.2s; }
+        .filter-btn.active, .filter-btn:hover { background: var(--azul-medio); color: var(--branco); border-color: var(--azul-medio); }
+        .search-input { padding: 6px 14px; border: 1px solid #e5e7eb; border-radius: 20px; font-size: 12px; font-family: inherit; color: var(--cinza-texto); width: 220px; }
+
+        /* Cards de erro */
+        .erros-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+        .erro-card {
+            background: var(--branco); border-radius: var(--radius);
+            box-shadow: var(--sombra); padding: 20px 24px;
+            border-left: 5px solid #9ca3af;
+            display: grid; grid-template-columns: 80px 1fr auto;
+            gap: 16px; align-items: start;
+            transition: transform 0.2s;
+        }
+        .erro-card:hover { transform: translateX(3px); }
+        .erro-card.st-em-correcao { border-left-color: #f57f17; }
+        .erro-card.st-ag-analise { border-left-color: #1565c0; }
+        .erro-card.st-resolvido { border-left-color: #2e7d32; }
+        .erro-card.st-aberto { border-left-color: #c62828; }
+
+        .erro-num { text-align: center; }
+        .erro-num .label { font-size: 10px; font-weight: 600; text-transform: uppercase; color: #9ca3af; }
+        .erro-num .value { font-size: 28px; font-weight: 800; color: var(--azul-escuro); }
+
+        .erro-body h4 { font-size: 14px; font-weight: 700; color: var(--azul-escuro); margin-bottom: 6px; }
+        .erro-body .desc { font-size: 13px; color: #4b5563; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+        .erro-body .homologador { font-size: 12px; color: #6b7280; margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+
+        .erro-status { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; white-space: nowrap; }
+
+        .badge-status { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+        .badge-em-correcao { background: #fff3e0; color: #e65100; }
+        .badge-ag-analise { background: #e3f2fd; color: #1565c0; }
+        .badge-resolvido { background: #e8f5e9; color: #2e7d32; }
+        .badge-aberto { background: #fbe9e7; color: #c62828; }
+        .badge-default { background: #f3f4f6; color: #6b7280; }
+
+        .count-info { font-size: 12px; color: #6b7280; margin-bottom: 12px; }
+
+        .footer { background: var(--azul-escuro); color: rgba(255,255,255,0.7); text-align: center; padding: 20px 40px; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 16px; }
+        .footer img { height: 40px; border-radius: 4px; }
+        .footer strong { color: var(--branco); }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 12px; padding: 20px; }
+            .main { padding: 20px; }
+            nav { padding: 12px 20px; }
+            .erro-card { grid-template-columns: 60px 1fr; }
+            .erro-status { grid-column: 2; grid-row: 1; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="header-logo"><img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV"></div>
+            <div class="header-divider"></div>
+            <div class="header-title">
+                <h1>Erros e Problemas — Fluxo Integrado</h1>
+                <p>Integração PAT · FPSE · SIBE</p>
+            </div>
+        </div>
+        <div class="header-time" id="current-time"></div>
+    </header>
+
+    <div class="tagline-bar">
+        <span>Dados para cidadania</span>
+        <span>•</span>
+        <span>Problemas reportados durante a homologação</span>
+    </div>
+
+    <nav>
+        <a href="../index.html" class="nav-link">🏠 Início</a>
+        <a href="visao-atual.html" class="nav-link">📊 Visão Atual</a>
+        <a href="evolucao.html" class="nav-link">📈 Evolução</a>
+        <a href="acompanhamento.html" class="nav-link">🔍 Acompanhamento</a>
+        <a href="massa-cnis.html" class="nav-link">🧪 Massa CNIS</a>
+        <a href="erros.html" class="nav-link active">🐛 Erros</a>
+    </nav>
+
+    <main class="main" id="main-content">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Carregando problemas reportados...</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <img src="../Logo_dataprev_Preferencial-01.jpg" alt="DATAPREV">
+        <p><strong>DATAPREV</strong> — Dados para cidadania • Homologação Fluxo Integrado</p>
+    </footer>
+
+    <script>
+        const XLSX_FILE = 'erros.xlsx';
+
+        function updateTime() {
+            const el = document.getElementById('current-time');
+            if (el) el.textContent = new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'medium' });
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function getStatusInfo(status) {
+            const s = (status || '').toLowerCase().trim();
+            if (s.includes('corre')) return { cls: 'st-em-correcao', badge: 'badge-em-correcao', label: 'Em Correção' };
+            if (s.includes('anál') || s.includes('anal') || s.includes('ag ')) return { cls: 'st-ag-analise', badge: 'badge-ag-analise', label: 'Ag. Análise' };
+            if (s.includes('resolv') || s.includes('fechad') || s.includes('ok')) return { cls: 'st-resolvido', badge: 'badge-resolvido', label: 'Resolvido' };
+            if (s.includes('aberto') || s.includes('novo')) return { cls: 'st-aberto', badge: 'badge-aberto', label: 'Aberto' };
+            return { cls: '', badge: 'badge-default', label: status || '—' };
+        }
+
+        async function loadData() {
+            try {
+                const res = await fetch(XLSX_FILE + '?t=' + Date.now());
+                const buf = await res.arrayBuffer();
+                const wb = XLSX.read(buf, { type: 'array' });
+
+                // Ler primeira aba
+                const sheet = wb.Sheets[wb.SheetNames[0]];
+                const raw = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+
+                // Headers na linha 1
+                const headers = raw[0] || [];
+                const colCenario   = headers.findIndex(h => (h||'').toString().toLowerCase().includes('cenário') || (h||'').toString().toLowerCase().includes('cenario'));
+                const colHomolog   = headers.findIndex(h => (h||'').toString().toLowerCase().includes('homolog'));
+                const colDesc      = headers.findIndex(h => (h||'').toString().toLowerCase().includes('descri'));
+                const colStatus    = headers.findIndex(h => (h||'').toString().toLowerCase().includes('status'));
+
+                const erros = [];
+                for (let i = 1; i < raw.length; i++) {
+                    const r = raw[i];
+                    const desc = (colDesc >= 0 ? r[colDesc] : '').toString().trim();
+                    if (!desc) continue;
+                    erros.push({
+                        cenario:   (colCenario >= 0 ? r[colCenario] : '').toString().trim(),
+                        homolog:   (colHomolog >= 0 ? r[colHomolog] : '').toString().trim(),
+                        desc,
+                        status:    (colStatus >= 0 ? r[colStatus] : '').toString().trim()
+                    });
+                }
+
+                renderPage(erros);
+            } catch (err) {
+                document.getElementById('main-content').innerHTML = `
+                    <div class="loading">
+                        <p style="color:#c62828;font-weight:600;">❌ Erro ao carregar</p>
+                        <p>${err.message}</p>
+                    </div>`;
+            }
+        }
+
+        function renderPage(erros) {
+            const main = document.getElementById('main-content');
+            main.innerHTML = '';
+
+            // KPIs por status
+            const statusMap = {};
+            erros.forEach(e => {
+                const { label } = getStatusInfo(e.status);
+                statusMap[label] = (statusMap[label] || 0) + 1;
+            });
+
+            const kpiColors = {
+                'Em Correção': '#f57f17',
+                'Ag. Análise': '#1565c0',
+                'Resolvido':   '#2e7d32',
+                'Aberto':      '#c62828'
+            };
+
+            let kpiHtml = '<div class="kpi-grid">';
+            kpiHtml += `<div class="kpi-card" style="border-top-color:#6b7280">
+                <div class="kpi-count">${erros.length}</div>
+                <div class="kpi-label">Total de Problemas</div>
+            </div>`;
+            Object.entries(statusMap).sort((a,b) => b[1]-a[1]).forEach(([label, cnt]) => {
+                const color = kpiColors[label] || '#9ca3af';
+                kpiHtml += `<div class="kpi-card" style="border-top-color:${color}">
+                    <div class="kpi-count" style="color:${color};">${cnt}</div>
+                    <div class="kpi-label">${label}</div>
+                </div>`;
+            });
+            kpiHtml += '</div>';
+            main.innerHTML += kpiHtml;
+
+            // Filtros
+            const allStatus = [...new Set(erros.map(e => getStatusInfo(e.status).label))].sort();
+            main.innerHTML += `
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <span class="filter-label">Buscar:</span>
+                        <input type="text" class="search-input" id="busca" placeholder="Pesquisar..." oninput="renderErros()">
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Status:</span>
+                        <button class="filter-btn active" data-filter="all">Todos</button>
+                        ${allStatus.map(s => `<button class="filter-btn" data-filter="${s}">${s}</button>`).join('')}
+                    </div>
+                </div>`;
+
+            main.innerHTML += `
+                <div class="section-title">Problemas Reportados</div>
+                <div class="count-info" id="count-info">Exibindo ${erros.length} problemas</div>
+                <div class="erros-grid" id="erros-grid"></div>`;
+
+            window._erros = erros;
+            window._statusFilter = 'all';
+
+            document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    window._statusFilter = this.dataset.filter;
+                    renderErros();
+                });
+            });
+
+            renderErros();
+        }
+
+        function renderErros() {
+            const busca = (document.getElementById('busca')?.value || '').toLowerCase();
+            const statusFilter = window._statusFilter || 'all';
+            const erros = window._erros || [];
+
+            const filtered = erros.filter(e => {
+                const { label } = getStatusInfo(e.status);
+                const statusOk = statusFilter === 'all' || label === statusFilter;
+                const buscaOk = !busca ||
+                    e.desc.toLowerCase().includes(busca) ||
+                    e.cenario.toLowerCase().includes(busca) ||
+                    e.homolog.toLowerCase().includes(busca);
+                return statusOk && buscaOk;
+            });
+
+            const countEl = document.getElementById('count-info');
+            if (countEl) countEl.textContent = `Exibindo ${filtered.length} de ${erros.length} problemas`;
+
+            const grid = document.getElementById('erros-grid');
+            if (!grid) return;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="text-align:center;padding:48px;color:#6b7280;background:var(--branco);border-radius:var(--radius);box-shadow:var(--sombra);">
+                    Nenhum problema encontrado com os filtros selecionados.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map((e, idx) => {
+                const { cls, badge, label } = getStatusInfo(e.status);
+                return `<div class="erro-card ${cls}">
+                    <div class="erro-num">
+                        <div class="label">Cenário</div>
+                        <div class="value">${e.cenario || '—'}</div>
+                    </div>
+                    <div class="erro-body">
+                        <div class="desc">${e.desc}</div>
+                        ${e.homolog ? `<div class="homologador">👤 <strong>${e.homolog}</strong></div>` : ''}
+                    </div>
+                    <div class="erro-status">
+                        <span class="badge-status ${badge}">${label}</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
